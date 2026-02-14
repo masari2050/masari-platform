@@ -225,21 +225,32 @@
                     password: password,
                 });
 
-                if (authError) throw authError;
+                if (authError) {
+                    // تعريب رسائل الخطأ
+                    if (authError.message.includes('already registered') || authError.message.includes('already been registered')) {
+                        throw new Error('هذا البريد الإلكتروني مسجل مسبقاً');
+                    }
+                    throw authError;
+                }
 
                 if (authData.user) {
-                    // Create profile - بدون avatar_emoji في البداية
-                    const { error: profileError } = await sb
-                        .from('profiles')
-                        .insert({
-                            id: authData.user.id,
-                            name: name,
-                            gender: selectedGender
-                        });
+                    // إنشاء البروفايل
+                    try {
+                        const { error: profileError } = await sb
+                            .from('profiles')
+                            .insert({
+                                id: authData.user.id,
+                                name: name,
+                                gender: selectedGender
+                            });
 
-                    if (profileError) {
-                        console.error('Profile error:', profileError);
-                        // حتى لو فشل البروفايل، نكمل
+                        if (profileError) {
+                            console.error('Profile error:', profileError);
+                            // نكمل حتى لو فشل البروفايل
+                        }
+                    } catch (profileErr) {
+                        console.error('Profile creation error:', profileErr);
+                        // نكمل للدخول حتى لو فشل البروفايل
                     }
 
                     alert('✅ تم إنشاء الحساب بنجاح!');
@@ -248,7 +259,22 @@
 
             } catch (err) {
                 console.error('Error:', err);
-                showError(err.message || 'حدث خطأ أثناء إنشاء الحساب');
+                let errorMessage = 'حدث خطأ أثناء إنشاء الحساب';
+                
+                // تعريب رسائل الخطأ الشائعة
+                if (err.message) {
+                    if (err.message.includes('already registered') || err.message.includes('already been registered')) {
+                        errorMessage = 'هذا البريد الإلكتروني مسجل مسبقاً';
+                    } else if (err.message.includes('Invalid email')) {
+                        errorMessage = 'البريد الإلكتروني غير صحيح';
+                    } else if (err.message.includes('Password')) {
+                        errorMessage = 'كلمة المرور ضعيفة جداً';
+                    } else if (err.message !== 'حدث خطأ أثناء إنشاء الحساب') {
+                        errorMessage = err.message;
+                    }
+                }
+                
+                showError(errorMessage);
                 submitBtn.disabled = false;
                 submitBtn.textContent = '🚀 إنشاء الحساب';
             }
