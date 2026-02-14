@@ -193,7 +193,6 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             const termsAccepted = document.getElementById('termsCheckbox').checked;
 
-            // Validation
             if (!name || !email || !password) {
                 showError('الرجاء ملء جميع الحقول');
                 return;
@@ -219,14 +218,12 @@
             submitBtn.textContent = 'جاري الإنشاء...';
 
             try {
-                // Sign up
                 const { data: authData, error: authError } = await sb.auth.signUp({
                     email: email,
                     password: password,
                 });
 
                 if (authError) {
-                    // تعريب رسائل الخطأ
                     if (authError.message.includes('already registered') || authError.message.includes('already been registered')) {
                         throw new Error('هذا البريد الإلكتروني مسجل مسبقاً');
                     }
@@ -234,7 +231,6 @@
                 }
 
                 if (authData.user) {
-                    // إنشاء البروفايل
                     try {
                         const { error: profileError } = await sb
                             .from('profiles')
@@ -246,11 +242,9 @@
 
                         if (profileError) {
                             console.error('Profile error:', profileError);
-                            // نكمل حتى لو فشل البروفايل
                         }
                     } catch (profileErr) {
                         console.error('Profile creation error:', profileErr);
-                        // نكمل للدخول حتى لو فشل البروفايل
                     }
 
                     alert('✅ تم إنشاء الحساب بنجاح!');
@@ -261,7 +255,6 @@
                 console.error('Error:', err);
                 let errorMessage = 'حدث خطأ أثناء إنشاء الحساب';
                 
-                // تعريب رسائل الخطأ الشائعة
                 if (err.message) {
                     if (err.message.includes('already registered') || err.message.includes('already been registered')) {
                         errorMessage = 'هذا البريد الإلكتروني مسجل مسبقاً';
