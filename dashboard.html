@@ -39,12 +39,8 @@
 <body class="min-h-screen">
     
     <!-- Beta Banner -->
-    <div id="betaBanner" class="beta-banner text-white py-1.5 px-4 text-center text-xs font-bold flex items-center justify-center gap-2">
-        <span>🚀</span>
-        <span>نسخة تجريبية - قريباً مفاجآت</span>
-        <button onclick="closeBanner()" class="mr-4 hover:bg-white hover:bg-opacity-20 rounded-full w-5 h-5 flex items-center justify-center">
-            ×
-        </button>
+    <div class="beta-banner text-white py-2 px-4 text-center text-sm font-bold">
+        ✨ منصة مساري - بنك أسئلة شامل يتحدث يومياً | تدرب الآن وحقق حلمك
     </div>
 
     <!-- Header -->
@@ -57,16 +53,16 @@
                     <h1 class="text-2xl font-black text-indigo-600 logo-shadow">مساري</h1>
                 </div>
 
-                <!-- User Info -->
-                <div class="flex items-center gap-2">
+                <!-- User Info - Clickable -->
+                <button onclick="window.location.href='profile.html'" class="flex items-center gap-2 hover:opacity-80 transition">
                     <div class="text-right">
                         <span class="font-bold text-gray-800 text-sm" id="userName">عبدالله</span>
                         <p class="text-xs text-gray-500">مشترك شهري 🔥</p>
                     </div>
-                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                        <span id="userInitial">ع</span>
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                        <span id="userAvatar">👤</span>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </header>
@@ -177,53 +173,7 @@
             </a>
         </div>
 
-        <!-- Settings Button -->
-        <button onclick="toggleSettings()" class="w-full bg-white rounded-xl p-4 shadow-lg mb-4 flex items-center justify-between hover:shadow-xl transition">
-            <div class="flex items-center gap-3">
-                <span class="text-2xl">⚙️</span>
-                <span class="font-bold text-gray-800">الإعدادات</span>
-            </div>
-            <svg id="settingsArrow" class="w-5 h-5 text-gray-400 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-            </svg>
-        </button>
-
-        <!-- Settings Panel -->
-        <div id="settingsPanel" class="hidden bg-white rounded-xl p-4 shadow-lg mb-4">
-            <div class="flex items-center justify-between mb-4 pb-4 border-b">
-                <div class="flex items-center gap-3">
-                    <span class="text-2xl">🔊</span>
-                    <div>
-                        <p class="font-bold text-gray-800">تأثيرات الصوت</p>
-                        <p class="text-xs text-gray-500">صوت عند الإجابة الصحيحة والخاطئة</p>
-                    </div>
-                </div>
-                <button onclick="toggleSound()" id="soundToggle" class="relative inline-flex h-8 w-14 items-center rounded-full bg-indigo-600 transition">
-                    <span id="soundDot" class="inline-block h-6 w-6 transform rounded-full bg-white transition translate-x-7"></span>
-                </button>
-            </div>
-            
-            <div class="space-y-3">
-                <button onclick="editProfile()" class="w-full text-right p-3 rounded-lg hover:bg-gray-50 transition flex items-center gap-3">
-                    <span class="text-xl">👤</span>
-                    <span class="text-gray-700">تعديل الملف الشخصي</span>
-                </button>
-                <button onclick="changePassword()" class="w-full text-right p-3 rounded-lg hover:bg-gray-50 transition flex items-center gap-3">
-                    <span class="text-xl">🔐</span>
-                    <span class="text-gray-700">تغيير كلمة المرور</span>
-                </button>
-            </div>
-        </div>
-
     </main>
-
-    <!-- Logout Button -->
-    <button 
-        onclick="handleLogout()"
-        class="fixed bottom-6 left-6 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg font-bold transition transform hover:scale-105 z-50"
-    >
-        تسجيل خروج
-    </button>
 
     <script>
         const supabaseUrl = 'https://czzcmbxejxbotjemyuqf.supabase.co';
@@ -231,55 +181,6 @@
         const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         let currentUser = null;
-        let soundEnabled = true;
-
-        // تحميل إعدادات الصوت
-        const savedSoundSetting = localStorage.getItem('soundEnabled');
-        if (savedSoundSetting !== null) {
-            soundEnabled = savedSoundSetting === 'true';
-            updateSoundUI();
-        }
-
-        // عبارات تحفيزية محسّنة (بدون علامات التعجب)
-        const motivationalQuotes = [
-            'ابدع لنفسك نحو التميز والتطور',
-            'كل سؤال تحله خطوة أقرب لحلمك',
-            'النجاح يحتاج للجهد والإصرار',
-            'أنت قادر على تحقيق أهدافك، فقط استمر',
-            'ثق بنفسك، أنت أقوى مما تتخيل',
-            'كل يوم تدريب، كل يوم تطور',
-            'حلمك قريب، استمر واجتهد',
-            'الطريق لدرجتك العالية يبدأ من هنا'
-        ];
-
-        function toggleSettings() {
-            const panel = document.getElementById('settingsPanel');
-            const arrow = document.getElementById('settingsArrow');
-            panel.classList.toggle('hidden');
-            arrow.classList.toggle('rotate-180');
-        }
-
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            localStorage.setItem('soundEnabled', soundEnabled);
-            updateSoundUI();
-        }
-
-        function updateSoundUI() {
-            const toggle = document.getElementById('soundToggle');
-            const dot = document.getElementById('soundDot');
-            if (soundEnabled) {
-                toggle.classList.remove('bg-gray-400');
-                toggle.classList.add('bg-indigo-600');
-                dot.classList.remove('translate-x-1');
-                dot.classList.add('translate-x-7');
-            } else {
-                toggle.classList.remove('bg-indigo-600');
-                toggle.classList.add('bg-gray-400');
-                dot.classList.remove('translate-x-7');
-                dot.classList.add('translate-x-1');
-            }
-        }
 
         async function checkAuth() {
             try {
@@ -294,15 +195,15 @@
                 
                 const { data: profile } = await sb
                     .from('profiles')
-                    .select('name')
+                    .select('name, avatar_emoji')
                     .eq('id', currentUser.id)
                     .single();
                 
                 if (profile && profile.name) {
-                    const userName = profile.name;
-                    document.getElementById('userName').textContent = userName;
-                    document.getElementById('displayName').textContent = userName;
-                    document.getElementById('userInitial').textContent = userName.charAt(0);
+                    document.getElementById('userName').textContent = profile.name;
+                    if (profile.avatar_emoji) {
+                        document.getElementById('userAvatar').textContent = profile.avatar_emoji;
+                    }
                 }
                 
                 return true;
@@ -316,7 +217,15 @@
 
         async function loadStats() {
             try {
-                // عرض عبارة تحفيزية
+                // عبارات تحفيزية
+                const motivationalQuotes = [
+                    'كل سؤال تحله خطوة أقرب لحلمك',
+                    'النجاح يحتاج للجهد والإصرار',
+                    'أنت قادر على تحقيق أهدافك',
+                    'ثق بنفسك، أنت أقوى مما تتخيل',
+                    'كل يوم تدريب، كل يوم تطور',
+                    'حلمك قريب، استمر واجتهد'
+                ];
                 const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
                 document.getElementById('motivationalQuote').textContent = randomQuote;
                 
@@ -374,57 +283,6 @@
             if (!isAuth) return;
             await loadStats();
         });
-
-        window.getSoundEnabled = () => soundEnabled;
-
-        function closeBanner() {
-            document.getElementById('betaBanner').style.display = 'none';
-            localStorage.setItem('bannerClosed', 'true');
-        }
-
-        // التحقق من حالة البانر عند التحميل
-        if (localStorage.getItem('bannerClosed') === 'true') {
-            const banner = document.getElementById('betaBanner');
-            if (banner) banner.style.display = 'none';
-        }
-
-        function editProfile() {
-            const newName = prompt('أدخل اسمك الجديد:', document.getElementById('userName').textContent);
-            if (!newName || newName.trim() === '') return;
-            
-            sb.from('profiles').update({ name: newName.trim() }).eq('id', currentUser.id)
-                .then(() => {
-                    document.getElementById('userName').textContent = newName.trim();
-                    document.getElementById('displayName').textContent = newName.trim();
-                    document.getElementById('userInitial').textContent = newName.trim().charAt(0);
-                    alert('✅ تم تحديث الاسم بنجاح');
-                })
-                .catch(err => {
-                    console.error('❌ خطأ:', err);
-                    alert('حدث خطأ في التحديث');
-                });
-        }
-
-        function changePassword() {
-            const newPassword = prompt('أدخل كلمة المرور الجديدة (6 أحرف على الأقل):');
-            if (!newPassword || newPassword.length < 6) {
-                alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
-                return;
-            }
-            
-            const confirm = prompt('أكّد كلمة المرور الجديدة:');
-            if (newPassword !== confirm) {
-                alert('كلمات المرور غير متطابقة');
-                return;
-            }
-            
-            sb.auth.updateUser({ password: newPassword })
-                .then(() => alert('✅ تم تغيير كلمة المرور بنجاح'))
-                .catch(err => {
-                    console.error('❌ خطأ:', err);
-                    alert('حدث خطأ في تغيير كلمة المرور');
-                });
-        }
     </script>
 
 </body>
