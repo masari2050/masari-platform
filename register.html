@@ -228,19 +228,18 @@
                 if (authError) throw authError;
 
                 if (authData.user) {
-                    // Create profile
+                    // Create profile - بدون avatar_emoji في البداية
                     const { error: profileError } = await sb
                         .from('profiles')
                         .insert({
                             id: authData.user.id,
                             name: name,
-                            gender: selectedGender,
-                            created_at: new Date().toISOString()
+                            gender: selectedGender
                         });
 
                     if (profileError) {
                         console.error('Profile error:', profileError);
-                        // Even if profile fails, continue (user can update later)
+                        // حتى لو فشل البروفايل، نكمل
                     }
 
                     alert('✅ تم إنشاء الحساب بنجاح!');
