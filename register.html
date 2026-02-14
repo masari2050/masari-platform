@@ -5,241 +5,256 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إنشاء حساب - مساري</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-    
-    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-        <div class="text-center mb-8">
-            <div class="text-4xl mb-3">🎓</div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">مرحباً بك في مساري</h1>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full">
+        
+        <!-- Logo -->
+        <div class="text-center mb-6">
+            <div class="text-5xl mb-3">🎓</div>
+            <h1 class="text-3xl font-black text-gray-800 mb-2">مرحباً بك في مساري</h1>
             <p class="text-gray-600">أنشئ حسابك وابدأ رحلتك نحو التميز</p>
         </div>
 
-        <form id="registerForm" class="space-y-4">
+        <!-- Form -->
+        <form id="signupForm" class="space-y-4">
+            
+            <!-- Name -->
             <div>
-                <label class="block text-gray-700 font-medium mb-2">الاسم الكامل</label>
+                <label class="block text-gray-700 font-bold mb-2 text-right">الاسم الكامل</label>
                 <input 
                     type="text" 
                     id="name" 
                     required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-right"
                     placeholder="أدخل اسمك الكامل"
                 >
             </div>
 
+            <!-- Email -->
             <div>
-                <label class="block text-gray-700 font-medium mb-2">البريد الإلكتروني</label>
+                <label class="block text-gray-700 font-bold mb-2 text-right">البريد الإلكتروني</label>
                 <input 
                     type="email" 
                     id="email" 
                     required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-right"
                     placeholder="example@email.com"
                 >
             </div>
 
+            <!-- Password -->
             <div>
-                <label class="block text-gray-700 font-medium mb-2">كلمة المرور</label>
+                <label class="block text-gray-700 font-bold mb-2 text-right">كلمة المرور</label>
                 <div class="relative">
                     <input 
                         type="password" 
                         id="password" 
                         required
                         minlength="6"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        placeholder="أدخل كلمة المرور (6 أحرف على الأقل)"
+                        class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-right"
+                        placeholder="••••••"
                     >
-                    <button 
-                        type="button"
-                        onclick="togglePass('password')"
-                        class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    >
+                    <button type="button" onclick="togglePassword('password')" class="absolute left-3 top-1/2 -translate-y-1/2 text-2xl">
                         👁️
                     </button>
                 </div>
             </div>
 
+            <!-- Confirm Password -->
             <div>
-                <label class="block text-gray-700 font-medium mb-2">تأكيد كلمة المرور</label>
+                <label class="block text-gray-700 font-bold mb-2 text-right">تأكيد كلمة المرور</label>
                 <div class="relative">
                     <input 
                         type="password" 
                         id="confirmPassword" 
                         required
                         minlength="6"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        placeholder="أعد إدخال كلمة المرور"
+                        class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:outline-none text-right"
+                        placeholder="••••••"
                     >
-                    <button 
-                        type="button"
-                        onclick="togglePass('confirmPassword')"
-                        class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    >
+                    <button type="button" onclick="togglePassword('confirmPassword')" class="absolute left-3 top-1/2 -translate-y-1/2 text-2xl">
                         👁️
                     </button>
                 </div>
             </div>
 
+            <!-- Gender -->
             <div>
-                <label class="block text-gray-700 font-medium mb-2">الجنس</label>
-                <div class="flex gap-3">
+                <label class="block text-gray-700 font-bold mb-3 text-right">الجنس</label>
+                <div class="grid grid-cols-2 gap-3">
                     <button 
                         type="button" 
+                        onclick="selectGender('male')" 
                         id="maleBtn"
-                        onclick="pickGender('male')"
-                        class="flex-1 py-3 border-2 border-indigo-500 text-indigo-600 rounded-lg hover:bg-indigo-50 transition font-medium"
+                        class="gender-btn py-3 rounded-xl border-2 border-indigo-500 bg-indigo-50 text-indigo-700 font-bold transition"
                     >
-                        ذكر 👨
+                        ذكر 🧑
                     </button>
                     <button 
                         type="button" 
+                        onclick="selectGender('female')" 
                         id="femaleBtn"
-                        onclick="pickGender('female')"
-                        class="flex-1 py-3 border-2 border-pink-400 text-pink-500 rounded-lg hover:bg-pink-50 transition font-medium"
+                        class="gender-btn py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold transition"
                     >
                         أنثى 👩
                     </button>
                 </div>
             </div>
 
-            <div id="errorMsg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
-            <div id="successMsg" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm"></div>
+            <!-- Terms Checkbox -->
+            <div class="bg-gray-50 rounded-xl p-4">
+                <label class="flex items-start gap-3 cursor-pointer">
+                    <input 
+                        type="checkbox" 
+                        id="termsCheckbox" 
+                        required
+                        class="w-5 h-5 mt-1 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    >
+                    <span class="text-sm text-gray-700 leading-relaxed">
+                        أوافق على 
+                        <a href="terms.html" target="_blank" class="text-indigo-600 font-bold underline">شروط الاستخدام</a>
+                        و
+                        <a href="privacy.html" target="_blank" class="text-indigo-600 font-bold underline">سياسة الخصوصية</a>
+                    </span>
+                </label>
+            </div>
 
+            <!-- Error Message -->
+            <div id="errorMessage" class="hidden bg-red-50 border-2 border-red-200 rounded-xl p-3 text-red-700 text-sm text-center"></div>
+
+            <!-- Submit Button -->
             <button 
                 type="submit"
+                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-4 rounded-xl font-bold text-lg transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 id="submitBtn"
-                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-bold text-lg transition transform hover:scale-105"
             >
-                إنشاء الحساب 🚀
+                🚀 إنشاء الحساب
             </button>
+
         </form>
 
-        <div class="text-center mt-6">
-            <p class="text-gray-600">
-                عندك حساب؟ 
-                <a href="login.html" class="text-indigo-600 font-bold hover:underline">سجّل دخول</a>
-            </p>
-        </div>
+        <!-- Login Link -->
+        <p class="text-center mt-6 text-gray-600">
+            عندك حساب؟ 
+            <a href="login.html" class="text-indigo-600 font-bold">سجّل دخول</a>
+        </p>
+
     </div>
 
     <script>
-        const sb = window.supabase.createClient(
-            'https://czzcmbxejxbotjemyuqf.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
-        );
+        const supabaseUrl = 'https://czzcmbxejxbotjemyuqf.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0';
+        const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        let userGender = null;
+        let selectedGender = 'male';
 
-        function togglePass(id) {
-            const f = document.getElementById(id);
-            f.type = f.type === 'password' ? 'text' : 'password';
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
         }
 
-        function pickGender(g) {
-            userGender = g;
-            const mb = document.getElementById('maleBtn');
-            const fb = document.getElementById('femaleBtn');
-            
-            if (g === 'male') {
-                mb.className = 'flex-1 py-3 border-2 border-indigo-600 bg-indigo-600 text-white rounded-lg transition font-medium';
-                fb.className = 'flex-1 py-3 border-2 border-pink-400 text-pink-500 rounded-lg hover:bg-pink-50 transition font-medium';
+        function selectGender(gender) {
+            selectedGender = gender;
+            const maleBtn = document.getElementById('maleBtn');
+            const femaleBtn = document.getElementById('femaleBtn');
+
+            if (gender === 'male') {
+                maleBtn.className = 'gender-btn py-3 rounded-xl border-2 border-indigo-500 bg-indigo-50 text-indigo-700 font-bold transition';
+                femaleBtn.className = 'gender-btn py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold transition';
             } else {
-                fb.className = 'flex-1 py-3 border-2 border-pink-400 bg-pink-400 text-white rounded-lg transition font-medium';
-                mb.className = 'flex-1 py-3 border-2 border-indigo-500 text-indigo-600 rounded-lg hover:bg-indigo-50 transition font-medium';
+                femaleBtn.className = 'gender-btn py-3 rounded-xl border-2 border-pink-500 bg-pink-50 text-pink-700 font-bold transition';
+                maleBtn.className = 'gender-btn py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold transition';
             }
         }
 
-        function showErr(m) {
-            const e = document.getElementById('errorMsg');
-            const s = document.getElementById('successMsg');
-            e.textContent = m;
-            e.classList.remove('hidden');
-            s.classList.add('hidden');
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => errorDiv.classList.add('hidden'), 5000);
         }
 
-        function showSuccess(m) {
-            const s = document.getElementById('successMsg');
-            const e = document.getElementById('errorMsg');
-            s.textContent = m;
-            s.classList.remove('hidden');
-            e.classList.add('hidden');
-        }
-
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const n = document.getElementById('name').value.trim();
-            const em = document.getElementById('email').value.trim();
-            const p = document.getElementById('password').value;
-            const cp = document.getElementById('confirmPassword').value;
-            
-            if (!n || !em || !p || !cp) {
-                showErr('الرجاء ملء جميع الحقول');
-                return;
-            }
-            
-            if (!userGender) {
-                showErr('الرجاء اختيار الجنس');
-                return;
-            }
-            
-            if (p.length < 6) {
-                showErr('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const termsAccepted = document.getElementById('termsCheckbox').checked;
+
+            // Validation
+            if (!name || !email || !password) {
+                showError('الرجاء ملء جميع الحقول');
                 return;
             }
 
-            if (p !== cp) {
-                showErr('كلمة المرور وتأكيد كلمة المرور غير متطابقتين');
+            if (password.length < 6) {
+                showError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
                 return;
             }
 
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.textContent = 'جاري التسجيل...';
+            if (password !== confirmPassword) {
+                showError('كلمات المرور غير متطابقة');
+                return;
+            }
+
+            if (!termsAccepted) {
+                showError('يجب الموافقة على الشروط والأحكام');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري الإنشاء...';
 
             try {
-                const { data: signUpData, error: signUpError } = await sb.auth.signUp({
-                    email: em,
-                    password: p,
-                    options: {
-                        data: { name: n, gender: userGender }
+                // Sign up
+                const { data: authData, error: authError } = await sb.auth.signUp({
+                    email: email,
+                    password: password,
+                });
+
+                if (authError) throw authError;
+
+                if (authData.user) {
+                    // Create profile
+                    const { error: profileError } = await sb
+                        .from('profiles')
+                        .insert({
+                            id: authData.user.id,
+                            name: name,
+                            gender: selectedGender,
+                            created_at: new Date().toISOString()
+                        });
+
+                    if (profileError) {
+                        console.error('Profile error:', profileError);
+                        // Even if profile fails, continue (user can update later)
                     }
-                });
 
-                if (signUpError) throw signUpError;
-
-                // Try to sign in immediately
-                const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({
-                    email: em,
-                    password: p
-                });
-
-                if (signInError) {
-                    showSuccess('تم إنشاء الحساب! تحقق من بريدك الإلكتروني لتفعيل الحساب');
-                    setTimeout(() => window.location.href = 'login.html', 2000);
-                } else {
-                    showSuccess('تم إنشاء الحساب بنجاح! جاري تحويلك...');
-                    setTimeout(() => window.location.href = 'dashboard.html', 1000);
+                    alert('✅ تم إنشاء الحساب بنجاح!');
+                    window.location.href = 'dashboard.html';
                 }
 
-            } catch (error) {
-                if (error.message.includes('already')) {
-                    showErr('هذا البريد الإلكتروني مسجل مسبقاً');
-                } else {
-                    showErr('حدث خطأ: ' + error.message);
-                }
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'إنشاء الحساب 🚀';
+            } catch (err) {
+                console.error('Error:', err);
+                showError(err.message || 'حدث خطأ أثناء إنشاء الحساب');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 إنشاء الحساب';
             }
         });
     </script>
+
 </body>
 </html>
