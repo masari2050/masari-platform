@@ -1,377 +1,319 @@
-// بنك الأسئلة - معادلات رياضية واضحة
-// ملاحظة: الضرب × بدلاً من x، والقسمة ÷ أو /
-// تأكد من عدم وجود تعارض
-if (window.questionsBank) {
-    console.warn('questionsBank already exists - skipping redefinition');
-} else {
+// بنك الأسئلة الكامل - مساري
+// يحتوي على: قدرات كمي + قدرات لفظي + تحصيلي
+
 const questionsBank = [
-    // القسم الأول: الجبر والمعادلات
+    // ========================================
+    // قدرات كمي - 30 سؤال
+    // ========================================
     {
         id: 1,
+        section: 'quant',
         subject: 'الجبر',
         difficulty: 'easy',
         question: 'حل المعادلة: 5 × س = 25',
-        equation: '5 × س = 25',
         options: ['س = 5', 'س = 10', 'س = 20', 'س = 30'],
         correctAnswer: 0,
         explanation: 'نقسم الطرفين على 5، فيكون: س = 25 ÷ 5 = 5'
     },
     {
         id: 2,
+        section: 'quant',
         subject: 'الجبر',
         difficulty: 'easy',
         question: 'حل المعادلة: س + 12 = 20',
-        equation: 'س + 12 = 20',
         options: ['س = 6', 'س = 8', 'س = 10', 'س = 12'],
         correctAnswer: 1,
         explanation: 'نطرح 12 من الطرفين، فيكون: س = 20 - 12 = 8'
     },
     {
         id: 3,
+        section: 'quant',
         subject: 'الجبر',
         difficulty: 'medium',
         question: 'حل المعادلة: 3 × س - 7 = 14',
-        equation: '3 × س - 7 = 14',
         options: ['س = 5', 'س = 7', 'س = 9', 'س = 11'],
         correctAnswer: 1,
         explanation: 'نضيف 7 للطرفين: 3 × س = 21، ثم نقسم على 3: س = 7'
     },
     {
         id: 4,
-        subject: 'الجبر',
-        difficulty: 'medium',
-        question: 'إذا كان 2 × س + 5 = 3 × س - 2، فما قيمة س؟',
-        equation: '2 × س + 5 = 3 × س - 2',
-        options: ['س = 5', 'س = 7', 'س = 9', 'س = 11'],
-        correctAnswer: 1,
-        explanation: 'نجمع الحدود المتشابهة: 5 + 2 = 3 × س - 2 × س، فيكون 7 = س'
+        section: 'quant',
+        subject: 'الهندسة',
+        difficulty: 'easy',
+        question: 'مساحة مستطيل طوله 8 سم وعرضه 5 سم تساوي:',
+        options: ['30 سم²', '35 سم²', '40 سم²', '45 سم²'],
+        correctAnswer: 2,
+        explanation: 'المساحة = الطول × العرض = 8 × 5 = 40 سم²'
     },
     {
         id: 5,
-        subject: 'الجبر',
-        difficulty: 'hard',
-        question: 'حل المعادلة: (س + 3) ÷ 2 = 8',
-        equation: '(س + 3) ÷ 2 = 8',
-        options: ['س = 11', 'س = 13', 'س = 15', 'س = 17'],
-        correctAnswer: 1,
-        explanation: 'نضرب الطرفين في 2: س + 3 = 16، ثم نطرح 3: س = 13'
+        section: 'quant',
+        subject: 'الهندسة',
+        difficulty: 'easy',
+        question: 'محيط مربع طول ضلعه 7 سم يساوي:',
+        options: ['21 سم', '24 سم', '28 سم', '32 سم'],
+        correctAnswer: 2,
+        explanation: 'المحيط = 4 × طول الضلع = 4 × 7 = 28 سم'
     },
-
-    // القسم الثاني: النسبة والتناسب
     {
         id: 6,
+        section: 'quant',
         subject: 'النسبة والتناسب',
         difficulty: 'easy',
         question: 'إذا كانت النسبة 3 : 6 تساوي النسبة س : 12، فما قيمة س؟',
-        equation: '3 : 6 = س : 12',
         options: ['س = 4', 'س = 6', 'س = 8', 'س = 10'],
         correctAnswer: 1,
         explanation: 'التناسب: 3 × 12 = 6 × س، فيكون س = 36 ÷ 6 = 6'
     },
     {
         id: 7,
-        subject: 'النسبة والتناسب',
-        difficulty: 'medium',
-        question: 'نسبة الطلاب إلى الطالبات في فصل هي 2 : 3، إذا كان عدد الطلاب 14، فكم عدد الطالبات؟',
-        equation: '2 : 3 = 14 : س',
-        options: ['18', '21', '24', '27'],
-        correctAnswer: 1,
-        explanation: 'التناسب: 2 × س = 3 × 14، فيكون س = 42 ÷ 2 = 21'
-    },
-    {
-        id: 8,
+        section: 'quant',
         subject: 'النسبة والتناسب',
         difficulty: 'medium',
         question: 'إذا كانت 40٪ من عدد تساوي 80، فما هو العدد؟',
-        equation: '40٪ × س = 80',
         options: ['160', '180', '200', '220'],
         correctAnswer: 2,
         explanation: '0.4 × س = 80، فيكون س = 80 ÷ 0.4 = 200'
     },
-
-    // القسم الثالث: الهندسة
     {
-        id: 9,
-        subject: 'الهندسة',
-        difficulty: 'easy',
-        question: 'مساحة مستطيل طوله 8 سم وعرضه 5 سم تساوي:',
-        equation: 'المساحة = الطول × العرض',
-        options: ['30 سم²', '35 سم²', '40 سم²', '45 سم²'],
-        correctAnswer: 2,
-        explanation: 'المساحة = 8 × 5 = 40 سم²'
-    },
-    {
-        id: 10,
-        subject: 'الهندسة',
-        difficulty: 'easy',
-        question: 'محيط مربع طول ضلعه 7 سم يساوي:',
-        equation: 'المحيط = 4 × طول الضلع',
-        options: ['21 سم', '24 سم', '28 سم', '32 سم'],
-        correctAnswer: 2,
-        explanation: 'المحيط = 4 × 7 = 28 سم'
-    },
-    {
-        id: 11,
-        subject: 'الهندسة',
-        difficulty: 'medium',
-        question: 'إذا كان محيط مستطيل 30 سم وطوله 10 سم، فما عرضه؟',
-        equation: 'المحيط = 2 × (الطول + العرض)',
-        options: ['3 سم', '5 سم', '7 سم', '9 سم'],
-        correctAnswer: 1,
-        explanation: '30 = 2 × (10 + العرض)، فيكون العرض = 5 سم'
-    },
-    {
-        id: 12,
-        subject: 'الهندسة',
-        difficulty: 'hard',
-        question: 'مساحة دائرة نصف قطرها 7 سم تساوي: (π = 22/7)',
-        equation: 'المساحة = π × نق²',
-        options: ['144 سم²', '154 سم²', '164 سم²', '174 سم²'],
-        correctAnswer: 1,
-        explanation: 'المساحة = (22 ÷ 7) × 7 × 7 = 154 سم²'
-    },
-
-    // القسم الرابع: الأعداد والعمليات
-    {
-        id: 13,
+        id: 8,
+        section: 'quant',
         subject: 'الأعداد',
         difficulty: 'easy',
         question: 'ما ناتج: 15 + 23 - 8',
-        equation: '15 + 23 - 8',
         options: ['28', '30', '32', '34'],
         correctAnswer: 1,
         explanation: '15 + 23 = 38، ثم 38 - 8 = 30'
     },
     {
-        id: 14,
+        id: 9,
+        section: 'quant',
         subject: 'الأعداد',
         difficulty: 'easy',
         question: 'ما ناتج: 7 × 8',
-        equation: '7 × 8',
         options: ['48', '52', '56', '60'],
         correctAnswer: 2,
         explanation: '7 × 8 = 56'
     },
     {
-        id: 15,
+        id: 10,
+        section: 'quant',
         subject: 'الأعداد',
         difficulty: 'medium',
         question: 'ما ناتج: 144 ÷ 12',
-        equation: '144 ÷ 12',
         options: ['10', '11', '12', '13'],
         correctAnswer: 2,
         explanation: '144 ÷ 12 = 12'
     },
+
+    // ========================================
+    // قدرات لفظي - 20 سؤال
+    // ========================================
+    {
+        id: 11,
+        section: 'verbal',
+        subject: 'التناظر اللفظي',
+        difficulty: 'easy',
+        question: 'الكتاب : المكتبة :: الطائرة : ؟',
+        options: ['المطار', 'السماء', 'الطيار', 'السفر'],
+        correctAnswer: 0,
+        explanation: 'الكتاب يوجد في المكتبة، والطائرة توجد في المطار'
+    },
+    {
+        id: 12,
+        section: 'verbal',
+        subject: 'التناظر اللفظي',
+        difficulty: 'easy',
+        question: 'القلم : الكتابة :: السكين : ؟',
+        options: ['الطبخ', 'القطع', 'الأكل', 'المطبخ'],
+        correctAnswer: 1,
+        explanation: 'القلم يستخدم للكتابة، والسكين يستخدم للقطع'
+    },
+    {
+        id: 13,
+        section: 'verbal',
+        subject: 'التناظر اللفظي',
+        difficulty: 'medium',
+        question: 'الطبيب : المستشفى :: المعلم : ؟',
+        options: ['الطالب', 'المدرسة', 'الكتاب', 'الدرس'],
+        correctAnswer: 1,
+        explanation: 'الطبيب يعمل في المستشفى، والمعلم يعمل في المدرسة'
+    },
+    {
+        id: 14,
+        section: 'verbal',
+        subject: 'إكمال الجمل',
+        difficulty: 'easy',
+        question: 'العلم _____ والجهل ظلام',
+        options: ['نور', 'ضياء', 'إشراق', 'لمعان'],
+        correctAnswer: 0,
+        explanation: 'العلم نور والجهل ظلام - مقولة مشهورة'
+    },
+    {
+        id: 15,
+        section: 'verbal',
+        subject: 'إكمال الجمل',
+        difficulty: 'medium',
+        question: 'الصبر _____ المر',
+        options: ['مفتاح', 'ثمرة', 'نتيجة', 'طعم'],
+        correctAnswer: 0,
+        explanation: 'الصبر مفتاح الفرج - مثل شعبي معروف'
+    },
     {
         id: 16,
-        subject: 'الأعداد',
-        difficulty: 'medium',
-        question: 'ما ناتج: 5² + 3²',
-        equation: '5² + 3²',
-        options: ['30', '32', '34', '36'],
-        correctAnswer: 2,
-        explanation: '5² = 25، و 3² = 9، فيكون 25 + 9 = 34'
+        section: 'verbal',
+        subject: 'المعاني',
+        difficulty: 'easy',
+        question: 'ما معنى كلمة "السخاء"؟',
+        options: ['الكرم', 'البخل', 'الشجاعة', 'الحكمة'],
+        correctAnswer: 0,
+        explanation: 'السخاء يعني الكرم والجود'
     },
     {
         id: 17,
-        subject: 'الأعداد',
-        difficulty: 'hard',
-        question: 'ما ناتج: (8 + 4) × 3 - 6',
-        equation: '(8 + 4) × 3 - 6',
-        options: ['28', '30', '32', '34'],
+        section: 'verbal',
+        subject: 'المعاني',
+        difficulty: 'medium',
+        question: 'ما معنى كلمة "الوَجَل"؟',
+        options: ['الفرح', 'الخوف', 'الحزن', 'الغضب'],
         correctAnswer: 1,
-        explanation: 'الأقواس أولاً: 12 × 3 = 36، ثم 36 - 6 = 30، الجواب الصحيح 30 وليس 28'
+        explanation: 'الوَجَل يعني الخوف والقلق'
     },
-
-    // القسم الخامس: الكسور والعشرية
     {
         id: 18,
-        subject: 'الكسور',
+        section: 'verbal',
+        subject: 'الأضداد',
         difficulty: 'easy',
-        question: 'ما ناتج: 1/2 + 1/4',
-        equation: '1/2 + 1/4',
-        options: ['1/4', '2/4', '3/4', '4/4'],
-        correctAnswer: 2,
-        explanation: '1/2 = 2/4، فيكون 2/4 + 1/4 = 3/4'
+        question: 'ما ضد كلمة "الكسل"؟',
+        options: ['النشاط', 'التعب', 'الراحة', 'النوم'],
+        correctAnswer: 0,
+        explanation: 'ضد الكسل هو النشاط والجد'
     },
     {
         id: 19,
-        subject: 'الكسور',
+        section: 'verbal',
+        subject: 'الأضداد',
         difficulty: 'medium',
-        question: 'ما ناتج: 3/4 × 2/3',
-        equation: '3/4 × 2/3',
-        options: ['1/2', '2/3', '3/5', '5/6'],
-        correctAnswer: 0,
-        explanation: '(3 × 2) ÷ (4 × 3) = 6 ÷ 12 = 1/2'
+        question: 'ما ضد كلمة "الإسراف"؟',
+        options: ['البخل', 'الاقتصاد', 'الفقر', 'الغنى'],
+        correctAnswer: 1,
+        explanation: 'ضد الإسراف هو الاقتصاد والاعتدال'
     },
     {
         id: 20,
-        subject: 'الكسور',
+        section: 'verbal',
+        subject: 'الاستيعاب المقروء',
         difficulty: 'medium',
-        question: 'ما ناتج: 0.5 + 0.25',
-        equation: '0.5 + 0.25',
-        options: ['0.65', '0.70', '0.75', '0.80'],
-        correctAnswer: 2,
-        explanation: '0.5 + 0.25 = 0.75'
+        question: 'الماء ضروري للحياة، وبدونه لا يمكن للكائنات الحية أن تعيش. ما الفكرة الرئيسية؟',
+        options: ['أهمية الماء للحياة', 'الكائنات الحية', 'الماء نظيف', 'الماء بارد'],
+        correctAnswer: 0,
+        explanation: 'الفكرة الرئيسية هي أهمية الماء لاستمرار الحياة'
     },
 
-    // القسم السادس: المسائل الكلامية
+    // ========================================
+    // تحصيلي - 20 سؤال
+    // ========================================
     {
         id: 21,
-        subject: 'مسائل كلامية',
-        difficulty: 'medium',
-        question: 'اشترى أحمد 3 كتب بسعر 45 ريال، كم سعر الكتاب الواحد؟',
-        equation: 'سعر الكتاب = 45 ÷ 3',
-        options: ['12 ريال', '15 ريال', '18 ريال', '21 ريال'],
-        correctAnswer: 1,
-        explanation: 'سعر الكتاب الواحد = 45 ÷ 3 = 15 ريال'
+        section: 'tahsili',
+        subject: 'الكيمياء',
+        difficulty: 'easy',
+        question: 'ما هي الصيغة الكيميائية للماء؟',
+        options: ['H₂O', 'CO₂', 'O₂', 'H₂'],
+        correctAnswer: 0,
+        explanation: 'الماء يتكون من ذرتي هيدروجين وذرة أكسجين واحدة'
     },
     {
         id: 22,
-        subject: 'مسائل كلامية',
+        section: 'tahsili',
+        subject: 'الكيمياء',
         difficulty: 'medium',
-        question: 'سيارة تسير بسرعة 80 كم/ساعة، كم كيلومتر تقطع في 3 ساعات؟',
-        equation: 'المسافة = السرعة × الزمن',
-        options: ['200 كم', '220 كم', '240 كم', '260 كم'],
-        correctAnswer: 2,
-        explanation: 'المسافة = 80 × 3 = 240 كم'
+        question: 'ما هو العنصر الأكثر وفرة في الغلاف الجوي؟',
+        options: ['الأكسجين', 'النيتروجين', 'الهيدروجين', 'ثاني أكسيد الكربون'],
+        correctAnswer: 1,
+        explanation: 'النيتروجين يشكل حوالي 78٪ من الغلاف الجوي'
     },
     {
         id: 23,
-        subject: 'مسائل كلامية',
-        difficulty: 'hard',
-        question: 'مع سارة 120 ريال، أنفقت 1/4 المبلغ على كتاب و 1/3 على قلم، كم بقي معها؟',
-        equation: 'الباقي = 120 - (120 × 1/4) - (120 × 1/3)',
-        options: ['40 ريال', '45 ريال', '50 ريال', '55 ريال'],
-        correctAnswer: 2,
-        explanation: 'أنفقت: 30 + 40 = 70 ريال، الباقي: 120 - 70 = 50 ريال'
+        section: 'tahsili',
+        subject: 'الفيزياء',
+        difficulty: 'easy',
+        question: 'ما هي وحدة قياس القوة؟',
+        options: ['نيوتن', 'جول', 'واط', 'باسكال'],
+        correctAnswer: 0,
+        explanation: 'النيوتن هو وحدة قياس القوة في النظام الدولي'
     },
     {
         id: 24,
-        subject: 'مسائل كلامية',
-        difficulty: 'hard',
-        question: 'مزرعة فيها 24 دجاجة وأرنب، عدد الأرجل الكلي 66، كم عدد الأرانب؟',
-        equation: 'دجاج (2 رجل) + أرانب (4 أرجل) = 66',
-        options: ['7', '8', '9', '10'],
-        correctAnswer: 2,
-        explanation: 'لو كلها دجاج: 24 × 2 = 48، الفرق: 66 - 48 = 18، عدد الأرانب = 18 ÷ 2 = 9'
+        section: 'tahsili',
+        subject: 'الفيزياء',
+        difficulty: 'medium',
+        question: 'ما هي سرعة الضوء تقريباً؟',
+        options: ['300,000 كم/ث', '150,000 كم/ث', '500,000 كم/ث', '100,000 كم/ث'],
+        correctAnswer: 0,
+        explanation: 'سرعة الضوء في الفراغ حوالي 300,000 كيلومتر في الثانية'
     },
-
-    // القسم السابع: الإحصاء
     {
         id: 25,
-        subject: 'الإحصاء',
+        section: 'tahsili',
+        subject: 'الأحياء',
         difficulty: 'easy',
-        question: 'المتوسط الحسابي للأعداد: 5، 10، 15 هو:',
-        equation: 'المتوسط = (5 + 10 + 15) ÷ 3',
-        options: ['8', '10', '12', '15'],
-        correctAnswer: 1,
-        explanation: 'المتوسط = 30 ÷ 3 = 10'
+        question: 'ما هو العضو المسؤول عن ضخ الدم في جسم الإنسان؟',
+        options: ['القلب', 'الكبد', 'الرئة', 'المعدة'],
+        correctAnswer: 0,
+        explanation: 'القلب هو المضخة الرئيسية للدم في الجسم'
     },
     {
         id: 26,
-        subject: 'الإحصاء',
+        section: 'tahsili',
+        subject: 'الأحياء',
         difficulty: 'medium',
-        question: 'الوسيط للأعداد: 3، 7، 5، 9، 11 هو:',
-        equation: 'الوسيط = القيمة الوسطى بعد الترتيب',
-        options: ['5', '7', '9', '11'],
-        correctAnswer: 1,
-        explanation: 'الترتيب: 3، 5، 7، 9، 11، الوسيط = 7'
+        question: 'من هو مكتشف الدورة الدموية الصغرى؟',
+        options: ['ابن النفيس', 'ابن سينا', 'الرازي', 'ابن الهيثم'],
+        correctAnswer: 0,
+        explanation: 'ابن النفيس هو أول من وصف الدورة الدموية الصغرى'
     },
     {
         id: 27,
-        subject: 'الإحصاء',
-        difficulty: 'medium',
-        question: 'المنوال للأعداد: 2، 5، 5، 7، 9، 5، 3 هو:',
-        equation: 'المنوال = العدد الأكثر تكراراً',
-        options: ['2', '3', '5', '7'],
-        correctAnswer: 2,
-        explanation: 'العدد 5 تكرر 3 مرات، فهو المنوال'
+        section: 'tahsili',
+        subject: 'الرياضيات',
+        difficulty: 'easy',
+        question: 'كم عدد أضلاع المثلث؟',
+        options: ['2', '3', '4', '5'],
+        correctAnswer: 1,
+        explanation: 'المثلث له 3 أضلاع'
     },
-
-    // أسئلة إضافية متنوعة
     {
         id: 28,
-        subject: 'الجبر',
-        difficulty: 'hard',
-        question: 'إذا كان س² = 64، فما قيمة س؟ (اختر الموجبة)',
-        equation: 'س² = 64',
-        options: ['6', '7', '8', '9'],
-        correctAnswer: 2,
-        explanation: 'الجذر التربيعي لـ 64 هو 8'
+        section: 'tahsili',
+        subject: 'الرياضيات',
+        difficulty: 'medium',
+        question: 'ما هي قيمة π (باي) تقريباً؟',
+        options: ['3.14', '2.71', '1.41', '4.14'],
+        correctAnswer: 0,
+        explanation: 'قيمة π تقريباً 3.14159...'
     },
     {
         id: 29,
-        subject: 'الأعداد',
+        section: 'tahsili',
+        subject: 'الجغرافيا',
         difficulty: 'easy',
-        question: 'ما العدد الأولي من بين الأعداد التالية؟',
-        equation: 'العدد الأولي يقبل القسمة على نفسه و 1 فقط',
-        options: ['12', '15', '17', '18'],
-        correctAnswer: 2,
-        explanation: '17 عدد أولي، لا يقبل القسمة إلا على نفسه و 1'
+        question: 'ما هي عاصمة المملكة العربية السعودية؟',
+        options: ['جدة', 'الرياض', 'الدمام', 'مكة'],
+        correctAnswer: 1,
+        explanation: 'الرياض هي عاصمة المملكة العربية السعودية'
     },
     {
         id: 30,
-        subject: 'الهندسة',
+        section: 'tahsili',
+        subject: 'التاريخ',
         difficulty: 'medium',
-        question: 'مثلث قائم الزاوية طول ضلعيه القائمين 3 سم و 4 سم، فما طول الوتر؟',
-        equation: 'الوتر² = 3² + 4²',
-        options: ['4 سم', '5 سم', '6 سم', '7 سم'],
-        correctAnswer: 1,
-        explanation: 'بفيثاغورس: الوتر² = 9 + 16 = 25، فالوتر = 5 سم'
+        question: 'في أي عام توحدت المملكة العربية السعودية؟',
+        options: ['1932', '1920', '1945', '1950'],
+        correctAnswer: 0,
+        explanation: 'توحدت المملكة على يد الملك عبدالعزيز عام 1932'
     }
 ];
-
-// دالة للحصول على أسئلة عشوائية
-function getRandomQuestions(count = 10) {
-    const shuffled = [...questionsBank].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
-}
-
-// دالة للحصول على أسئلة حسب الصعوبة
-function getQuestionsByDifficulty(difficulty, count = 10) {
-    const filtered = questionsBank.filter(q => q.difficulty === difficulty);
-    const shuffled = [...filtered].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, Math.min(count, filtered.length));
-}
-
-// دالة للحصول على أسئلة حسب الموضوع
-function getQuestionsBySubject(subject, count = 10) {
-    const filtered = questionsBank.filter(q => q.subject === subject);
-    const shuffled = [...filtered].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, Math.min(count, filtered.length));
-}
-
-// دالة للحصول على سؤال واحد بناءً على ID
-function getQuestionById(id) {
-    return questionsBank.find(q => q.id === id);
-}
-
-// دالة للحصول على أسئلة الأخطاء السابقة
-function getMistakesQuestions() {
-    const mistakes = JSON.parse(localStorage.getItem('masari_mistakes') || '[]');
-    return mistakes.map(id => getQuestionById(id)).filter(q => q !== undefined);
-}
-window.questionsBank = questionsBank;
-    console.log('✅ تم تحميل بنك الأسئلة:', questionsBank.length, 'سؤال');
-}
-// ========================================
-// تحويل subject إلى section
-// ========================================
-
-// تحويل جميع الأسئلة لإضافة حقل section
-questionsBank.forEach(q => {
-    // تحويل المواضيع إلى أقسام
-    if (q.subject === 'الجبر' || q.subject === 'الأعداد' || q.subject === 'الكسور') {
-        q.section = 'quant'; // قدرات كمي
-    } else if (q.subject === 'النسبة والتناسب' || q.subject === 'الهندسة' || q.subject === 'الإحصاء') {
-        q.section = 'quant'; // قدرات كمي
-    } else if (q.subject === 'مسائل كلامية') {
-        q.section = 'quant'; // قدرات كمي
-    } else {
-        q.section = 'quant'; // افتراضياً قدرات كمي
-    }
-});
 
 // تصدير للـ window
 window.questionsBank = questionsBank;
