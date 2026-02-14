@@ -130,115 +130,51 @@
     </div>
   </div>
 
-  <script>
-    // ✅ Supabase client
-    const sb = window.supabase.createClient(
-      'https://czzcmbxejxbotjemyuqf.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
-    );
-
-    const pageMsg = document.getElementById('pageMsg');
-
-    async function requireAuth() {
-      const { data: { session }, error } = await sb.auth.getSession();
-      if (error) {
-        pageMsg.textContent = 'خطأ في التحقق من الجلسة: ' + error.message;
-        return null;
-      }
-      if (!session) {
-        window.location.href = 'login.html';
-        return null;
-      }
-      return session;
+ <script>
+    // تحميل بنك الأسئلة
+    const questionsBank = window.questionsBank || [];
+    
+    // دالة لحساب عدد الأسئلة لكل قسم
+    function getQuestionCount(section) {
+        if (!questionsBank || questionsBank.length === 0) return 0;
+        return questionsBank.filter(q => q.section === section).length;
     }
-
-    function setCountUI(subject, count) {
-      if (subject === 'قدرات كمي') {
-        document.getElementById('quantCount').textContent = count;
-        document.getElementById('quantBtn').disabled = count === 0;
-      }
-      if (subject === 'قدرات لفظي') {
-        document.getElementById('verbalCount').textContent = count;
-        document.getElementById('verbalBtn').disabled = count === 0;
-      }
-      if (subject === 'تحصيلي') {
-        document.getElementById('tahsiliCount').textContent = count;
-        document.getElementById('tahsiliBtn').disabled = count === 0;
-      }
+    
+    // تحديث العدادات عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+        const verbalCount = getQuestionCount('verbal');
+        const quantCount = getQuestionCount('quant');
+        const tahsiliCount = getQuestionCount('tahsili');
+        
+        console.log('عدد الأسئلة:', { verbal: verbalCount, quant: quantCount, tahsili: tahsiliCount });
+        
+        // تحديث النصوص في الصفحة
+        const verbalElement = document.querySelector('[data-section="verbal"] .question-count');
+        const quantElement = document.querySelector('[data-section="quant"] .question-count');
+        const tahsiliElement = document.querySelector('[data-section="tahsili"] .question-count');
+        
+        if (verbalElement) verbalElement.textContent = `+${verbalCount} سؤال متنوع`;
+        if (quantElement) quantElement.textContent = `+${quantCount} سؤال متنوع`;
+        if (tahsiliElement) tahsiliElement.textContent = `+${tahsiliCount} سؤال متنوع`;
+    });
+    
+    // دالة بدء التدريب
+    function startPractice(section) {
+        console.log('القسم المختار:', section);
+        
+        // حفظ القسم في الذاكرة
+        localStorage.setItem('masari_selected_section', section);
+        
+        // التحقق من وجود أسئلة
+        const count = getQuestionCount(section);
+        if (count === 0) {
+            alert('ما فيه أسئلة متاحة لهذا القسم حالياً');
+            return;
+        }
+        
+        // الانتقال لصفحة التدريب
+        window.location.href = 'practice.html';
     }
-
-    async function loadCounts() {
-      pageMsg.textContent = 'جاري تحميل عدد الأسئلة...';
-
-      // نجلب كل الصفوف للـ subjects الثلاثة ثم نحسبها هنا (أضمن من count مع RLS)
-      const subjects = ['قدرات كمي', 'قدرات لفظي', 'تحصيلي'];
-
-      const { data, error } = await sb
-        .from('questions')
-        .select('subject')
-        .in('subject', subjects);
-
-      if (error) {
-        pageMsg.textContent = 'تعذر جلب البيانات: ' + error.message;
-        // عطّل الأزرار
-        setCountUI('قدرات كمي', 0);
-        setCountUI('قدرات لفظي', 0);
-        setCountUI('تحصيلي', 0);
-        return;
-      }
-
-      const counts = { 'قدرات كمي': 0, 'قدرات لفظي': 0, 'تحصيلي': 0 };
-      for (const row of data) counts[row.subject] = (counts[row.subject] || 0) + 1;
-
-      setCountUI('قدرات كمي', counts['قدرات كمي'] || 0);
-      setCountUI('قدرات لفظي', counts['قدرات لفظي'] || 0);
-      setCountUI('تحصيلي', counts['تحصيلي'] || 0);
-
-      pageMsg.textContent = '';
-    }
-
-    // ✅ يبدأ التدريب: يحفظ الإعدادات ويفتح practice.html
-    async function startTraining(subject) {
-      const session = await requireAuth();
-      if (!session) return;
-
-      // نجلب مجموعة أسئلة للموضوع (مثلاً 10)
-      const { data, error } = await sb
-        .from('questions')
-        .select('id')
-        .eq('subject', subject);
-
-      if (error) {
-        alert('تعذر بدء التدريب: ' + error.message);
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        alert('ما فيه أسئلة في هذا القسم حالياً');
-        return;
-      }
-
-      // اختيار 10 عشوائيًا
-      const shuffled = data.map(x => x.id).sort(() => Math.random() - 0.5);
-      const picked = shuffled.slice(0, Math.min(10, shuffled.length));
-
-      localStorage.setItem('practice_subject', subject);
-      localStorage.setItem('practice_question_ids', JSON.stringify(picked));
-
-      // (اختياري) تصفير مؤشرات جلسة سابقة
-      localStorage.removeItem('practice_index');
-      localStorage.removeItem('practice_answers');
-
-      window.location.href = 'practice.html';
-    }
-
-    // init
-    (async function init() {
-      const session = await requireAuth();
-      if (!session) return;
-      await loadCounts();
-    })();
-  </script>
-
+</script>
 </body>
 </html>
