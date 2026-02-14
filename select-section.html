@@ -7,7 +7,6 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body { font-family: 'Tajawal', sans-serif; }
@@ -29,7 +28,6 @@
     <div class="text-center mb-10">
       <h1 class="text-4xl font-extrabold text-gray-900 mb-3">اختر القسم للتدريب</h1>
       <p class="text-gray-600">ابدأ التدريب مباشرة حسب القسم</p>
-      <div id="pageMsg" class="mt-4 text-sm text-gray-500"></div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -57,9 +55,8 @@
 
         <button
           id="quantBtn"
-          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
-          onclick="startTraining('قدرات كمي')"
-          disabled
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold transition"
+          onclick="startTraining('quant')"
         >
           ابدأ التدريب
         </button>
@@ -88,9 +85,8 @@
 
         <button
           id="verbalBtn"
-          class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
-          onclick="startTraining('قدرات لفظي')"
-          disabled
+          class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold transition"
+          onclick="startTraining('verbal')"
         >
           ابدأ التدريب
         </button>
@@ -119,9 +115,8 @@
 
         <button
           id="tahsiliBtn"
-          class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
-          onclick="startTraining('تحصيلي')"
-          disabled
+          class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-bold transition"
+          onclick="startTraining('tahsili')"
         >
           ابدأ التدريب
         </button>
@@ -130,64 +125,65 @@
     </div>
   </div>
 
+<!-- تحميل بنك الأسئلة -->
+<script src="questions_bank.js"></script>
+
 <script>
     // تحميل بنك الأسئلة
     const questionsBank = window.questionsBank || [];
     
-    console.log('إجمالي الأسئلة:', questionsBank.length);
+    console.log('📚 إجمالي الأسئلة في البنك:', questionsBank.length);
     
     // دالة لحساب عدد الأسئلة لكل قسم
     function getQuestionCount(section) {
         if (!questionsBank || questionsBank.length === 0) return 0;
-        return questionsBank.filter(q => q.section === section).length;
+        const count = questionsBank.filter(q => q.section === section).length;
+        console.log(`عدد أسئلة ${section}:`, count);
+        return count;
     }
     
     // تحديث العدادات عند تحميل الصفحة
     window.addEventListener('DOMContentLoaded', function() {
+        console.log('🔄 جاري تحميل العدادات...');
+        
         // حساب الأعداد
         const verbalCount = getQuestionCount('verbal');
         const quantCount = getQuestionCount('quant');
         const tahsiliCount = getQuestionCount('tahsili');
         
-        console.log('عدد أسئلة قدرات لفظي:', verbalCount);
-        console.log('عدد أسئلة قدرات كمي:', quantCount);
-        console.log('عدد أسئلة تحصيلي:', tahsiliCount);
+        // تحديث النصوص مباشرة باستخدام IDs
+        const quantElement = document.getElementById('quantCount');
+        const verbalElement = document.getElementById('verbalCount');
+        const tahsiliElement = document.getElementById('tahsiliCount');
         
-        // البحث عن العناصر وتحديثها
-        // نبحث عن النصوص اللي فيها "سؤال متاح"
-        const allParagraphs = document.querySelectorAll('p');
+        if (quantElement) {
+            quantElement.textContent = quantCount;
+            console.log('✅ تم تحديث عداد قدرات كمي:', quantCount);
+        }
         
-        allParagraphs.forEach(p => {
-            const text = p.textContent.trim();
-            
-            // إذا النص يحتوي "سؤال متاح"
-            if (text.includes('سؤال متاح')) {
-                // نشوف وين موقعه في الصفحة
-                const card = p.closest('div');
-                const cardText = card ? card.textContent : '';
-                
-                // إذا الكارت يحتوي "قدرات كمي"
-                if (cardText.includes('قدرات كمي')) {
-                    p.textContent = `+${quantCount} سؤال متنوع`;
-                }
-                // إذا الكارت يحتوي "قدرات لفظي"
-                else if (cardText.includes('قدرات لفظي')) {
-                    p.textContent = `+${verbalCount} سؤال متنوع`;
-                }
-                // إذا الكارت يحتوي "التحصيلي"
-                else if (cardText.includes('التحصيلي')) {
-                    p.textContent = `+${tahsiliCount} سؤال متنوع`;
-                }
-            }
-        });
+        if (verbalElement) {
+            verbalElement.textContent = verbalCount;
+            console.log('✅ تم تحديث عداد قدرات لفظي:', verbalCount);
+        }
+        
+        if (tahsiliElement) {
+            tahsiliElement.textContent = tahsiliCount;
+            console.log('✅ تم تحديث عداد تحصيلي:', tahsiliCount);
+        }
+        
+        // تفعيل/تعطيل الأزرار حسب توفر الأسئلة
+        const quantBtn = document.getElementById('quantBtn');
+        const verbalBtn = document.getElementById('verbalBtn');
+        const tahsiliBtn = document.getElementById('tahsiliBtn');
+        
+        if (quantBtn) quantBtn.disabled = (quantCount === 0);
+        if (verbalBtn) verbalBtn.disabled = (verbalCount === 0);
+        if (tahsiliBtn) tahsiliBtn.disabled = (tahsiliCount === 0);
     });
     
     // دالة بدء التدريب
-    function startPractice(section) {
-        console.log('القسم المختار:', section);
-        
-        // حفظ القسم في localStorage
-        localStorage.setItem('masari_selected_section', section);
+    function startTraining(section) {
+        console.log('🎯 القسم المختار:', section);
         
         // التحقق من وجود أسئلة
         const count = getQuestionCount(section);
@@ -196,9 +192,15 @@
             return;
         }
         
+        // حفظ القسم في localStorage
+        localStorage.setItem('masari_selected_section', section);
+        console.log('💾 تم حفظ القسم في localStorage');
+        
         // الانتقال لصفحة التدريب
+        console.log('➡️ جاري الانتقال لصفحة التدريب...');
         window.location.href = 'practice.html';
     }
 </script>
+
 </body>
 </html>
