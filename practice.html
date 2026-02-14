@@ -422,9 +422,11 @@
             
             // Filter by section if selected
             let filtered = allQ;
-            if (selectedSection) {
-                filtered = allQ.filter(q => q.section === selectedSection);
-            }
+           if (selectedSection) {
+    filtered = allQ.filter(q =>
+        (q.section || '').trim() === selectedSection.trim()
+    );
+}
             
             // If no questions found, show message
             if (filtered.length === 0) {
