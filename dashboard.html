@@ -39,30 +39,31 @@
 <body class="min-h-screen">
     
     <!-- Beta Banner -->
-    <div class="beta-banner text-white py-2 px-4 text-center text-sm font-medium">
-        🚀 الموقع في التجربة - ستشاهد قريباً إبداعاً متكاملاً | جاري إضافة الميزات والأسئلة بشكل يومي
+    <div id="betaBanner" class="beta-banner text-white py-1.5 px-4 text-center text-xs font-bold flex items-center justify-center gap-2">
+        <span>🚀</span>
+        <span>نسخة تجريبية - قريباً مفاجآت</span>
+        <button onclick="closeBanner()" class="mr-4 hover:bg-white hover:bg-opacity-20 rounded-full w-5 h-5 flex items-center justify-center">
+            ×
+        </button>
     </div>
 
     <!-- Header -->
     <header class="bg-white shadow-sm">
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
-                <!-- Logo - أكبر مع تأثير -->
-                <div class="flex items-center gap-3">
-                    <span class="text-5xl logo-shadow">🎓</span>
-                    <h1 class="text-4xl font-black text-indigo-600 logo-shadow">مساري</h1>
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl logo-shadow">🎓</span>
+                    <h1 class="text-2xl font-black text-indigo-600 logo-shadow">مساري</h1>
                 </div>
 
                 <!-- User Info -->
-                <div class="flex items-center gap-3">
-                    <div class="text-left">
-                        <div class="flex items-center gap-2">
-                            <span class="bg-gradient-to-r from-orange-400 to-orange-600 text-white text-xs px-3 py-1 rounded-full font-bold">مشترك شهري 🔥</span>
-                            <span class="font-bold text-gray-800" id="userName">عبدالله</span>
-                        </div>
-                        <p class="text-xs text-gray-500">عضو مميز</p>
+                <div class="flex items-center gap-2">
+                    <div class="text-right">
+                        <span class="font-bold text-gray-800 text-sm" id="userName">عبدالله</span>
+                        <p class="text-xs text-gray-500">مشترك شهري 🔥</p>
                     </div>
-                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
                         <span id="userInitial">ع</span>
                     </div>
                 </div>
@@ -85,41 +86,37 @@
             <!-- Total Questions -->
             <div class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="text-4xl">📝</span>
-                    <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full font-medium">دقيق</span>
+                    <span class="text-3xl">📝</span>
                 </div>
-                <p class="text-gray-600 text-xs mb-1">إجمالي الأسئلة المحلولة</p>
-                <p class="text-5xl font-black text-gray-800" id="totalQuestions">0</p>
+                <p class="text-gray-600 text-xs mb-1">إجمالي الأسئلة</p>
+                <p class="text-3xl font-black text-gray-800" id="totalQuestions">0</p>
             </div>
 
             <!-- Correct Answers -->
             <div class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="text-4xl">✅</span>
-                    <span class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full font-medium">صحيحة</span>
+                    <span class="text-3xl">✅</span>
                 </div>
                 <p class="text-gray-600 text-xs mb-1">الإجابات الصحيحة</p>
-                <p class="text-5xl font-black text-green-500" id="correctAnswers">0</p>
+                <p class="text-3xl font-black text-green-500" id="correctAnswers">0</p>
             </div>
 
             <!-- Wrong Answers -->
             <div class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="text-4xl">❌</span>
-                    <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full font-medium">خاطئة</span>
+                    <span class="text-3xl">❌</span>
                 </div>
                 <p class="text-gray-600 text-xs mb-1">الإجابات الخاطئة</p>
-                <p class="text-5xl font-black text-red-500" id="wrongAnswers">0</p>
+                <p class="text-3xl font-black text-red-500" id="wrongAnswers">0</p>
             </div>
 
             <!-- Success Rate -->
             <div class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition">
                 <div class="flex items-center justify-between mb-3">
-                    <span class="text-4xl">🎯</span>
-                    <span class="bg-purple-100 text-purple-600 text-xs px-2 py-1 rounded-full font-medium">نسبة</span>
+                    <span class="text-3xl">🎯</span>
                 </div>
                 <p class="text-gray-600 text-xs mb-1">نسبة النجاح</p>
-                <p class="text-5xl font-black text-indigo-600" id="successRate">0%</p>
+                <p class="text-3xl font-black text-indigo-600" id="successRate">0%</p>
             </div>
 
         </div>
@@ -207,11 +204,11 @@
             </div>
             
             <div class="space-y-3">
-                <button class="w-full text-right p-3 rounded-lg hover:bg-gray-50 transition flex items-center gap-3">
+                <button onclick="editProfile()" class="w-full text-right p-3 rounded-lg hover:bg-gray-50 transition flex items-center gap-3">
                     <span class="text-xl">👤</span>
                     <span class="text-gray-700">تعديل الملف الشخصي</span>
                 </button>
-                <button class="w-full text-right p-3 rounded-lg hover:bg-gray-50 transition flex items-center gap-3">
+                <button onclick="changePassword()" class="w-full text-right p-3 rounded-lg hover:bg-gray-50 transition flex items-center gap-3">
                     <span class="text-xl">🔐</span>
                     <span class="text-gray-700">تغيير كلمة المرور</span>
                 </button>
@@ -379,6 +376,55 @@
         });
 
         window.getSoundEnabled = () => soundEnabled;
+
+        function closeBanner() {
+            document.getElementById('betaBanner').style.display = 'none';
+            localStorage.setItem('bannerClosed', 'true');
+        }
+
+        // التحقق من حالة البانر عند التحميل
+        if (localStorage.getItem('bannerClosed') === 'true') {
+            const banner = document.getElementById('betaBanner');
+            if (banner) banner.style.display = 'none';
+        }
+
+        function editProfile() {
+            const newName = prompt('أدخل اسمك الجديد:', document.getElementById('userName').textContent);
+            if (!newName || newName.trim() === '') return;
+            
+            sb.from('profiles').update({ name: newName.trim() }).eq('id', currentUser.id)
+                .then(() => {
+                    document.getElementById('userName').textContent = newName.trim();
+                    document.getElementById('displayName').textContent = newName.trim();
+                    document.getElementById('userInitial').textContent = newName.trim().charAt(0);
+                    alert('✅ تم تحديث الاسم بنجاح');
+                })
+                .catch(err => {
+                    console.error('❌ خطأ:', err);
+                    alert('حدث خطأ في التحديث');
+                });
+        }
+
+        function changePassword() {
+            const newPassword = prompt('أدخل كلمة المرور الجديدة (6 أحرف على الأقل):');
+            if (!newPassword || newPassword.length < 6) {
+                alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
+            
+            const confirm = prompt('أكّد كلمة المرور الجديدة:');
+            if (newPassword !== confirm) {
+                alert('كلمات المرور غير متطابقة');
+                return;
+            }
+            
+            sb.auth.updateUser({ password: newPassword })
+                .then(() => alert('✅ تم تغيير كلمة المرور بنجاح'))
+                .catch(err => {
+                    console.error('❌ خطأ:', err);
+                    alert('حدث خطأ في تغيير كلمة المرور');
+                });
+        }
     </script>
 
 </body>
