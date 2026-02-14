@@ -143,7 +143,7 @@
         // Timer variables
         let timeRemaining = 0;
         let timerInterval = null;
-        const SECONDS_PER_QUESTION = 60; // دقيقة لكل سؤال
+        const SECONDS_PER_QUESTION = 60;
 
         async function checkAuth() {
             const { data: { session } } = await sb.auth.getSession();
@@ -153,6 +153,7 @@
                 return false;
             }
             currentUser = session.user;
+            console.log('✅ User ID:', currentUser.id);
             return true;
         }
 
@@ -180,12 +181,8 @@
                 }
                 
                 currentQuestions = shuffleArray(questions).slice(0, 10);
-                
-                // Initialize timer
                 timeRemaining = currentQuestions.length * SECONDS_PER_QUESTION;
                 startTimer();
-                
-                // Create session
                 await createSession(selectedSection);
                 
                 const sectionNames = {
@@ -225,7 +222,6 @@
             const timerElement = document.getElementById('timerDisplay');
             timerElement.textContent = display;
             
-            // Warning when less than 1 minute
             if (timeRemaining < 60) {
                 timerElement.classList.add('timer-warning');
             } else {
@@ -235,7 +231,7 @@
 
         async function createSession(section) {
             try {
-                const { data } = await sb
+                const { data, error } = await sb
                     .from('practice_sessions')
                     .insert({
                         user_id: currentUser.id,
@@ -246,7 +242,15 @@
                     .select()
                     .single();
                 
-                if (data) sessionId = data.id;
+                if (error) {
+                    console.error('❌ خطأ في إنشاء الجلسة:', error);
+                    return;
+                }
+                
+                if (data) {
+                    sessionId = data.id;
+                    console.log('✅ تم إنشاء الجلسة:', sessionId);
+                }
             } catch (err) {
                 console.error('❌ خطأ:', err);
             }
@@ -275,7 +279,6 @@
             
             document.getElementById('questionText').textContent = question.question_text;
             
-            // Handle question image
             const imageContainer = document.getElementById('questionImageContainer');
             const imageElement = document.getElementById('questionImage');
             if (question.image_url) {
@@ -323,7 +326,11 @@
             }
             updateStats();
             
-            await saveAttempt(question.id, selectedIndex, isCorrect);
+            // ✅ حفظ المحاولة مع تشخيص أفضل
+            const saved = await saveAttempt(question.id, selectedIndex, isCorrect);
+            if (!saved) {
+                console.warn('⚠️ فشل حفظ المحاولة، لكن سنكمل الاختبار');
+            }
             
             const cards = document.querySelectorAll('.option-card');
             cards.forEach((card, index) => {
@@ -367,17 +374,36 @@
             displayQuestion();
         }
 
+        // ✅ تحسين دالة الحفظ مع تشخيص أفضل
         async function saveAttempt(questionId, selectedAnswer, isCorrect) {
             try {
-                await sb.from('attempts').insert({
+                console.log('💾 جاري حفظ المحاولة...', {
+                    user_id: currentUser.id,
+                    question_id: questionId,
+                    selected_answer: selectedAnswer,
+                    is_correct: isCorrect
+                });
+                
+                const { data, error } = await sb.from('attempts').insert({
                     user_id: currentUser.id,
                     question_id: questionId,
                     selected_answer: selectedAnswer,
                     is_correct: isCorrect,
                     answered_at: new Date().toISOString()
-                });
+                }).select();
+                
+                if (error) {
+                    console.error('❌ خطأ في حفظ المحاولة:', error);
+                    console.error('تفاصيل الخطأ:', JSON.stringify(error, null, 2));
+                    return false;
+                }
+                
+                console.log('✅ تم حفظ المحاولة بنجاح:', data);
+                return true;
+                
             } catch (err) {
-                console.error('❌ خطأ:', err);
+                console.error('❌ خطأ في catch:', err);
+                return false;
             }
         }
 
@@ -385,7 +411,7 @@
             const question = currentQuestions[currentQuestionIndex];
             const reason = prompt('الرجاء ذكر سبب التبليغ (اختياري):');
             
-            if (reason === null) return; // User cancelled
+            if (reason === null) return;
             
             try {
                 await sb.from('reports').insert({
@@ -415,7 +441,6 @@
             clearInterval(timerInterval);
             await finishSession();
             
-            // Save results to localStorage
             localStorage.setItem('quiz_results', JSON.stringify({
                 correct: correctCount,
                 wrong: wrongCount,
@@ -448,6 +473,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
+            console.log('📄 صفحة التدريب جاهزة');
+            
             const isAuth = await checkAuth();
             if (!isAuth) return;
             
