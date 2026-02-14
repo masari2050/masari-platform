@@ -88,13 +88,20 @@
                 
                 if (attemptsError) {
                     console.error('❌ خطأ في جلب المحاولات:', attemptsError);
+                    
+                    // التحقق: هل الخطأ بسبب عدم وجود بيانات؟
+                    if (attemptsError.code === 'PGRST116' || wrongAttempts === null) {
+                        showEmpty();
+                        return;
+                    }
+                    
                     showError();
                     return;
                 }
                 
-                console.log('✅ تم جلب', wrongAttempts.length, 'محاولة خاطئة');
+                console.log('✅ تم جلب', wrongAttempts ? wrongAttempts.length : 0, 'محاولة خاطئة');
                 
-                if (wrongAttempts.length === 0) {
+                if (!wrongAttempts || wrongAttempts.length === 0) {
                     showEmpty();
                     return;
                 }
