@@ -407,18 +407,53 @@
         }
 
         // Get random questions (filter by selected section)
-        function getRandomQuestions(count) {
-            const selectedSection = localStorage.getItem('masari_selected_section');
-            
-            // Load all questions
-            let allQ = [...questionsBank];
-            const saved = localStorage.getItem('masari_custom_questions');
-            if (saved) {
-                try {
-                    const customQ = JSON.parse(saved);
-                    allQ = customQ;
-                } catch(e) {}
-            }
+  function getRandomQuestions(count) {
+    const selectedSection = localStorage.getItem('masari_selected_section');
+
+    // تحميل الأسئلة
+    let allQ = [];
+    const saved = localStorage.getItem('masari_custom_questions');
+
+    if (saved) {
+        try {
+            const raw = JSON.parse(saved);
+
+            // تحويل بيانات Supabase لشكل المنصة
+            allQ = raw.map(q => ({
+                id: q.id,
+                subject: q.subject,
+                section: q.section,
+                question: q.question_text || q.question,
+                equation: q.question_text || q.equation || '',
+                options: q.choices || q.options || [],
+                correctAnswer: q.correct_index ?? q.correctAnswer,
+                explanation: q.explanation || '',
+                difficulty:
+                    q.difficulty === 1 ? 'easy' :
+                    q.difficulty === 2 ? 'medium' : 'hard'
+            }));
+
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    // فلترة حسب القسم
+    let filtered = allQ;
+    if (selectedSection) {
+        filtered = allQ.filter(q => q.section === selectedSection);
+    }
+
+    if (filtered.length === 0) {
+        alert('ما فيه أسئلة في هذا القسم حالياً');
+        window.location.href = 'dashboard.html';
+        return [];
+    }
+
+    // خلط الأسئلة
+    const shuffled = filtered.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, Math.min(count, shuffled.length));
+}
             
             // Filter by section if selected
             let filtered = allQ;
