@@ -1,167 +1,217 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختيار القسم - مساري</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>اختيار القسم - مساري</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <style>
-        body { font-family: 'Tajawal', sans-serif; }
-    </style>
+  <style>
+    body { font-family: 'Tajawal', sans-serif; }
+  </style>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+<body class="min-h-screen bg-slate-50">
+  <!-- Top Bar -->
+  <div class="bg-white border-b">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html" class="text-slate-600 hover:text-slate-900 font-medium">← العودة للوحة</a>
+      </div>
+      <div class="text-xl font-bold text-slate-900">اختر القسم</div>
+    </div>
+  </div>
 
-    <!-- Header -->
-    <header class="bg-white border-b border-slate-200">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            <a href="dashboard.html" class="text-slate-600 hover:text-slate-900 font-medium">← العودة للوحة</a>
-            <h1 class="text-2xl font-extrabold text-slate-900">اختر القسم</h1>
+  <!-- Content -->
+  <div class="max-w-6xl mx-auto px-4 py-10">
+    <div class="text-center mb-10">
+      <h1 class="text-4xl font-extrabold text-slate-900 mb-2">اختر القسم للتدريب</h1>
+      <p class="text-slate-600">ابدأ التدريب مباشرة حسب القسم</p>
+      <p id="statusMsg" class="mt-3 text-sm text-slate-500"></p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Quant -->
+      <div class="bg-white rounded-2xl shadow-sm border border-blue-100 overflow-hidden">
+        <div class="p-6">
+          <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl mb-4">📊</div>
+          <h2 class="text-2xl font-bold text-slate-900">قدرات كمي</h2>
+          <p class="text-slate-600 mt-1">الرياضيات والحساب</p>
+
+          <div class="mt-4 text-sm text-slate-600 space-y-2">
+            <div class="flex items-center justify-between"><span>الجبر والمعادلات</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>الهندسة</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>النسبة والتناسب</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>الإحصاء</span><span class="text-green-600">✓</span></div>
+          </div>
+
+          <div class="mt-6 rounded-xl bg-blue-50 border border-blue-100 px-4 py-3 text-center">
+            <span class="text-blue-800 font-bold"><span id="count_quant">—</span> سؤال متاح</span>
+          </div>
+
+          <button
+            id="btn_quant"
+            class="mt-4 w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white py-3 rounded-xl font-bold transition"
+          >
+            ابدأ التدريب
+          </button>
         </div>
-    </header>
+      </div>
 
-    <main class="max-w-6xl mx-auto px-4 py-8">
+      <!-- Verbal -->
+      <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <div class="p-6">
+          <div class="w-14 h-14 rounded-2xl bg-green-600 text-white flex items-center justify-center text-2xl mb-4">📖</div>
+          <h2 class="text-2xl font-bold text-slate-900">قدرات لفظي</h2>
+          <p class="text-slate-600 mt-1">اللغة العربية</p>
 
-        <div class="text-center mb-10">
-            <h2 class="text-4xl font-extrabold text-slate-900 mb-3">اختر القسم للتدريب</h2>
-            <p class="text-slate-600 text-lg">ابدأ التدريب مباشرة حسب القسم</p>
+          <div class="mt-4 text-sm text-slate-600 space-y-2">
+            <div class="flex items-center justify-between"><span>التناظر اللفظي</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>إكمال الجمل</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>الخطأ السياقي</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>الاستيعاب المقروء</span><span class="text-green-600">✓</span></div>
+          </div>
+
+          <div class="mt-6 rounded-xl bg-green-50 border border-green-100 px-4 py-3 text-center">
+            <span class="text-green-800 font-bold"><span id="count_verbal">—</span> سؤال متاح</span>
+          </div>
+
+          <button
+            id="btn_verbal"
+            class="mt-4 w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-300 text-white py-3 rounded-xl font-bold transition"
+          >
+            ابدأ التدريب
+          </button>
         </div>
+      </div>
 
-        <!-- Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Achievement -->
+      <div class="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
+        <div class="p-6">
+          <div class="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-2xl mb-4">🎓</div>
+          <h2 class="text-2xl font-bold text-slate-900">التحصيلي</h2>
+          <p class="text-slate-600 mt-1">المواد الدراسية</p>
 
-            <!-- Tahsili -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg border-2 border-purple-200">
-                <div class="text-center mb-6">
-                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-violet-500 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-4">🎓</div>
-                    <h3 class="text-3xl font-bold text-gray-800 mb-2">التحصيلي</h3>
-                    <p class="text-gray-600">المواد الدراسية</p>
-                </div>
+          <div class="mt-4 text-sm text-slate-600 space-y-2">
+            <div class="flex items-center justify-between"><span>الرياضيات</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>الفيزياء</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>الكيمياء</span><span class="text-green-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>الأحياء</span><span class="text-green-600">✓</span></div>
+          </div>
 
-                <div class="space-y-2 mb-6 text-sm text-gray-700">
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الرياضيات</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الفيزياء</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الكيمياء</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الأحياء</span></div>
-                </div>
+          <div class="mt-6 rounded-xl bg-purple-50 border border-purple-100 px-4 py-3 text-center">
+            <span class="text-purple-800 font-bold"><span id="count_achievement">—</span> سؤال متاح</span>
+          </div>
 
-                <div id="tahsiliStatus" class="bg-purple-50 rounded-lg p-3 text-center mb-4">
-                    <p class="text-sm text-purple-700 font-semibold">جاري تحميل عدد الأسئلة...</p>
-                </div>
-
-                <button onclick="startTraining('tahsili')"
-                    class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-bold transition">
-                    ابدأ التدريب
-                </button>
-            </div>
-
-            <!-- Verbal -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg border-2 border-green-200">
-                <div class="text-center mb-6">
-                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-4">📖</div>
-                    <h3 class="text-3xl font-bold text-gray-800 mb-2">قدرات لفظي</h3>
-                    <p class="text-gray-600">اللغة العربية</p>
-                </div>
-
-                <div class="space-y-2 mb-6 text-sm text-gray-700">
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>التناظر اللفظي</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>إكمال الجمل</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الخطأ السياقي</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الاستيعاب المقروء</span></div>
-                </div>
-
-                <div id="verbalStatus" class="bg-green-50 rounded-lg p-3 text-center mb-4">
-                    <p class="text-sm text-green-700 font-semibold">جاري تحميل عدد الأسئلة...</p>
-                </div>
-
-                <button onclick="startTraining('verbal')"
-                    class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold transition">
-                    ابدأ التدريب
-                </button>
-            </div>
-
-            <!-- Quant -->
-            <div class="bg-white rounded-2xl p-8 shadow-lg border-2 border-blue-200">
-                <div class="text-center mb-6">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-4">📊</div>
-                    <h3 class="text-3xl font-bold text-gray-800 mb-2">قدرات كمي</h3>
-                    <p class="text-gray-600">الرياضيات والحساب</p>
-                </div>
-
-                <div class="space-y-2 mb-6 text-sm text-gray-700">
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الجبر والمعادلات</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الهندسة</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>النسبة والتناسب</span></div>
-                    <div class="flex items-center gap-2"><span class="text-green-500">✓</span><span>الإحصاء</span></div>
-                </div>
-
-                <div id="quantStatus" class="bg-blue-50 rounded-lg p-3 text-center mb-4">
-                    <p class="text-sm text-blue-700 font-semibold">جاري تحميل عدد الأسئلة...</p>
-                </div>
-
-                <button onclick="startTraining('quantitative')"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold transition">
-                    ابدأ التدريب
-                </button>
-            </div>
-
+          <button
+            id="btn_achievement"
+            class="mt-4 w-full bg-purple-600 hover:bg-purple-700 disabled:bg-slate-300 text-white py-3 rounded-xl font-bold transition"
+          >
+            ابدأ التدريب
+          </button>
         </div>
-    </main>
+      </div>
 
-<script>
-/* ===== Supabase ===== */
-const sb = window.supabase.createClient(
-    'https://czzcmbxejxbotjemyuqf.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
-);
+    </div>
+  </div>
 
-/* ===== Auth Guard ===== */
-async function guardAuth() {
-    const { data:{ session } } = await sb.auth.getSession();
-    if (!session) window.location.href = 'login.html';
-}
+  <script>
+    // 1) Supabase client
+    const sb = window.supabase.createClient(
+      'https://czzcmbxejxbotjemyuqf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
+    );
 
-/* ===== Load Real Counts ===== */
-/* غيّر اسم العمود section إذا عندك اسم مختلف */
-async function loadCount(sectionName, statusId, colorClass) {
-    const el = document.getElementById(statusId);
+    const statusMsg = document.getElementById('statusMsg');
 
-    try {
-        const { count, error } = await sb
-            .from('questions')
-            .select('*', { count:'exact', head:true })
-            .eq('section', sectionName);
+    // 2) Auth guard (جلسة Supabase)
+    async function guard() {
+      const { data: { session }, error } = await sb.auth.getSession();
+      if (error) console.warn('getSession error:', error);
 
-        if (error) throw error;
+      if (!session) {
+        // ما فيه جلسة: روح تسجيل الدخول
+        window.location.href = 'login.html';
+        return null;
+      }
 
-        el.innerHTML =
-            `<p class="text-sm ${colorClass} font-semibold">${count || 0} سؤال متاح</p>`;
+      // (اختياري) نخزن نسخة بسيطة عشان صفحاتك القديمة اللي تعتمد على localStorage
+      localStorage.setItem('masari_user', JSON.stringify({
+        id: session.user.id,
+        email: session.user.email
+      }));
 
-    } catch (e) {
-        el.innerHTML =
-            `<p class="text-sm text-red-600 font-semibold">خطأ في جلب البيانات</p>`;
+      return session;
     }
-}
 
-/* ===== Start Training ===== */
-function startTraining(sectionName) {
-    localStorage.setItem('masari_selected_section', sectionName);
-    window.location.href = 'practice.html';
-}
+    // 3) Read counts from Supabase
+    async function getCount(sectionKey) {
+      // لازم يكون عندك جدول اسمه questions وعمود section
+      const { count, error } = await sb
+        .from('questions')
+        .select('id', { count: 'exact', head: true })
+        .eq('section', sectionKey);
 
-/* ===== Init ===== */
-(async function init(){
-    await guardAuth();
+      if (error) {
+        console.error('Count error for', sectionKey, error);
+        return null;
+      }
+      return count ?? 0;
+    }
 
-    await loadCount('tahsili', 'tahsiliStatus', 'text-purple-700');
-    await loadCount('verbal', 'verbalStatus', 'text-green-700');
-    await loadCount('quantitative', 'quantStatus', 'text-blue-700');
-})();
-</script>
+    function setCardState(sectionKey, count) {
+      const countEl = document.getElementById('count_' + sectionKey);
+      const btnEl = document.getElementById('btn_' + sectionKey);
 
+      if (count === null) {
+        countEl.textContent = '—';
+        btnEl.disabled = true;
+        btnEl.textContent = 'فيه خطأ بالبيانات';
+        return;
+      }
+
+      countEl.textContent = count;
+
+      if (count <= 0) {
+        btnEl.disabled = true;
+        btnEl.textContent = 'لا يوجد أسئلة الآن';
+      } else {
+        btnEl.disabled = false;
+        btnEl.textContent = 'ابدأ التدريب';
+      }
+
+      btnEl.onclick = () => {
+        if (count <= 0) return;
+        localStorage.setItem('masari_selected_section', sectionKey);
+        localStorage.setItem('masari_review_mode', 'false');
+        window.location.href = 'practice.html';
+      };
+    }
+
+    async function main() {
+      statusMsg.textContent = 'جاري تحميل الأقسام...';
+      const session = await guard();
+      if (!session) return;
+
+      // تحميل الأعداد
+      const [quant, verbal, achievement] = await Promise.all([
+        getCount('quant'),
+        getCount('verbal'),
+        getCount('achievement')
+      ]);
+
+      setCardState('quant', quant);
+      setCardState('verbal', verbal);
+      setCardState('achievement', achievement);
+
+      statusMsg.textContent = '';
+    }
+
+    main();
+  </script>
 </body>
 </html>
