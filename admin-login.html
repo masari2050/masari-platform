@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دخول الإدارة - مساري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        *{font-family:'Tajawal',sans-serif}
+        body{background:linear-gradient(135deg,#0f0a2e 0%,#1a1145 30%,#1e1550 50%,#151040 70%,#0d0825 100%);min-height:100vh;display:flex;align-items:center;justify-content:center}
+        .card-glass{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:1.5rem}
+        .input-dark{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:.75rem;padding:.75rem 1rem;color:#fff;width:100%;font-size:.85rem;transition:all .2s}
+        .input-dark:focus{outline:none;border-color:rgba(239,68,68,0.5);box-shadow:0 0 0 3px rgba(239,68,68,0.15)}
+        .input-dark::placeholder{color:rgba(255,255,255,0.2)}
+        .btn-admin{background:linear-gradient(135deg,#dc2626,#b91c1c);padding:12px;border-radius:.75rem;font-weight:700;font-size:.85rem;color:#fff;width:100%;border:none;cursor:pointer;transition:all .3s;box-shadow:0 8px 25px rgba(220,38,38,0.3)}
+        .btn-admin:hover{box-shadow:0 12px 35px rgba(220,38,38,0.5);transform:translateY(-2px)}
+        .btn-admin:disabled{opacity:.5;transform:none!important}
+        .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 24px;border-radius:12px;font-size:.85rem;font-weight:700;z-index:999;animation:slideD .4s ease}
+        .toast-err{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+        @keyframes slideD{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .animate-in{animation:fadeUp .5s ease forwards}.delay-1{animation-delay:.1s;opacity:0}.delay-2{animation-delay:.2s;opacity:0}
+    </style>
+</head>
+<body class="text-white p-4">
+
+    <div id="toast" class="toast hidden"></div>
+
+    <div class="w-full max-w-sm">
+        <!-- Logo -->
+        <div class="text-center mb-6 animate-in delay-1">
+            <span class="text-4xl block mb-2">🔐</span>
+            <h1 class="text-2xl font-black mb-1">لوحة الإدارة</h1>
+            <p class="text-purple-300/50 text-sm">دخول مخصص للمسؤولين فقط</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card-glass p-6 animate-in delay-2">
+            <form id="adminLoginForm" class="space-y-4">
+                <div>
+                    <label class="block text-purple-300/60 text-xs font-medium mb-1.5">البريد الإلكتروني</label>
+                    <input type="email" id="email" required class="input-dark" placeholder="admin@masari.sa" autocomplete="email">
+                </div>
+                <div>
+                    <label class="block text-purple-300/60 text-xs font-medium mb-1.5">كلمة المرور</label>
+                    <div class="relative">
+                        <input type="password" id="password" required class="input-dark pl-10" placeholder="كلمة المرور" autocomplete="current-password">
+                        <button type="button" onclick="togglePass()" class="absolute left-3 top-1/2 -translate-y-1/2 text-purple-300/30 hover:text-purple-300/60 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="btn-admin">
+                    🔐 دخول لوحة الإدارة
+                </button>
+            </form>
+
+            <div class="mt-4 p-3 rounded-xl text-center" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.1)">
+                <p class="text-yellow-400/60 text-xs">⚠️ هذه الصفحة للمسؤولين فقط</p>
+                <p class="text-yellow-400/40 text-[10px] mt-1">المحاولات غير المصرح بها يتم تسجيلها</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="index.html" class="text-purple-300/25 text-xs hover:text-purple-300/50 transition">← الرئيسية</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const sb = window.supabase.createClient(
+            'https://czzcmbxejxbotjemyuqf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
+        );
+
+        function togglePass() {
+            var f = document.getElementById('password');
+            f.type = f.type === 'password' ? 'text' : 'password';
+        }
+
+        function showToast(msg) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast toast-err';
+            setTimeout(function() { t.classList.add('hidden'); }, 3500);
+        }
+
+        // لو مسجل دخول وأدمن، وديه مباشرة
+        (async function() {
+            var { data: { session } } = await sb.auth.getSession();
+            if (session) {
+                var { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
+                if (profile && profile.role === 'admin') {
+                    window.location.href = 'admin.html';
+                }
+            }
+        })();
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var em = document.getElementById('email').value.trim();
+            var p = document.getElementById('password').value;
+            if (!em || !p) { showToast('الرجاء ملء جميع الحقول'); return; }
+
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'جاري التحقق...';
+
+            try {
+                // تسجيل الدخول
+                var { data, error } = await sb.auth.signInWithPassword({ email: em, password: p });
+                if (error) throw error;
+
+                // تحقق من الدور
+                var { data: profile, error: pErr } = await sb.from('profiles').select('role').eq('id', data.user.id).single();
+
+                if (pErr || !profile || profile.role !== 'admin') {
+                    // مو أدمن — سجل خروج فوراً
+                    await sb.auth.signOut();
+                    showToast('ما عندك صلاحية — هذي الصفحة للمسؤولين فقط');
+                    btn.disabled = false;
+                    btn.textContent = '🔐 دخول لوحة الإدارة';
+                    return;
+                }
+
+                // أدمن — وديه للوحة
+                window.location.href = 'admin.html';
+
+            } catch (error) {
+                var msg = 'حدث خطأ';
+                if ((error.message || '').includes('Invalid')) msg = 'البريد أو كلمة المرور غلط';
+                showToast(msg);
+                btn.disabled = false;
+                btn.textContent = '🔐 دخول لوحة الإدارة';
+            }
+        });
+    </script>
+</body>
+</html>
