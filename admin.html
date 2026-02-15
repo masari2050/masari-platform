@@ -4,301 +4,333 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة الإدارة - مساري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <style>* { font-family: 'Tajawal', sans-serif; }
-    select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: left 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-left: 2.5rem; }
+    <style>
+        *{font-family:'Tajawal',sans-serif}
+        body{background:linear-gradient(135deg,#0f0a2e 0%,#1a1145 30%,#1e1550 50%,#151040 70%,#0d0825 100%);min-height:100vh}
+        .glass{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:1rem}
+        .sidebar{background:rgba(255,255,255,0.03);border-left:1px solid rgba(255,255,255,0.06);min-height:100vh;width:220px;position:fixed;top:0;right:0;z-index:40;overflow-y:auto}
+        .sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:.75rem;font-size:.8rem;font-weight:600;color:rgba(196,181,253,0.5);transition:all .2s;cursor:pointer;margin:2px 8px}
+        .sidebar-link:hover{background:rgba(255,255,255,0.05);color:rgba(196,181,253,0.8)}
+        .sidebar-link.active{background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.2)}
+        .main-content{margin-right:220px;padding:20px;min-height:100vh}
+        .input-dark{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:.75rem;padding:.625rem .875rem;color:#fff;width:100%;font-size:.85rem;transition:all .2s}
+        .input-dark:focus{outline:none;border-color:rgba(139,92,246,0.5);box-shadow:0 0 0 3px rgba(139,92,246,0.1)}
+        .input-dark::placeholder{color:rgba(255,255,255,0.2)}
+        .input-dark option{background:#1a1145;color:#fff}
+        .btn-p{background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:8px 20px;border-radius:.75rem;font-weight:700;font-size:.8rem;color:#fff;transition:all .2s;border:none;cursor:pointer}
+        .btn-p:hover{box-shadow:0 8px 25px rgba(99,102,241,0.3);transform:translateY(-1px)}
+        .btn-d{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:6px 14px;border-radius:.75rem;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
+        .btn-d:hover{background:rgba(239,68,68,0.25)}
+        .btn-s{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#c4b5fd;padding:6px 14px;border-radius:.75rem;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
+        .btn-s:hover{background:rgba(255,255,255,0.1)}
+        .stat-card{transition:all .3s}.stat-card:hover{transform:translateY(-3px)}
+        .table-row{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .2s}
+        .table-row:hover{background:rgba(255,255,255,0.03)}
+        .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700}
+        .badge-free{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
+        .badge-monthly{background:rgba(99,102,241,0.1);color:#818cf8;border:1px solid rgba(99,102,241,0.2)}
+        .badge-yearly{background:rgba(16,185,129,0.1);color:#34d399;border:1px solid rgba(16,185,129,0.2)}
+        .badge-admin{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2)}
+        .tab-section{display:none}.tab-section.active{display:block}
+        .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 24px;border-radius:12px;font-size:.85rem;font-weight:700;z-index:999;animation:slideD .4s ease}
+        .toast-ok{background:linear-gradient(135deg,#10b981,#14b8a6);color:#fff}
+        .toast-err{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+        @keyframes slideD{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(5px);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
+        .modal-box{background:linear-gradient(135deg,#1a1145,#1e1550);border:1px solid rgba(139,92,246,0.2);border-radius:1.25rem;padding:24px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto}
+        @media(max-width:768px){.sidebar{display:none}.main-content{margin-right:0}}
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-screen">
-    
-    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-10">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg flex items-center justify-center text-white">⚙️</div>
-                <div><h1 class="text-xl font-bold text-slate-800">لوحة الإدارة</h1><p class="text-xs text-slate-500">مساري</p></div>
-            </div>
-            <div class="flex items-center gap-3">
-                <a href="index.html" class="px-4 py-2 text-sm text-slate-600 hover:text-slate-800 transition">الرئيسية</a>
-                <button onclick="logout()" class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition">خروج</button>
-            </div>
-        </div>
-    </header>
+<body class="text-white">
+    <div id="toast" class="toast hidden"></div>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl p-6 text-white shadow-lg">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm opacity-90">الإيرادات الشهرية</span>
-                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">💰</div>
-                </div>
-                <p class="text-3xl font-bold mb-1" id="monthlyRevenue">0 ريال</p>
-                <p class="text-xs opacity-75">+15% عن الماضي</p>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="p-4 mb-2">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="text-xl">🎓</span>
+                <span class="text-lg font-black bg-gradient-to-l from-purple-300 to-indigo-300 bg-clip-text text-transparent">مساري</span>
             </div>
-            <div class="bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm opacity-90">الاشتراكات النشطة</span>
-                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">👥</div>
-                </div>
-                <p class="text-3xl font-bold mb-1" id="activeSubs">0</p>
-                <p class="text-xs opacity-75">شهري: <span id="mCount">0</span> | سنوي: <span id="yCount">0</span></p>
-            </div>
-            <div class="bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl p-6 text-white shadow-lg">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm opacity-90">المستخدمين</span>
-                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">📊</div>
-                </div>
-                <p class="text-3xl font-bold mb-1" id="totalUsers">0</p>
-                <p class="text-xs opacity-75">+12 هذا الأسبوع</p>
-            </div>
-            <div class="bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl p-6 text-white shadow-lg">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-sm opacity-90">بنك الأسئلة</span>
-                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">📝</div>
-                </div>
-                <p class="text-3xl font-bold mb-1" id="totalQ">30</p>
-                <p class="text-xs opacity-75">في 3 أقسام</p>
-            </div>
+            <p class="text-[10px] text-purple-300/30">لوحة الإدارة</p>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border mb-8">
-            <div class="border-b p-2 flex gap-2 overflow-x-auto">
-                <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active px-6 py-3 rounded-lg font-medium text-sm whitespace-nowrap">📊 نظرة عامة</button>
-                <button onclick="switchTab('financial')" id="tab-financial" class="tab-btn px-6 py-3 rounded-lg font-medium text-sm whitespace-nowrap">💰 المالية</button>
-                <button onclick="switchTab('subs')" id="tab-subs" class="tab-btn px-6 py-3 rounded-lg font-medium text-sm whitespace-nowrap">🔔 الاشتراكات</button>
-                <button onclick="switchTab('questions')" id="tab-questions" class="tab-btn px-6 py-3 rounded-lg font-medium text-sm whitespace-nowrap">📝 الأسئلة</button>
-                <button onclick="switchTab('coupons')" id="tab-coupons" class="tab-btn px-6 py-3 rounded-lg font-medium text-sm whitespace-nowrap">🎫 الكوبونات</button>
-                <button onclick="switchTab('staff')" id="tab-staff" class="tab-btn px-6 py-3 rounded-lg font-medium text-sm whitespace-nowrap">👨‍💼 الموظفين</button>
-                <button onclick="switchTab('users')" id="tab-users" class="tab-btn px-6 py-3 rounded-lg font-medium text-sm whitespace-nowrap">👥 المستخدمين</button>
+        <div class="sidebar-link active" onclick="switchTab('overview')">
+            <span>📊</span><span>نظرة عامة</span>
+        </div>
+        <div class="sidebar-link" onclick="switchTab('questions')">
+            <span>📝</span><span>الأسئلة</span>
+        </div>
+        <div class="sidebar-link" onclick="switchTab('users')">
+            <span>👥</span><span>الأعضاء</span>
+        </div>
+        <div class="sidebar-link" onclick="switchTab('coupons')">
+            <span>🎟️</span><span>الكوبونات</span>
+        </div>
+        <div class="sidebar-link" onclick="switchTab('finance')">
+            <span>💰</span><span>المالية</span>
+        </div>
+        <div class="sidebar-link" onclick="switchTab('reports')">
+            <span>🚩</span><span>البلاغات</span>
+        </div>
+        <div class="sidebar-link" onclick="switchTab('staff')">
+            <span>🔑</span><span>الموظفين</span>
+        </div>
+        <div class="sidebar-link" onclick="switchTab('settings')">
+            <span>⚙️</span><span>الإعدادات</span>
+        </div>
+
+        <div class="mt-auto p-4 border-t border-purple-500/10 mt-4">
+            <button onclick="logout()" class="sidebar-link w-full" style="color:#f87171">
+                <span>🚪</span><span>تسجيل خروج</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+
+        <!-- ══════════════ نظرة عامة ══════════════ -->
+        <div id="tab-overview" class="tab-section active">
+            <h2 class="text-xl font-black mb-5">📊 نظرة عامة</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                <div class="stat-card glass p-4 text-center">
+                    <p class="text-purple-300/40 text-xs mb-1">إجمالي الأسئلة</p>
+                    <p class="text-2xl font-black text-indigo-400" id="ov-questions">-</p>
+                </div>
+                <div class="stat-card glass p-4 text-center">
+                    <p class="text-purple-300/40 text-xs mb-1">الأعضاء</p>
+                    <p class="text-2xl font-black text-emerald-400" id="ov-users">-</p>
+                </div>
+                <div class="stat-card glass p-4 text-center">
+                    <p class="text-purple-300/40 text-xs mb-1">إجمالي المحاولات</p>
+                    <p class="text-2xl font-black text-purple-400" id="ov-attempts">-</p>
+                </div>
+                <div class="stat-card glass p-4 text-center">
+                    <p class="text-purple-300/40 text-xs mb-1">البلاغات</p>
+                    <p class="text-2xl font-black text-red-400" id="ov-reports">-</p>
+                </div>
             </div>
-            
-            <div class="p-6">
-                <div id="content-overview" class="tab-content"><h2 class="text-2xl font-bold mb-6">نظرة عامة</h2><div class="bg-slate-50 rounded-xl p-6"><p class="text-center text-slate-600">الرسوم البيانية قريباً</p></div></div>
-                <div id="content-financial" class="tab-content hidden"><h2 class="text-2xl font-bold mb-6">المالية</h2><div class="grid md:grid-cols-3 gap-6"><div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">اليوم</p><p class="text-3xl font-bold text-green-600">0 ريال</p></div><div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">الأسبوع</p><p class="text-3xl font-bold text-blue-600">0 ريال</p></div><div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">الشهر</p><p class="text-3xl font-bold text-indigo-600" id="monthRev">0 ريال</p></div></div></div>
-                <div id="content-subs" class="tab-content hidden"><h2 class="text-2xl font-bold mb-6">الاشتراكات</h2><div class="bg-white border rounded-xl p-6 overflow-x-auto"><table class="w-full"><thead><tr class="border-b"><th class="text-right py-3 px-4 text-sm">المستخدم</th><th class="text-right py-3 px-4 text-sm">الباقة</th><th class="text-right py-3 px-4 text-sm">الحالة</th><th class="text-center py-3 px-4 text-sm">إجراءات</th></tr></thead><tbody id="subsList"><tr><td colspan="4" class="text-center py-8 text-slate-500">لا توجد اشتراكات</td></tr></tbody></table></div></div>
-
-                <div id="content-questions" class="tab-content hidden">
-                    <div class="flex justify-between mb-6 flex-wrap gap-3">
-                        <h2 class="text-2xl font-bold">الأسئلة</h2>
-                        <div class="flex gap-3">
-                            <button onclick="showBulkModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 shadow-sm">📦 إضافة جماعية</button>
-                            <button onclick="showAddModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 shadow-sm">+ إضافة سؤال</button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-3 mb-4 flex-wrap">
-                        <select id="filterSection" onchange="loadQ()" class="px-4 py-2.5 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition bg-white shadow-sm font-medium">
-                            <option value="all">كل الأقسام</option>
-                            <option value="quantitative">قدرات كمي</option>
-                            <option value="verbal">قدرات لفظي</option>
-                            <option value="achievement">تحصيلي</option>
-                        </select>
-                        <select id="filterDiff" onchange="loadQ()" class="px-4 py-2.5 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition bg-white shadow-sm font-medium">
-                            <option value="all">كل المستويات</option>
-                            <option value="easy">سهل</option>
-                            <option value="medium">متوسط</option>
-                            <option value="hard">صعب</option>
-                        </select>
-                    </div>
-                    
-                    <div class="space-y-3" id="qList"><p class="text-center text-slate-500 py-12">جاري التحميل...</p></div>
+            <div class="grid lg:grid-cols-2 gap-4">
+                <div class="glass p-5">
+                    <h3 class="font-bold text-sm mb-3">📝 الأسئلة حسب القسم</h3>
+                    <div class="space-y-2" id="ov-sections"></div>
                 </div>
-
-                <div id="content-coupons" class="tab-content hidden">
-                    <div class="flex justify-between mb-6">
-                        <h2 class="text-2xl font-bold">إدارة الكوبونات</h2>
-                        <button onclick="showCouponModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700">+ إنشاء كوبون</button>
-                    </div>
-                    <div class="grid md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">الكوبونات النشطة</p><p class="text-3xl font-bold text-green-600" id="activeCoupons">0</p></div>
-                        <div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">المستخدمة</p><p class="text-3xl font-bold text-blue-600" id="usedCoupons">0</p></div>
-                        <div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">الخصم الإجمالي</p><p class="text-3xl font-bold text-indigo-600" id="totalDiscount">0 ريال</p></div>
-                    </div>
-                    <div class="bg-white border rounded-xl p-6 overflow-x-auto"><table class="w-full"><thead><tr class="border-b"><th class="text-right py-3 px-4 text-sm">الكود</th><th class="text-right py-3 px-4 text-sm">الخصم</th><th class="text-right py-3 px-4 text-sm">الاستخدامات</th><th class="text-right py-3 px-4 text-sm">الانتهاء</th><th class="text-center py-3 px-4 text-sm">إجراءات</th></tr></thead><tbody id="couponsList"><tr><td colspan="5" class="text-center py-8 text-slate-500">لا توجد كوبونات</td></tr></tbody></table></div>
-                </div>
-
-                <div id="content-users" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">إدارة المستخدمين</h2>
-                    <div class="grid md:grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">المسجلون الجدد (اليوم)</p><p class="text-3xl font-bold text-green-600" id="newUsers">0</p></div>
-                        <div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">المشتركون المدفوعون</p><p class="text-3xl font-bold text-blue-600" id="paidUsers">0</p></div>
-                        <div class="bg-white border rounded-xl p-6"><p class="text-sm text-slate-600 mb-2">المجانيون</p><p class="text-3xl font-bold text-slate-600" id="freeUsers">0</p></div>
-                    </div>
-                    <div class="bg-white border rounded-xl p-6 overflow-x-auto"><table class="w-full"><thead><tr class="border-b"><th class="text-right py-3 px-4 text-sm">الاسم</th><th class="text-right py-3 px-4 text-sm">البريد</th><th class="text-right py-3 px-4 text-sm">الباقة</th><th class="text-right py-3 px-4 text-sm">التسجيل</th><th class="text-center py-3 px-4 text-sm">إجراءات</th></tr></thead><tbody id="usersList"><tr><td colspan="5" class="text-center py-8 text-slate-500">لا توجد بيانات</td></tr></tbody></table></div>
-                </div>
-
-                <div id="content-staff" class="tab-content hidden">
-                    <div class="flex justify-between mb-6 flex-wrap gap-3">
-                        <h2 class="text-2xl font-bold">إدارة الموظفين والصلاحيات</h2>
-                        <button onclick="showAddStaffModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 shadow-sm">+ إضافة موظف</button>
-                    </div>
-
-                    <div class="grid md:grid-cols-4 gap-6 mb-6">
-                        <div class="bg-gradient-to-br from-indigo-100 to-blue-100 border-2 border-indigo-300 rounded-xl p-6">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
-                                    <span class="text-white text-xl">👑</span>
-                                </div>
-                                <p class="text-sm text-indigo-800 font-medium">المديرون</p>
-                            </div>
-                            <p class="text-3xl font-bold text-indigo-900" id="adminCount">1</p>
-                            <p class="text-xs text-indigo-700 mt-1">كامل الصلاحيات</p>
-                        </div>
-
-                        <div class="bg-gradient-to-br from-green-100 to-emerald-100 border-2 border-green-300 rounded-xl p-6">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                                    <span class="text-white text-xl">👨‍🏫</span>
-                                </div>
-                                <p class="text-sm text-green-800 font-medium">المعلمون</p>
-                            </div>
-                            <p class="text-3xl font-bold text-green-900" id="teacherCount">0</p>
-                            <p class="text-xs text-green-700 mt-1">إدارة الأسئلة</p>
-                        </div>
-
-                        <div class="bg-gradient-to-br from-amber-100 to-yellow-100 border-2 border-amber-300 rounded-xl p-6">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
-                                    <span class="text-white text-xl">🎧</span>
-                                </div>
-                                <p class="text-sm text-amber-800 font-medium">الدعم الفني</p>
-                            </div>
-                            <p class="text-3xl font-bold text-amber-900" id="supportCount">0</p>
-                            <p class="text-xs text-amber-700 mt-1">عرض المستخدمين</p>
-                        </div>
-
-                        <div class="bg-gradient-to-br from-slate-100 to-gray-100 border-2 border-slate-300 rounded-xl p-6">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="w-10 h-10 bg-slate-500 rounded-lg flex items-center justify-center">
-                                    <span class="text-white text-xl">👥</span>
-                                </div>
-                                <p class="text-sm text-slate-800 font-medium">إجمالي الفريق</p>
-                            </div>
-                            <p class="text-3xl font-bold text-slate-900" id="totalStaff">1</p>
-                            <p class="text-xs text-slate-700 mt-1">نشطون</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white border rounded-xl p-6 overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b">
-                                    <th class="text-right py-3 px-4 text-sm font-bold text-gray-700">الاسم</th>
-                                    <th class="text-right py-3 px-4 text-sm font-bold text-gray-700">البريد</th>
-                                    <th class="text-right py-3 px-4 text-sm font-bold text-gray-700">الدور</th>
-                                    <th class="text-right py-3 px-4 text-sm font-bold text-gray-700">الصلاحيات</th>
-                                    <th class="text-right py-3 px-4 text-sm font-bold text-gray-700">تاريخ الإضافة</th>
-                                    <th class="text-center py-3 px-4 text-sm font-bold text-gray-700">إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="staffList">
-                                <tr>
-                                    <td class="py-4 px-4 border-b">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">ع</div>
-                                            <span class="font-medium">عبدالله (أنت)</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-4 border-b text-gray-600"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="98ecfdebecd8f9fcf5f1f6b6fbf7f5">[email&#160;protected]</a></td>
-                                    <td class="py-4 px-4 border-b">
-                                        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">👑 مدير</span>
-                                    </td>
-                                    <td class="py-4 px-4 border-b text-gray-600 text-sm">كامل الصلاحيات</td>
-                                    <td class="py-4 px-4 border-b text-gray-500 text-sm">22 شعبان, 1447 هـ</td>
-                                    <td class="py-4 px-4 border-b text-center">
-                                        <span class="text-gray-400 text-xs">-</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-6 bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
-                        <h3 class="font-bold text-blue-900 mb-3 flex items-center gap-2">
-                            <span>ℹ️</span>
-                            دليل الصلاحيات
-                        </h3>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex items-start gap-3">
-                                <span class="text-indigo-600 font-bold">👑 مدير:</span>
-                                <span class="text-gray-700">كامل الصلاحيات - إدارة كل شي (الأسئلة، المستخدمين، الموظفين، المالية، الكوبونات)</span>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <span class="text-green-600 font-bold">👨‍🏫 معلم:</span>
-                                <span class="text-gray-700">إضافة وتعديل الأسئلة فقط - لا يقدر يشوف بيانات المستخدمين أو المالية</span>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <span class="text-amber-600 font-bold">🎧 دعم فني:</span>
-                                <span class="text-gray-700">عرض المستخدمين ومساعدتهم فقط - لا يقدر يعدل الأسئلة أو يشوف المالية</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="glass p-5">
+                    <h3 class="font-bold text-sm mb-3">🔥 أكثر سؤال يغلطون فيه</h3>
+                    <div id="ov-hardest" class="text-purple-300/40 text-sm">جاري التحميل...</div>
                 </div>
             </div>
         </div>
-    </main>
 
-    <!-- Add/Edit Question Modal -->
-    <div id="addModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl p-6 max-w-3xl w-full max-h-[85vh] overflow-y-auto">
-            <div class="flex justify-between mb-4 sticky top-0 bg-white pb-3 border-b">
-                <h3 class="text-xl font-bold" id="modalTitle">إضافة سؤال جديد</h3>
-                <button onclick="closeAddModal()" class="text-slate-500 hover:text-slate-700 text-2xl leading-none">✕</button>
+        <!-- ══════════════ الأسئلة ══════════════ -->
+        <div id="tab-questions" class="tab-section">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl font-black">📝 إدارة الأسئلة</h2>
+                <button class="btn-p" onclick="openQuestionModal()">+ إضافة سؤال</button>
             </div>
-            <form id="addForm" onsubmit="saveQ(event)" class="space-y-4">
-                <input type="hidden" id="editingId">
-                <div class="grid md:grid-cols-2 gap-4">
+            <div class="flex gap-2 mb-4">
+                <select id="q-filter" class="input-dark" style="max-width:160px" onchange="loadQuestions()">
+                    <option value="all">كل الأقسام</option>
+                    <option value="quant">كمي</option>
+                    <option value="verbal">لفظي</option>
+                    <option value="tahsili">تحصيلي</option>
+                </select>
+                <input type="text" id="q-search" class="input-dark" placeholder="بحث في الأسئلة..." oninput="loadQuestions()">
+            </div>
+            <div id="questions-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ══════════════ الأعضاء ══════════════ -->
+        <div id="tab-users" class="tab-section">
+            <h2 class="text-xl font-black mb-5">👥 إدارة الأعضاء</h2>
+            <input type="text" id="u-search" class="input-dark mb-4" placeholder="بحث بالاسم أو الإيميل..." oninput="loadUsers()">
+            <div class="glass overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead><tr class="border-b border-purple-500/10">
+                        <th class="text-right p-3 text-purple-300/40 text-xs">العضو</th>
+                        <th class="text-right p-3 text-purple-300/40 text-xs">الإيميل</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">الاشتراك</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">التسجيل</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">إجراء</th>
+                    </tr></thead>
+                    <tbody id="users-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ══════════════ الكوبونات ══════════════ -->
+        <div id="tab-coupons" class="tab-section">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl font-black">🎟️ إدارة الكوبونات</h2>
+                <button class="btn-p" onclick="openCouponModal()">+ كوبون جديد</button>
+            </div>
+            <div class="glass overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead><tr class="border-b border-purple-500/10">
+                        <th class="text-right p-3 text-purple-300/40 text-xs">الكود</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">الخصم</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">الاستخدامات</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">الحد الأقصى</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">الحالة</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">إجراء</th>
+                    </tr></thead>
+                    <tbody id="coupons-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ══════════════ المالية ══════════════ -->
+        <div id="tab-finance" class="tab-section">
+            <h2 class="text-xl font-black mb-5">💰 المالية والاشتراكات</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+                <div class="stat-card glass p-4 text-center">
+                    <p class="text-purple-300/40 text-xs mb-1">مشتركين فعالين</p>
+                    <p class="text-2xl font-black text-emerald-400" id="fin-active">-</p>
+                </div>
+                <div class="stat-card glass p-4 text-center">
+                    <p class="text-purple-300/40 text-xs mb-1">شهري</p>
+                    <p class="text-2xl font-black text-indigo-400" id="fin-monthly">-</p>
+                </div>
+                <div class="stat-card glass p-4 text-center">
+                    <p class="text-purple-300/40 text-xs mb-1">سنوي</p>
+                    <p class="text-2xl font-black text-purple-400" id="fin-yearly">-</p>
+                </div>
+                <div class="stat-card glass p-4 text-center">
+                    <p class="text-purple-300/40 text-xs mb-1">مجاني</p>
+                    <p class="text-2xl font-black text-yellow-400" id="fin-free">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════ البلاغات ══════════════ -->
+        <div id="tab-reports" class="tab-section">
+            <h2 class="text-xl font-black mb-5">🚩 بلاغات الأسئلة</h2>
+            <div id="reports-list" class="space-y-2"></div>
+        </div>
+
+        <!-- ══════════════ الموظفين ══════════════ -->
+        <div id="tab-staff" class="tab-section">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="text-xl font-black">🔑 إدارة الموظفين والصلاحيات</h2>
+                <button class="btn-p" onclick="openStaffModal()">+ إضافة موظف</button>
+            </div>
+            <div class="glass overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead><tr class="border-b border-purple-500/10">
+                        <th class="text-right p-3 text-purple-300/40 text-xs">الاسم</th>
+                        <th class="text-right p-3 text-purple-300/40 text-xs">الإيميل</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">الدور</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">الصلاحيات</th>
+                        <th class="text-center p-3 text-purple-300/40 text-xs">إجراء</th>
+                    </tr></thead>
+                    <tbody id="staff-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ══════════════ الإعدادات ══════════════ -->
+        <div id="tab-settings" class="tab-section">
+            <h2 class="text-xl font-black mb-5">⚙️ إعدادات الموقع</h2>
+
+            <!-- Banner Text -->
+            <div class="glass p-5 mb-4">
+                <h3 class="font-bold text-sm mb-3">📢 نص البانر العلوي</h3>
+                <p class="text-purple-300/30 text-xs mb-2">هذا النص يظهر في الشريط المتحرك أعلى كل الصفحات</p>
+                <textarea id="set-banner" class="input-dark" rows="2" placeholder="نص البانر..."></textarea>
+                <button class="btn-p mt-2" onclick="saveSetting('banner_text', document.getElementById('set-banner').value)">حفظ</button>
+            </div>
+
+            <!-- Colors -->
+            <div class="glass p-5 mb-4">
+                <h3 class="font-bold text-sm mb-3">🎨 ثيم الألوان</h3>
+                <p class="text-purple-300/30 text-xs mb-3">اختر نمط الألوان للمنصة</p>
+                <div class="flex gap-3 flex-wrap">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="theme" value="purple" class="hidden peer" checked>
+                        <div class="peer-checked:ring-2 peer-checked:ring-purple-400 w-12 h-12 rounded-xl" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)"></div>
+                        <p class="text-[10px] text-center text-purple-300/40 mt-1">بنفسجي</p>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="theme" value="blue" class="hidden peer">
+                        <div class="peer-checked:ring-2 peer-checked:ring-blue-400 w-12 h-12 rounded-xl" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"></div>
+                        <p class="text-[10px] text-center text-purple-300/40 mt-1">أزرق</p>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="theme" value="green" class="hidden peer">
+                        <div class="peer-checked:ring-2 peer-checked:ring-emerald-400 w-12 h-12 rounded-xl" style="background:linear-gradient(135deg,#10b981,#059669)"></div>
+                        <p class="text-[10px] text-center text-purple-300/40 mt-1">أخضر</p>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="theme" value="rose" class="hidden peer">
+                        <div class="peer-checked:ring-2 peer-checked:ring-pink-400 w-12 h-12 rounded-xl" style="background:linear-gradient(135deg,#ec4899,#be185d)"></div>
+                        <p class="text-[10px] text-center text-purple-300/40 mt-1">وردي</p>
+                    </label>
+                </div>
+                <button class="btn-p mt-3" onclick="saveTheme()">حفظ الثيم</button>
+            </div>
+
+            <!-- Pricing -->
+            <div class="glass p-5 mb-4">
+                <h3 class="font-bold text-sm mb-3">💰 أسعار الاشتراكات</h3>
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-medium mb-2">القسم *</label>
-                        <select id="qSec" required class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition bg-white shadow-sm" onchange="updateSubjects()">
-                            <option value="">اختر القسم</option>
-                            <option value="quantitative">قدرات كمي</option>
-                            <option value="verbal">قدرات لفظي</option>
-                            <option value="achievement">تحصيلي</option>
-                        </select>
+                        <label class="text-purple-300/40 text-xs mb-1 block">الشهري (ريال)</label>
+                        <input type="number" id="set-price-monthly" class="input-dark" value="29">
                     </div>
                     <div>
-                        <label class="block font-medium mb-2">المادة/الموضوع *</label>
-                        <select id="qSub" required class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition bg-white shadow-sm">
-                            <option value="">اختر القسم أولاً</option>
-                        </select>
+                        <label class="text-purple-300/40 text-xs mb-1 block">السنوي (ريال)</label>
+                        <input type="number" id="set-price-yearly" class="input-dark" value="228">
                     </div>
                 </div>
+                <button class="btn-p mt-2" onclick="savePricing()">حفظ الأسعار</button>
+            </div>
+
+            <!-- Free Limit -->
+            <div class="glass p-5">
+                <h3 class="font-bold text-sm mb-3">🆓 حد الأسئلة المجانية</h3>
                 <div>
-                    <label class="block font-medium mb-2">الصعوبة *</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <button type="button" onclick="setDiff('easy')" id="diff-easy" class="px-4 py-3 border-2 rounded-xl hover:border-green-500 transition font-medium">سهل</button>
-                        <button type="button" onclick="setDiff('medium')" id="diff-medium" class="px-4 py-3 border-2 rounded-xl hover:border-amber-500 transition font-medium">متوسط</button>
-                        <button type="button" onclick="setDiff('hard')" id="diff-hard" class="px-4 py-3 border-2 rounded-xl hover:border-red-500 transition font-medium">صعب</button>
-                    </div>
-                    <input type="hidden" id="qDiff" required>
+                    <label class="text-purple-300/40 text-xs mb-1 block">عدد الأسئلة المجانية</label>
+                    <input type="number" id="set-free-limit" class="input-dark" value="10" style="max-width:120px">
+                </div>
+                <button class="btn-p mt-2" onclick="saveSetting('free_limit', document.getElementById('set-free-limit').value)">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ Modals ══════════════ -->
+
+    <!-- Question Modal -->
+    <div id="questionModal" class="modal-bg hidden">
+        <div class="modal-box">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-base" id="qModalTitle">إضافة سؤال</h3>
+                <button onclick="closeModal('questionModal')" class="text-purple-300/30 hover:text-white text-lg">✕</button>
+            </div>
+            <input type="hidden" id="qm-id">
+            <div class="space-y-3">
+                <div>
+                    <label class="text-purple-300/40 text-xs mb-1 block">القسم</label>
+                    <select id="qm-section" class="input-dark">
+                        <option value="quant">قدرات كمي</option>
+                        <option value="verbal">قدرات لفظي</option>
+                        <option value="tahsili">التحصيلي</option>
+                    </select>
                 </div>
                 <div>
-                    <label class="block font-medium mb-2">نص السؤال *</label>
-                    <textarea id="qText" required rows="3" placeholder="اكتب السؤال هنا..." class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition"></textarea>
+                    <label class="text-purple-300/40 text-xs mb-1 block">نص السؤال</label>
+                    <textarea id="qm-text" class="input-dark" rows="3" placeholder="اكتب السؤال هنا..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="text-purple-300/40 text-xs mb-1 block">الخيار 1</label><input id="qm-c0" class="input-dark" placeholder="الخيار الأول"></div>
+                    <div><label class="text-purple-300/40 text-xs mb-1 block">الخيار 2</label><input id="qm-c1" class="input-dark" placeholder="الخيار الثاني"></div>
+                    <div><label class="text-purple-300/40 text-xs mb-1 block">الخيار 3</label><input id="qm-c2" class="input-dark" placeholder="الخيار الثالث"></div>
+                    <div><label class="text-purple-300/40 text-xs mb-1 block">الخيار 4</label><input id="qm-c3" class="input-dark" placeholder="الخيار الرابع"></div>
                 </div>
                 <div>
-                    <label class="block font-medium mb-2">المعادلة (اختياري)</label>
-                    <input type="text" id="qEq" placeholder="مثلاً: 5 × س = 25" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition">
-                </div>
-                <div>
-                    <label class="block font-medium mb-2">صورة السؤال (اختياري)</label>
-                    <input type="file" id="qImg" accept="image/*" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition" onchange="previewImage(event)">
-                    <div id="imgPreview" class="mt-2"></div>
-                </div>
-                <div>
-                    <label class="block font-medium mb-2">الخيارات (4 خيارات) *</label>
-                    <div class="space-y-2">
-                        <input type="text" id="op1" required placeholder="الخيار 1" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition">
-                        <input type="text" id="op2" required placeholder="الخيار 2" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition">
-                        <input type="text" id="op3" required placeholder="الخيار 3" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition">
-                        <input type="text" id="op4" required placeholder="الخيار 4" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition">
-                    </div>
-                </div>
-                <div>
-                    <label class="block font-medium mb-2">الإجابة الصحيحة *</label>
-                    <select id="qAns" required class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition bg-white shadow-sm">
-                        <option value="">اختر الإجابة</option>
+                    <label class="text-purple-300/40 text-xs mb-1 block">الإجابة الصحيحة</label>
+                    <select id="qm-correct" class="input-dark">
                         <option value="0">الخيار 1</option>
                         <option value="1">الخيار 2</option>
                         <option value="2">الخيار 3</option>
@@ -306,362 +338,444 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block font-medium mb-2">الشرح *</label>
-                    <textarea id="qExp" required rows="3" placeholder="اشرح طريقة الحل..." class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition"></textarea>
+                    <label class="text-purple-300/40 text-xs mb-1 block">الشرح</label>
+                    <textarea id="qm-explanation" class="input-dark" rows="3" placeholder="شرح الإجابة الصحيحة..."></textarea>
                 </div>
-                <div class="flex gap-3 pt-4">
-                    <button type="submit" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-lg">حفظ السؤال</button>
-                    <button type="button" onclick="closeAddModal()" class="px-6 bg-slate-200 py-3 rounded-xl hover:bg-slate-300 font-medium">إلغاء</button>
+                <div>
+                    <label class="text-purple-300/40 text-xs mb-1 block">رابط الصورة (اختياري)</label>
+                    <input id="qm-image" class="input-dark" placeholder="https://...">
                 </div>
-            </form>
+                <button class="btn-p w-full" onclick="saveQuestion()">💾 حفظ السؤال</button>
+            </div>
         </div>
     </div>
 
-    <!-- Bulk Import Modal -->
-    <div id="bulkModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between mb-6">
-                <h3 class="text-2xl font-bold">إضافة مجموعة أسئلة</h3>
-                <button onclick="closeBulkModal()" class="text-slate-500 hover:text-slate-700 text-2xl">✕</button>
+    <!-- User Edit Modal -->
+    <div id="userModal" class="modal-bg hidden">
+        <div class="modal-box">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-base">تعديل بيانات العضو</h3>
+                <button onclick="closeModal('userModal')" class="text-purple-300/30 hover:text-white text-lg">✕</button>
             </div>
-            <div class="mb-6"><p class="text-slate-600 mb-4">الصق JSON هنا:</p><div class="bg-slate-50 rounded p-4 mb-4"><p class="text-xs text-slate-500 mb-2">مثال:</p><pre class="text-xs bg-slate-800 text-green-400 p-3 rounded overflow-x-auto">[{"section":"quantitative","subject":"الجبر","difficulty":"easy","question":"حل: 2×س=10","equation":"2×س=10","options":["3","5","7","10"],"correctAnswer":1,"explanation":"نقسم على 2"}]</pre></div></div>
-            <form onsubmit="bulkImport(event)"><textarea id="bulkInput" rows="10" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:outline-none transition font-mono text-sm" placeholder='[{...}]'></textarea><div class="flex gap-3 mt-4"><button type="submit" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 shadow-lg">استيراد الأسئلة</button><button type="button" onclick="closeBulkModal()" class="px-6 bg-slate-200 py-3 rounded-xl hover:bg-slate-300 font-medium">إلغاء</button></div></form>
+            <input type="hidden" id="um-id">
+            <div class="space-y-3">
+                <div><label class="text-purple-300/40 text-xs mb-1 block">الاسم</label><input id="um-name" class="input-dark"></div>
+                <div><label class="text-purple-300/40 text-xs mb-1 block">الإيميل</label><input id="um-email" class="input-dark" disabled></div>
+                <div><label class="text-purple-300/40 text-xs mb-1 block">الاشتراك</label>
+                    <select id="um-sub" class="input-dark">
+                        <option value="free">مجاني</option>
+                        <option value="monthly">شهري</option>
+                        <option value="yearly">سنوي</option>
+                    </select>
+                </div>
+                <div><label class="text-purple-300/40 text-xs mb-1 block">الدور</label>
+                    <select id="um-role" class="input-dark">
+                        <option value="user">مستخدم</option>
+                        <option value="admin">أدمن</option>
+                    </select>
+                </div>
+                <button class="btn-p w-full" onclick="saveUser()">💾 حفظ التعديلات</button>
+            </div>
         </div>
     </div>
 
     <!-- Coupon Modal -->
-    <div id="couponModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full">
-            <div class="flex justify-between mb-6">
-                <h3 class="text-2xl font-bold">إنشاء كوبون خصم</h3>
-                <button onclick="closeCouponModal()" class="text-slate-500 hover:text-slate-700 text-2xl">✕</button>
+    <div id="couponModal" class="modal-bg hidden">
+        <div class="modal-box">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-base">إضافة كوبون</h3>
+                <button onclick="closeModal('couponModal')" class="text-purple-300/30 hover:text-white text-lg">✕</button>
             </div>
-            <form id="couponForm" onsubmit="createCoupon(event)" class="space-y-4">
-                <div><label class="block font-medium mb-2">كود الكوبون *</label><input type="text" id="couponCode" required placeholder="مثلاً: WELCOME50" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:outline-none transition uppercase"></div>
-                <div><label class="block font-medium mb-2">نوع الخصم *</label><div class="grid grid-cols-2 gap-3"><button type="button" onclick="setDiscountType('percentage')" id="type-percentage" class="px-4 py-3 border-2 rounded-xl hover:border-indigo-500 transition font-medium">نسبة مئوية %</button><button type="button" onclick="setDiscountType('fixed')" id="type-fixed" class="px-4 py-3 border-2 rounded-xl hover:border-green-500 transition font-medium">مبلغ ثابت (ريال)</button></div><input type="hidden" id="discountType" required></div>
-                <div><label class="block font-medium mb-2">قيمة الخصم *</label><input type="number" id="discountValue" required min="1" placeholder="مثلاً: 50" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:outline-none transition"></div>
-                <div><label class="block font-medium mb-2">عدد الاستخدامات *</label><input type="number" id="maxUses" required min="1" value="100" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:outline-none transition"></div>
-                <div><label class="block font-medium mb-2">تاريخ الانتهاء *</label><input type="date" id="expiryDate" required class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-green-500 focus:outline-none transition"></div>
-                <div class="flex gap-3 pt-4"><button type="submit" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 shadow-lg">إنشاء الكوبون</button><button type="button" onclick="closeCouponModal()" class="px-6 bg-slate-200 py-3 rounded-xl hover:bg-slate-300 font-medium">إلغاء</button></div>
-            </form>
+            <div class="space-y-3">
+                <div><label class="text-purple-300/40 text-xs mb-1 block">كود الكوبون</label><input id="cm-code" class="input-dark" placeholder="MASARI50" style="text-transform:uppercase"></div>
+                <div>
+                    <label class="text-purple-300/40 text-xs mb-1 block">نوع الخصم</label>
+                    <select id="cm-type" class="input-dark">
+                        <option value="percentage">نسبة مئوية (%)</option>
+                        <option value="fixed">مبلغ ثابت (ريال)</option>
+                    </select>
+                </div>
+                <div><label class="text-purple-300/40 text-xs mb-1 block">قيمة الخصم</label><input type="number" id="cm-value" class="input-dark" placeholder="50"></div>
+                <div><label class="text-purple-300/40 text-xs mb-1 block">الحد الأقصى للاستخدام</label><input type="number" id="cm-max" class="input-dark" placeholder="100" value="100"></div>
+                <div><label class="text-purple-300/40 text-xs mb-1 block">تاريخ الانتهاء</label><input type="date" id="cm-expires" class="input-dark"></div>
+                <button class="btn-p w-full" onclick="saveCoupon()">💾 إنشاء الكوبون</button>
+            </div>
         </div>
     </div>
 
-    <!-- Edit User Modal -->
-    <div id="editUserModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full">
-            <div class="flex justify-between mb-6">
-                <h3 class="text-2xl font-bold">تعديل بيانات المستخدم</h3>
-                <button onclick="closeEditUserModal()" class="text-slate-500 hover:text-slate-700 text-2xl">✕</button>
+    <!-- Staff Modal -->
+    <div id="staffModal" class="modal-bg hidden">
+        <div class="modal-box">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-base">إضافة موظف</h3>
+                <button onclick="closeModal('staffModal')" class="text-purple-300/30 hover:text-white text-lg">✕</button>
             </div>
-            <form id="editUserForm" onsubmit="saveUserEdit(event)" class="space-y-4">
-                <input type="hidden" id="editUserId">
-                <div><label class="block font-medium mb-2">الاسم</label><input type="text" id="editUserName" required class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition"></div>
-                <div><label class="block font-medium mb-2">البريد الإلكتروني</label><input type="email" id="editUserEmail" required class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition"></div>
-                <div><label class="block font-medium mb-2">كلمة المرور الجديدة (اختياري)</label><input type="password" id="editUserPassword" placeholder="اتركه فارغاً للإبقاء على القديمة" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition"></div>
-                <div><label class="block font-medium mb-2">رقم الجوال (اختياري)</label><input type="tel" id="editUserPhone" placeholder="05xxxxxxxx" class="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:border-indigo-500 focus:outline-none transition"></div>
-                <div class="flex gap-3 pt-4"><button type="submit" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-lg">حفظ التغييرات</button><button type="button" onclick="closeEditUserModal()" class="px-6 bg-slate-200 py-3 rounded-xl hover:bg-slate-300 font-medium">إلغاء</button></div>
-            </form>
-        </div>
-    </div>
-
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="questions_bank.js"></script>
-    <script>
-        const subjects = {quantitative: ['الجبر', 'الهندسة', 'النسبة والتناسب', 'الأعداد', 'الكسور', 'المسائل الكلامية', 'الإحصاء'], verbal: ['التناظر اللفظي', 'إكمال الجمل', 'الخطأ السياقي', 'الاستيعاب المقروء'], achievement: ['الرياضيات', 'الفيزياء', 'الكيمياء', 'الأحياء', 'اللغة الإنجليزية']};
-        let allQ = [...questionsBank];
-        const saved = localStorage.getItem('masari_custom_questions');
-        if (saved) { try { allQ = JSON.parse(saved); } catch(e) {} }
-        let coupons = JSON.parse(localStorage.getItem('masari_coupons') || '[]');
-        let editingQId = null;
-        
-        function switchTab(t) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(b => {b.classList.remove('active', 'bg-indigo-100', 'text-indigo-700'); b.classList.add('text-slate-600');});
-            document.getElementById('content-' + t).classList.remove('hidden');
-            const a = document.getElementById('tab-' + t);
-            a.classList.add('active', 'bg-indigo-100', 'text-indigo-700');
-            a.classList.remove('text-slate-600');
-            if (t === 'questions') loadQ(); else if (t === 'financial') loadFin(); else if (t === 'subs') loadSubs(); else if (t === 'coupons') loadCoupons(); else if (t === 'users') loadUsers();
-        }
-
-        function loadStats() {
-            document.getElementById('totalQ').textContent = allQ.length;
-            const u = JSON.parse(localStorage.getItem('masari_user') || 'null');
-            document.getElementById('totalUsers').textContent = u ? 1 : 0;
-            const s = JSON.parse(localStorage.getItem('masari_subscription') || 'null');
-            if (s) {
-                document.getElementById('activeSubs').textContent = 1;
-                if (s.plan === 'monthly') {document.getElementById('mCount').textContent = 1; document.getElementById('monthlyRevenue').textContent = '29 ريال'; document.getElementById('monthRev').textContent = '29 ريال';} else {document.getElementById('yCount').textContent = 1; document.getElementById('monthlyRevenue').textContent = '228 ريال'; document.getElementById('monthRev').textContent = '228 ريال';}
-            }
-        }
-
-        function loadFin() {}
-        function loadSubs() {
-            const s = JSON.parse(localStorage.getItem('masari_subscription') || 'null');
-            if (!s) return;
-            const u = JSON.parse(localStorage.getItem('masari_user'));
-            const p = s.plan === 'monthly' ? 'شهري' : 'سنوي';
-            const d = new Date(s.startDate).toLocaleDateString('ar-SA');
-            document.getElementById('subsList').innerHTML = `<tr class="border-b"><td class="py-3 px-4 text-sm">${u.name}</td><td class="py-3 px-4 text-sm"><span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs">${p}</span></td><td class="py-3 px-4 text-sm"><span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">نشط</span></td><td class="py-3 px-4 text-center"><button class="text-sm text-indigo-600 hover:text-indigo-700" onclick="sendCouponToUser()">إرسال كوبون</button></td></tr>`;
-        }
-
-        function updateSubjects() {
-            const sec = document.getElementById('qSec').value;
-            const subSel = document.getElementById('qSub');
-            subSel.innerHTML = '<option value="">اختر الموضوع</option>';
-            if (sec && subjects[sec]) { subjects[sec].forEach(s => { subSel.innerHTML += `<option value="${s}">${s}</option>`; }); }
-        }
-
-        let selectedDiff = null;
-        function setDiff(d) {
-            selectedDiff = d;
-            document.getElementById('qDiff').value = d;
-            ['easy', 'medium', 'hard'].forEach(x => {
-                const btn = document.getElementById('diff-' + x);
-                btn.classList.remove('border-green-500', 'bg-green-50', 'border-amber-500', 'bg-amber-50', 'border-red-500', 'bg-red-50');
-            });
-            const colors = {easy: 'green', medium: 'amber', hard: 'red'};
-            const btn = document.getElementById('diff-' + d);
-            btn.classList.add(`border-${colors[d]}-500`, `bg-${colors[d]}-50`);
-        }
-
-        let qImage = null;
-        function previewImage(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    qImage = ev.target.result;
-                    document.getElementById('imgPreview').innerHTML = `<img src="${qImage}" class="max-w-xs rounded-lg border">`;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function showAddModal() {
-            editingQId = null;
-            document.getElementById('modalTitle').textContent = 'إضافة سؤال جديد';
-            document.getElementById('addModal').classList.remove('hidden');
-        }
-        
-        function closeAddModal() {
-            document.getElementById('addModal').classList.add('hidden');
-            document.getElementById('addForm').reset();
-            editingQId = null;
-            qImage = null;
-            document.getElementById('imgPreview').innerHTML = '';
-        }
-
-        function editQ(id) {
-            const q = allQ.find(x => x.id === id);
-            if (!q) return;
-            editingQId = id;
-            document.getElementById('modalTitle').textContent = 'تعديل السؤال';
-            document.getElementById('qSec').value = q.section;
-            updateSubjects();
-            setTimeout(() => { document.getElementById('qSub').value = q.subject; }, 100);
-            setDiff(q.difficulty);
-            document.getElementById('qText').value = q.question;
-            document.getElementById('qEq').value = q.equation || '';
-            document.getElementById('op1').value = q.options[0];
-            document.getElementById('op2').value = q.options[1];
-            document.getElementById('op3').value = q.options[2];
-            document.getElementById('op4').value = q.options[3];
-            document.getElementById('qAns').value = q.correctAnswer;
-            document.getElementById('qExp').value = q.explanation;
-            if (q.image) {
-                qImage = q.image;
-                document.getElementById('imgPreview').innerHTML = `<img src="${qImage}" class="max-w-xs rounded-lg border">`;
-            }
-            document.getElementById('addModal').classList.remove('hidden');
-        }
-
-        function saveQ(e) {
-            e.preventDefault();
-            const data = {
-                section: document.getElementById('qSec').value,
-                subject: document.getElementById('qSub').value,
-                difficulty: document.getElementById('qDiff').value,
-                question: document.getElementById('qText').value,
-                equation: document.getElementById('qEq').value || '',
-                image: qImage || '',
-                options: [document.getElementById('op1').value, document.getElementById('op2').value, document.getElementById('op3').value, document.getElementById('op4').value],
-                correctAnswer: parseInt(document.getElementById('qAns').value),
-                explanation: document.getElementById('qExp').value
-            };
-            
-            if (editingQId) {
-                const idx = allQ.findIndex(q => q.id === editingQId);
-                allQ[idx] = {...allQ[idx], ...data};
-                alert('✅ تم تحديث السؤال');
-            } else {
-                data.id = allQ.length + 1;
-                allQ.push(data);
-                alert('✅ تم إضافة السؤال');
-            }
-            
-            localStorage.setItem('masari_custom_questions', JSON.stringify(allQ));
-            closeAddModal();
-            loadQ();
-            loadStats();
-        }
-
-        function loadQ() {
-            const c = document.getElementById('qList');
-            const secF = document.getElementById('filterSection')?.value || 'all';
-            const difF = document.getElementById('filterDiff')?.value || 'all';
-            let filtered = allQ;
-            if (secF !== 'all') filtered = filtered.filter(q => q.section === secF);
-            if (difF !== 'all') filtered = filtered.filter(q => q.difficulty === difF);
-            if (filtered.length === 0) { c.innerHTML = '<p class="text-center text-slate-500 py-12">لا توجد أسئلة</p>'; return; }
-            const dc = {easy: 'bg-green-100 text-green-700', medium: 'bg-amber-100 text-amber-700', hard: 'bg-red-100 text-red-700'};
-            const dt = {easy: 'سهل', medium: 'متوسط', hard: 'صعب'};
-            const st = {quantitative: 'قدرات كمي', verbal: 'قدرات لفظي', achievement: 'تحصيلي'};
-            c.innerHTML = filtered.map(q => `
-                <div class="bg-white border-2 border-slate-200 rounded-xl p-5 hover:shadow-lg hover:border-indigo-300 transition">
-                    <div class="flex justify-between">
-                        <div class="flex-1">
-                            <div class="flex gap-2 mb-3 flex-wrap">
-                                <span class="px-3 py-1 ${dc[q.difficulty]} rounded-lg text-xs font-bold">${dt[q.difficulty]}</span>
-                                <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-xs font-bold">${st[q.section]}</span>
-                                <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold">${q.subject}</span>
-                                <span class="text-xs text-slate-500 font-mono">#${q.id}</span>
-                            </div>
-                            <p class="text-slate-800 mb-2 font-medium">${q.question}</p>
-                            ${q.equation ? `<p class="text-sm text-slate-600 font-mono bg-slate-50 px-3 py-2 rounded-lg inline-block">${q.equation}</p>` : ''}
-                            ${q.image ? `<img src="${q.image}" class="max-w-xs mt-3 rounded-lg border-2 shadow-sm">` : ''}
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <button class="text-sm text-indigo-600 hover:text-indigo-700 font-medium px-3 py-1 rounded hover:bg-indigo-50" onclick="editQ(${q.id})">تعديل</button>
-                            <button class="text-sm text-red-600 hover:text-red-700 font-medium px-3 py-1 rounded hover:bg-red-50" onclick="delQ(${q.id})">حذف</button>
-                        </div>
+            <div class="space-y-3">
+                <div><label class="text-purple-300/40 text-xs mb-1 block">إيميل الموظف (حساب موجود)</label><input id="sm-email" class="input-dark" placeholder="staff@masari.sa"></div>
+                <div><label class="text-purple-300/40 text-xs mb-1 block">المسمى الوظيفي</label><input id="sm-title" class="input-dark" placeholder="مدير المحتوى"></div>
+                <div>
+                    <label class="text-purple-300/40 text-xs mb-1 block">الصلاحيات</label>
+                    <div class="space-y-2 mt-1">
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="sp-questions" checked><span class="text-purple-200/70">إدارة الأسئلة</span></label>
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="sp-users"><span class="text-purple-200/70">إدارة الأعضاء</span></label>
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="sp-coupons"><span class="text-purple-200/70">إدارة الكوبونات</span></label>
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="sp-finance"><span class="text-purple-200/70">المالية</span></label>
+                        <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="sp-settings"><span class="text-purple-200/70">الإعدادات</span></label>
                     </div>
                 </div>
-            `).join('');
+                <button class="btn-p w-full" onclick="saveStaff()">💾 إضافة الموظف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ Scripts ══════════════ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const sb = window.supabase.createClient(
+            'https://czzcmbxejxbotjemyuqf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
+        );
+        let currentAdmin = null;
+
+        // ═══ Auth ═══
+        async function checkAdmin() {
+            var { data: { session } } = await sb.auth.getSession();
+            if (!session) { window.location.href = 'login.html'; return; }
+            var { data: profile } = await sb.from('profiles').select('role, full_name').eq('id', session.user.id).single();
+            if (!profile || profile.role !== 'admin') {
+                alert('ما عندك صلاحية للوصول لهذه الصفحة');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            currentAdmin = { id: session.user.id, ...profile };
+            loadOverview();
         }
 
-        function delQ(id) {
+        function logout() { sb.auth.signOut().then(function(){ window.location.href = 'login.html'; }); }
+
+        // ═══ Tab Switching ═══
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-section').forEach(function(s){ s.classList.remove('active'); });
+            document.querySelectorAll('.sidebar-link').forEach(function(l){ l.classList.remove('active'); });
+            document.getElementById('tab-' + tab).classList.add('active');
+            event.currentTarget.classList.add('active');
+            if (tab === 'overview') loadOverview();
+            if (tab === 'questions') loadQuestions();
+            if (tab === 'users') loadUsers();
+            if (tab === 'coupons') loadCoupons();
+            if (tab === 'finance') loadFinance();
+            if (tab === 'reports') loadReports();
+            if (tab === 'staff') loadStaff();
+            if (tab === 'settings') loadSettings();
+        }
+
+        // ═══ Toast ═══
+        function toast(msg, ok) {
+            var t = document.getElementById('toast');
+            t.textContent = msg; t.className = 'toast ' + (ok ? 'toast-ok' : 'toast-err');
+            setTimeout(function(){ t.classList.add('hidden'); }, 3000);
+        }
+
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // ═══════════════════════════════════
+        //  نظرة عامة
+        // ═══════════════════════════════════
+        async function loadOverview() {
+            var { data: q } = await sb.from('questions').select('section');
+            var { data: u } = await sb.from('profiles').select('id');
+            var { data: a } = await sb.from('attempts').select('id');
+            var { data: r } = await sb.from('reports').select('id');
+
+            document.getElementById('ov-questions').textContent = q ? q.length : 0;
+            document.getElementById('ov-users').textContent = u ? u.length : 0;
+            document.getElementById('ov-attempts').textContent = a ? a.length : 0;
+            document.getElementById('ov-reports').textContent = r ? r.length : 0;
+
+            // Section breakdown
+            if (q) {
+                var counts = { quant: 0, verbal: 0, tahsili: 0 };
+                q.forEach(function(x) { if (counts[x.section] !== undefined) counts[x.section]++; });
+                var names = { quant: 'قدرات كمي', verbal: 'قدرات لفظي', tahsili: 'التحصيلي' };
+                var colors = { quant: '#6366f1', verbal: '#10b981', tahsili: '#8b5cf6' };
+                var total = q.length || 1;
+                var html = '';
+                for (var k in counts) {
+                    var pct = Math.round((counts[k] / total) * 100);
+                    html += '<div class="flex items-center justify-between text-xs mb-1"><span class="text-purple-200/60">' + names[k] + '</span><span class="font-bold">' + counts[k] + '</span></div>';
+                    html += '<div class="h-1.5 rounded-full mb-2" style="background:rgba(255,255,255,0.06)"><div class="h-full rounded-full" style="width:' + pct + '%;background:' + colors[k] + '"></div></div>';
+                }
+                document.getElementById('ov-sections').innerHTML = html;
+            }
+
+            // Hardest question
+            if (a && a.length > 0) {
+                var { data: wrongA } = await sb.from('attempts').select('question_id').eq('is_correct', false);
+                if (wrongA && wrongA.length > 0) {
+                    var freq = {};
+                    wrongA.forEach(function(x) { freq[x.question_id] = (freq[x.question_id] || 0) + 1; });
+                    var hardestId = Object.keys(freq).sort(function(a,b) { return freq[b] - freq[a]; })[0];
+                    var { data: hq } = await sb.from('questions').select('question_text, section').eq('id', hardestId).single();
+                    if (hq) {
+                        var sn = { quant: 'كمي', verbal: 'لفظي', tahsili: 'تحصيلي' };
+                        document.getElementById('ov-hardest').innerHTML = '<span class="badge badge-' + (hq.section === 'quant' ? 'monthly' : hq.section === 'verbal' ? 'yearly' : 'free') + ' mb-2">' + (sn[hq.section] || '') + '</span><p class="text-white text-sm">' + hq.question_text + '</p><p class="text-red-400/60 text-xs mt-1">' + freq[hardestId] + ' خطأ</p>';
+                    }
+                } else {
+                    document.getElementById('ov-hardest').innerHTML = '<p class="text-purple-300/30 text-sm">ما فيه أخطاء بعد</p>';
+                }
+            }
+        }
+
+        // ═══════════════════════════════════
+        //  الأسئلة
+        // ═══════════════════════════════════
+        async function loadQuestions() {
+            var filter = document.getElementById('q-filter').value;
+            var search = document.getElementById('q-search').value.trim().toLowerCase();
+            var query = sb.from('questions').select('*').order('created_at', { ascending: false });
+            if (filter !== 'all') query = query.eq('section', filter);
+            var { data } = await query;
+            if (!data) data = [];
+            if (search) data = data.filter(function(q) { return q.question_text.toLowerCase().includes(search); });
+
+            var sn = { quant: 'كمي', verbal: 'لفظي', tahsili: 'تحصيلي' };
+            var html = '';
+            data.forEach(function(q) {
+                html += '<div class="glass p-4 table-row"><div class="flex items-start justify-between gap-3"><div class="flex-1"><span class="badge badge-' + (q.section === 'quant' ? 'monthly' : q.section === 'verbal' ? 'yearly' : 'free') + ' mb-1">' + (sn[q.section] || '') + '</span><p class="text-sm text-white leading-relaxed">' + q.question_text.substring(0, 100) + (q.question_text.length > 100 ? '...' : '') + '</p></div><div class="flex gap-1 flex-shrink-0"><button class="btn-s" onclick="editQuestion(\'' + q.id + '\')">✏️</button><button class="btn-d" onclick="deleteQuestion(\'' + q.id + '\')">🗑️</button></div></div></div>';
+            });
+            document.getElementById('questions-list').innerHTML = html || '<p class="text-purple-300/30 text-sm text-center py-8">لا توجد أسئلة</p>';
+        }
+
+        function openQuestionModal(q) {
+            document.getElementById('qModalTitle').textContent = q ? 'تعديل السؤال' : 'إضافة سؤال';
+            document.getElementById('qm-id').value = q ? q.id : '';
+            document.getElementById('qm-section').value = q ? q.section : 'quant';
+            document.getElementById('qm-text').value = q ? q.question_text : '';
+            var c = q ? (q.choices || []) : [];
+            for (var i = 0; i < 4; i++) document.getElementById('qm-c' + i).value = c[i] || '';
+            document.getElementById('qm-correct').value = q ? q.correct_index : '0';
+            document.getElementById('qm-explanation').value = q ? (q.explanation || '') : '';
+            document.getElementById('qm-image').value = q ? (q.image_url || '') : '';
+            document.getElementById('questionModal').classList.remove('hidden');
+        }
+
+        async function editQuestion(id) {
+            var { data } = await sb.from('questions').select('*').eq('id', id).single();
+            if (data) openQuestionModal(data);
+        }
+
+        async function saveQuestion() {
+            var id = document.getElementById('qm-id').value;
+            var obj = {
+                section: document.getElementById('qm-section').value,
+                question_text: document.getElementById('qm-text').value,
+                choices: [document.getElementById('qm-c0').value, document.getElementById('qm-c1').value, document.getElementById('qm-c2').value, document.getElementById('qm-c3').value],
+                correct_index: parseInt(document.getElementById('qm-correct').value),
+                explanation: document.getElementById('qm-explanation').value,
+                image_url: document.getElementById('qm-image').value || null
+            };
+            if (!obj.question_text || !obj.choices[0]) { toast('املأ الحقول المطلوبة', false); return; }
+
+            if (id) {
+                var { error } = await sb.from('questions').update(obj).eq('id', id);
+                if (error) { toast('خطأ: ' + error.message, false); return; }
+                toast('تم تحديث السؤال', true);
+            } else {
+                var { error } = await sb.from('questions').insert(obj);
+                if (error) { toast('خطأ: ' + error.message, false); return; }
+                toast('تم إضافة السؤال', true);
+            }
+            closeModal('questionModal');
+            loadQuestions();
+        }
+
+        async function deleteQuestion(id) {
             if (!confirm('متأكد تبي تحذف هالسؤال؟')) return;
-            allQ = allQ.filter(q => q.id !== id);
-            localStorage.setItem('masari_custom_questions', JSON.stringify(allQ));
-            loadQ(); loadStats();
+            await sb.from('attempts').delete().eq('question_id', id);
+            await sb.from('reports').delete().eq('question_id', id);
+            var { error } = await sb.from('questions').delete().eq('id', id);
+            if (error) toast('خطأ بالحذف', false);
+            else { toast('تم الحذف', true); loadQuestions(); }
         }
 
-        function showBulkModal() { document.getElementById('bulkModal').classList.remove('hidden'); }
-        function closeBulkModal() { document.getElementById('bulkModal').classList.add('hidden'); document.getElementById('bulkInput').value = ''; }
-        
-        function bulkImport(e) {
-            e.preventDefault();
-            const input = document.getElementById('bulkInput').value;
-            try {
-                const questions = JSON.parse(input);
-                if (!Array.isArray(questions)) { alert('❌ الصيغة غير صحيحة، يجب أن تكون مصفوفة'); return; }
-                let startId = allQ.length + 1;
-                questions.forEach((q, index) => { allQ.push({...q, id: startId + index}); });
-                localStorage.setItem('masari_custom_questions', JSON.stringify(allQ));
-                alert(`✅ تم إضافة ${questions.length} سؤال بنجاح`);
-                closeBulkModal(); loadQ(); loadStats();
-            } catch (e) { alert('❌ خطأ في الصيغة، تأكد من صحة JSON'); }
+        // ═══════════════════════════════════
+        //  الأعضاء
+        // ═══════════════════════════════════
+        async function loadUsers() {
+            var search = (document.getElementById('u-search').value || '').trim().toLowerCase();
+            var { data } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
+            if (!data) data = [];
+            if (search) data = data.filter(function(u) { return (u.full_name || '').toLowerCase().includes(search) || (u.email || '').toLowerCase().includes(search); });
+            var html = '';
+            data.forEach(function(u) {
+                var badge = u.subscription_type === 'monthly' ? 'badge-monthly' : u.subscription_type === 'yearly' ? 'badge-yearly' : 'badge-free';
+                var label = u.subscription_type === 'monthly' ? 'شهري' : u.subscription_type === 'yearly' ? 'سنوي' : 'مجاني';
+                html += '<tr class="table-row"><td class="p-3"><div class="flex items-center gap-2"><span class="text-lg">' + (u.avatar_emoji || '👤') + '</span><span class="text-sm font-medium">' + (u.full_name || '—') + '</span>' + (u.role === 'admin' ? '<span class="badge badge-admin">أدمن</span>' : '') + '</div></td><td class="p-3 text-purple-300/40 text-xs">' + (u.email || '') + '</td><td class="p-3 text-center"><span class="badge ' + badge + '">' + label + '</span></td><td class="p-3 text-center text-purple-300/30 text-xs">' + (u.created_at ? new Date(u.created_at).toLocaleDateString('ar-SA') : '') + '</td><td class="p-3 text-center"><button class="btn-s" onclick="editUser(\'' + u.id + '\')">✏️</button></td></tr>';
+            });
+            document.getElementById('users-list').innerHTML = html;
         }
 
-        function showCouponModal() { document.getElementById('couponModal').classList.remove('hidden'); }
-        function closeCouponModal() { document.getElementById('couponModal').classList.add('hidden'); document.getElementById('couponForm').reset(); }
-
-        let discType = null;
-        function setDiscountType(t) {
-            discType = t;
-            document.getElementById('discountType').value = t;
-            ['percentage', 'fixed'].forEach(x => { const btn = document.getElementById('type-' + x); btn.classList.remove('border-indigo-500', 'bg-indigo-50', 'border-green-500', 'bg-green-50'); });
-            const colors = {percentage: 'indigo', fixed: 'green'};
-            document.getElementById('type-' + t).classList.add(`border-${colors[t]}-500`, `bg-${colors[t]}-50`);
+        async function editUser(id) {
+            var { data } = await sb.from('profiles').select('*').eq('id', id).single();
+            if (!data) return;
+            document.getElementById('um-id').value = data.id;
+            document.getElementById('um-name').value = data.full_name || '';
+            document.getElementById('um-email').value = data.email || '';
+            document.getElementById('um-sub').value = data.subscription_type || 'free';
+            document.getElementById('um-role').value = data.role || 'user';
+            document.getElementById('userModal').classList.remove('hidden');
         }
 
-        function createCoupon(e) {
-            e.preventDefault();
-            const coup = {id: Date.now(), code: document.getElementById('couponCode').value.toUpperCase(), type: document.getElementById('discountType').value, value: parseInt(document.getElementById('discountValue').value), maxUses: parseInt(document.getElementById('maxUses').value), used: 0, expiry: document.getElementById('expiryDate').value, createdAt: Date.now()};
-            coupons.push(coup);
-            localStorage.setItem('masari_coupons', JSON.stringify(coupons));
-            alert('✅ تم إنشاء الكوبون بنجاح');
-            closeCouponModal(); loadCoupons();
+        async function saveUser() {
+            var id = document.getElementById('um-id').value;
+            var { error } = await sb.from('profiles').update({
+                full_name: document.getElementById('um-name').value,
+                subscription_type: document.getElementById('um-sub').value,
+                role: document.getElementById('um-role').value
+            }).eq('id', id);
+            if (error) toast('خطأ', false);
+            else { toast('تم التحديث', true); closeModal('userModal'); loadUsers(); }
         }
 
-        function loadCoupons() {
-            const active = coupons.filter(c => new Date(c.expiry) > new Date() && c.used < c.maxUses).length;
-            const used = coupons.reduce((sum, c) => sum + c.used, 0);
-            const totalDisc = coupons.reduce((sum, c) => { if (c.type === 'fixed') return sum + (c.value * c.used); return sum; }, 0);
-            document.getElementById('activeCoupons').textContent = active;
-            document.getElementById('usedCoupons').textContent = used;
-            document.getElementById('totalDiscount').textContent = totalDisc + ' ريال';
-            const list = document.getElementById('couponsList');
-            if (coupons.length === 0) { list.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-slate-500">لا توجد كوبونات</td></tr>'; return; }
-            list.innerHTML = coupons.map(c => {
-                const expired = new Date(c.expiry) < new Date();
-                const full = c.used >= c.maxUses;
-                const status = expired ? 'منتهي' : full ? 'مستنفذ' : 'نشط';
-                const statusColor = expired || full ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700';
-                const discount = c.type === 'percentage' ? `${c.value}%` : `${c.value} ريال`;
-                return `<tr class="border-b"><td class="py-3 px-4 text-sm font-mono font-bold">${c.code}</td><td class="py-3 px-4 text-sm">${discount}</td><td class="py-3 px-4 text-sm">${c.used} / ${c.maxUses}</td><td class="py-3 px-4 text-sm">${c.expiry}</td><td class="py-3 px-4 text-center"><span class="px-2 py-1 ${statusColor} rounded text-xs">${status}</span> <button class="text-sm text-red-600 hover:text-red-700 mr-2" onclick="deleteCoupon(${c.id})">حذف</button></td></tr>`;
-            }).join('');
+        // ═══════════════════════════════════
+        //  الكوبونات
+        // ═══════════════════════════════════
+        async function loadCoupons() {
+            var { data } = await sb.from('coupons').select('*').order('created_at', { ascending: false });
+            if (!data || data.length === 0) { document.getElementById('coupons-list').innerHTML = '<tr><td colspan="6" class="p-6 text-center text-purple-300/30 text-sm">لا توجد كوبونات</td></tr>'; return; }
+            var html = '';
+            data.forEach(function(c) {
+                var active = !c.expires_at || new Date(c.expires_at) > new Date();
+                html += '<tr class="table-row"><td class="p-3 font-bold text-sm text-indigo-300">' + c.code + '</td><td class="p-3 text-center text-sm">' + c.discount_value + (c.discount_type === 'percentage' ? '%' : ' ريال') + '</td><td class="p-3 text-center text-sm font-bold">' + (c.used_count || 0) + '</td><td class="p-3 text-center text-sm text-purple-300/40">' + (c.max_uses || '∞') + '</td><td class="p-3 text-center"><span class="badge ' + (active ? 'badge-yearly' : 'badge-free') + '">' + (active ? 'فعّال' : 'منتهي') + '</span></td><td class="p-3 text-center"><button class="btn-d" onclick="deleteCoupon(\'' + c.id + '\')">🗑️</button></td></tr>';
+            });
+            document.getElementById('coupons-list').innerHTML = html;
         }
 
-        function deleteCoupon(id) { if (!confirm('متأكد تبي تحذف هالكوبون؟')) return; coupons = coupons.filter(c => c.id !== id); localStorage.setItem('masari_coupons', JSON.stringify(coupons)); loadCoupons(); }
-        function sendCouponToUser() { const code = prompt('أدخل كود الكوبون للإرسال:'); if (code) { alert(`✅ تم إرسال الكوبون ${code} للمستخدم`); } }
+        function openCouponModal() { document.getElementById('couponModal').classList.remove('hidden'); }
 
-        function loadUsers() {
-            const u = JSON.parse(localStorage.getItem('masari_user') || 'null');
-            const s = JSON.parse(localStorage.getItem('masari_subscription') || 'null');
-            if (!u) { document.getElementById('usersList').innerHTML = '<tr><td colspan="5" class="text-center py-8 text-slate-500">لا توجد بيانات</td></tr>'; return; }
-            const plan = s ? (s.plan === 'monthly' ? 'شهري' : 'سنوي') : 'مجاني';
-            const planColor = s ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-700';
-            const date = new Date(u.createdAt).toLocaleDateString('ar-SA');
-            document.getElementById('newUsers').textContent = 1;
-            document.getElementById('paidUsers').textContent = s ? 1 : 0;
-            document.getElementById('freeUsers').textContent = s ? 0 : 1;
-            document.getElementById('usersList').innerHTML = `<tr class="border-b"><td class="py-3 px-4 text-sm">${u.name}</td><td class="py-3 px-4 text-sm">${u.email}</td><td class="py-3 px-4 text-sm"><span class="px-2 py-1 ${planColor} rounded text-xs">${plan}</span></td><td class="py-3 px-4 text-sm text-slate-500">${date}</td><td class="py-3 px-4 text-center"><button class="text-sm text-indigo-600 hover:text-indigo-700 mr-2" onclick="editUser()">تعديل</button><button class="text-sm text-green-600 hover:text-green-700" onclick="sendCouponToUser()">إرسال كوبون</button></td></tr>`;
+        async function saveCoupon() {
+            var obj = {
+                code: document.getElementById('cm-code').value.toUpperCase().trim(),
+                discount_type: document.getElementById('cm-type').value,
+                discount_value: parseFloat(document.getElementById('cm-value').value),
+                max_uses: parseInt(document.getElementById('cm-max').value) || 100,
+                used_count: 0,
+                expires_at: document.getElementById('cm-expires').value || null
+            };
+            if (!obj.code || !obj.discount_value) { toast('املأ الحقول', false); return; }
+            var { error } = await sb.from('coupons').insert(obj);
+            if (error) toast('خطأ: ' + error.message, false);
+            else { toast('تم إنشاء الكوبون', true); closeModal('couponModal'); loadCoupons(); }
         }
 
-        function editUser() {
-            const u = JSON.parse(localStorage.getItem('masari_user'));
-            document.getElementById('editUserId').value = 'current';
-            document.getElementById('editUserName').value = u.name;
-            document.getElementById('editUserEmail').value = u.email;
-            document.getElementById('editUserPhone').value = u.phone || '';
-            document.getElementById('editUserModal').classList.remove('hidden');
+        async function deleteCoupon(id) {
+            if (!confirm('متأكد تحذف الكوبون؟')) return;
+            await sb.from('coupons').delete().eq('id', id);
+            toast('تم الحذف', true); loadCoupons();
         }
 
-        function closeEditUserModal() { document.getElementById('editUserModal').classList.add('hidden'); }
-        
-        function saveUserEdit(e) {
-            e.preventDefault();
-            const u = JSON.parse(localStorage.getItem('masari_user'));
-            u.name = document.getElementById('editUserName').value;
-            u.email = document.getElementById('editUserEmail').value;
-            const newPass = document.getElementById('editUserPassword').value;
-            if (newPass) u.password = newPass;
-            u.phone = document.getElementById('editUserPhone').value;
-            localStorage.setItem('masari_user', JSON.stringify(u));
-            alert('✅ تم حفظ التغييرات');
-            closeEditUserModal(); loadUsers();
+        // ═══════════════════════════════════
+        //  المالية
+        // ═══════════════════════════════════
+        async function loadFinance() {
+            var { data } = await sb.from('profiles').select('subscription_type');
+            if (!data) return;
+            var m = data.filter(function(u){ return u.subscription_type === 'monthly'; }).length;
+            var y = data.filter(function(u){ return u.subscription_type === 'yearly'; }).length;
+            var f = data.filter(function(u){ return !u.subscription_type || u.subscription_type === 'free'; }).length;
+            document.getElementById('fin-active').textContent = m + y;
+            document.getElementById('fin-monthly').textContent = m;
+            document.getElementById('fin-yearly').textContent = y;
+            document.getElementById('fin-free').textContent = f;
         }
 
-        function logout() { if (confirm('متأكد تبي تسجل خروج؟')) window.location.href = 'index.html'; }
-
-        loadStats();
-        const style = document.createElement('style');
-        sty
-        // Tab switching function
-        function switchTab(tabName) {
-            // Hide all content
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            // Remove active from all buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active', 'bg-indigo-100', 'text-indigo-700'));
-            // Show selected content
-            const content = document.getElementById('content-' + tabName);
-            if (content) content.classList.remove('hidden');
-            // Activate button
-            const button = document.getElementById('tab-' + tabName);
-            if (button) button.classList.add('active', 'bg-indigo-100', 'text-indigo-700');
+        // ═══════════════════════════════════
+        //  البلاغات
+        // ═══════════════════════════════════
+        async function loadReports() {
+            var { data } = await sb.from('reports').select('*, questions(question_text, section)').order('reported_at', { ascending: false });
+            if (!data || data.length === 0) { document.getElementById('reports-list').innerHTML = '<div class="glass p-8 text-center text-purple-300/30 text-sm">ما فيه بلاغات</div>'; return; }
+            var html = '';
+            data.forEach(function(r) {
+                html += '<div class="glass p-4"><div class="flex items-start justify-between gap-3"><div><p class="text-sm text-white mb-1">' + (r.questions ? r.questions.question_text.substring(0,80) + '...' : 'سؤال محذوف') + '</p><p class="text-purple-300/40 text-xs">السبب: ' + (r.reason || 'ما حدد') + '</p><p class="text-purple-300/20 text-xs mt-1">' + new Date(r.reported_at).toLocaleDateString('ar-SA') + '</p></div><button class="btn-d flex-shrink-0" onclick="deleteReport(\'' + r.id + '\')">✕</button></div></div>';
+            });
+            document.getElementById('reports-list').innerHTML = html;
         }
+
+        async function deleteReport(id) { await sb.from('reports').delete().eq('id', id); toast('تم حذف البلاغ', true); loadReports(); }
+
+        // ═══════════════════════════════════
+        //  الموظفين
+        // ═══════════════════════════════════
+        async function loadStaff() {
+            var { data } = await sb.from('profiles').select('*').eq('role', 'admin');
+            if (!data) data = [];
+            var html = '';
+            data.forEach(function(s) {
+                html += '<tr class="table-row"><td class="p-3 text-sm font-medium">' + (s.full_name || '—') + '</td><td class="p-3 text-purple-300/40 text-xs">' + (s.email || '') + '</td><td class="p-3 text-center"><span class="badge badge-admin">أدمن</span></td><td class="p-3 text-center text-purple-300/30 text-xs">كامل</td><td class="p-3 text-center">' + (s.id !== currentAdmin.id ? '<button class="btn-d" onclick="removeStaff(\'' + s.id + '\')">إزالة</button>' : '<span class="text-purple-300/20 text-xs">أنت</span>') + '</td></tr>';
+            });
+            document.getElementById('staff-list').innerHTML = html;
+        }
+
+        function openStaffModal() { document.getElementById('staffModal').classList.remove('hidden'); }
+
+        async function saveStaff() {
+            var email = document.getElementById('sm-email').value.trim();
+            if (!email) { toast('أدخل الإيميل', false); return; }
+            var { data: user } = await sb.from('profiles').select('id').eq('email', email).single();
+            if (!user) { toast('ما لقينا حساب بهالإيميل', false); return; }
+            var { error } = await sb.from('profiles').update({ role: 'admin' }).eq('id', user.id);
+            if (error) toast('خطأ', false);
+            else { toast('تم إضافة الموظف كأدمن', true); closeModal('staffModal'); loadStaff(); }
+        }
+
+        async function removeStaff(id) {
+            if (!confirm('متأكد تشيل صلاحيات الأدمن؟')) return;
+            await sb.from('profiles').update({ role: 'user' }).eq('id', id);
+            toast('تم إزالة الصلاحيات', true); loadStaff();
+        }
+
+        // ═══════════════════════════════════
+        //  الإعدادات
+        // ═══════════════════════════════════
+        async function loadSettings() {
+            var { data } = await sb.from('site_settings').select('*');
+            if (data) {
+                data.forEach(function(s) {
+                    if (s.key === 'banner_text') document.getElementById('set-banner').value = s.value || '';
+                    if (s.key === 'free_limit') document.getElementById('set-free-limit').value = s.value || '10';
+                    if (s.key === 'price_monthly') document.getElementById('set-price-monthly').value = s.value || '29';
+                    if (s.key === 'price_yearly') document.getElementById('set-price-yearly').value = s.value || '228';
+                    if (s.key === 'theme') {
+                        var r = document.querySelector('input[name="theme"][value="' + s.value + '"]');
+                        if (r) r.checked = true;
+                    }
+                });
+            }
+        }
+
+        async function saveSetting(key, value) {
+            var { data: existing } = await sb.from('site_settings').select('id').eq('key', key).single();
+            if (existing) {
+                await sb.from('site_settings').update({ value: value }).eq('key', key);
+            } else {
+                await sb.from('site_settings').insert({ key: key, value: value });
+            }
+            toast('تم الحفظ', true);
+        }
+
+        function saveTheme() {
+            var v = document.querySelector('input[name="theme"]:checked');
+            if (v) saveSetting('theme', v.value);
+        }
+
+        function savePricing() {
+            saveSetting('price_monthly', document.getElementById('set-price-monthly').value);
+            saveSetting('price_yearly', document.getElementById('set-price-yearly').value);
+        }
+
+        // ═══ Init ═══
+        document.addEventListener('DOMContentLoaded', checkAdmin);
     </script>
 </body>
 </html>
