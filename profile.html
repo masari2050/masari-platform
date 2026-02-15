@@ -82,8 +82,7 @@
         .btn-primary {
             background: linear-gradient(135deg, #8b5cf6, #6366f1, #4f46e5);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
         }
         .btn-primary:hover {
             transform: translateY(-2px);
@@ -92,10 +91,17 @@
         .btn-primary:active {
             transform: translateY(0);
         }
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
 
         .btn-danger {
             background: linear-gradient(135deg, #ef4444, #dc2626);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         .btn-danger:hover {
             transform: translateY(-2px);
@@ -103,6 +109,12 @@
         }
         .btn-danger:active {
             transform: translateY(0);
+        }
+        .btn-danger:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         /* Toast */
@@ -130,6 +142,7 @@
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
             display: inline-block;
+            vertical-align: middle;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -167,13 +180,39 @@
             background: linear-gradient(135deg, #8b5cf6, #6366f1);
             box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
         }
+
+        /* Password eye toggle */
+        .password-wrapper {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: rgba(255,255,255,0.4);
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+        .password-toggle:hover {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Date style */
+        .join-date {
+            color: rgba(167, 139, 250, 0.5);
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <body class="font-tajawal text-white">
 
     <!-- Toast Notification -->
     <div id="toast" class="toast">
-        <div class="bg-gray-800 border border-gray-600 rounded-xl px-6 py-3 shadow-2xl flex items-center gap-3">
+        <div class="bg-gray-800/95 border border-gray-600/50 rounded-2xl px-6 py-3.5 shadow-2xl flex items-center gap-3 backdrop-blur-sm">
             <span id="toast-icon" class="text-xl">✅</span>
             <span id="toast-msg" class="text-sm font-medium">تم الحفظ بنجاح</span>
         </div>
@@ -218,7 +257,8 @@
                     <span id="user-avatar">👤</span>
                 </div>
                 <h2 id="user-name-display" class="text-2xl font-bold mb-1">...</h2>
-                <p id="user-email-display" class="text-purple-300/70 text-sm">...</p>
+                <p id="user-email-display" class="text-purple-300/70 text-sm mb-1">...</p>
+                <p id="user-join-date" class="join-date"></p>
             </div>
 
             <!-- Personal Info Card -->
@@ -255,11 +295,27 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs text-purple-300/60 mb-1.5 font-medium">كلمة المرور الجديدة</label>
-                        <input type="password" id="input-password" class="input-field w-full rounded-xl px-4 py-3 text-sm" placeholder="اتركها فارغة إذا ما تبي تغيّر">
+                        <div class="password-wrapper">
+                            <input type="password" id="input-password" class="input-field w-full rounded-xl px-4 py-3 text-sm" placeholder="اتركها فارغة إذا ما تبي تغيّر" dir="ltr" style="text-align:right;">
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('input-password', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-xs text-purple-300/60 mb-1.5 font-medium">تأكيد كلمة المرور</label>
-                        <input type="password" id="input-password-confirm" class="input-field w-full rounded-xl px-4 py-3 text-sm" placeholder="أعد كتابة كلمة المرور الجديدة">
+                        <div class="password-wrapper">
+                            <input type="password" id="input-password-confirm" class="input-field w-full rounded-xl px-4 py-3 text-sm" placeholder="أعد كتابة كلمة المرور الجديدة" dir="ltr" style="text-align:right;">
+                            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('input-password-confirm', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -287,17 +343,20 @@
             <!-- Action Buttons -->
             <div class="animate-in delay-4 space-y-3">
                 <!-- Save Button -->
-                <button id="btn-save" onclick="saveChanges()" class="btn-primary w-full rounded-xl py-3.5 text-sm font-bold text-white cursor-pointer">
-                    <span id="save-text">حفظ التغييرات</span>
-                    <span id="save-spinner" class="hidden"><span class="spinner"></span></span>
+                <button type="button" id="btn-save" onclick="saveChanges()" class="btn-primary w-full rounded-xl py-3.5 text-sm font-bold text-white">
+                    <span id="save-text">💾 حفظ التغييرات</span>
+                    <span id="save-spinner" class="hidden"><span class="spinner"></span> جاري الحفظ...</span>
                 </button>
 
                 <!-- Logout Button -->
-                <button id="btn-logout" onclick="logoutUser()" class="btn-danger w-full rounded-xl py-3.5 text-sm font-bold text-white cursor-pointer">
-                    <span id="logout-text">تسجيل الخروج</span>
-                    <span id="logout-spinner" class="hidden"><span class="spinner"></span></span>
+                <button type="button" id="btn-logout" onclick="logoutUser()" class="btn-danger w-full rounded-xl py-3.5 text-sm font-bold text-white">
+                    <span id="logout-text">🚪 تسجيل الخروج</span>
+                    <span id="logout-spinner" class="hidden"><span class="spinner"></span> جاري الخروج...</span>
                 </button>
             </div>
+
+            <!-- App Version -->
+            <p class="text-center text-purple-300/30 text-xs mt-8">مساري v1.0</p>
 
         </div>
     </div>
@@ -306,10 +365,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // ============ Supabase Init ============
-        const SUPABASE_URL = 'https://czzcmbxejxbotjemyuqf.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg4MTYwNzcsImV4cCI6MjA1NDM5MjA3N30.ssII2KdmOcz1n-L3fo_tGdtHKBnPxLmEcJpWGBJBxDE';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // ============================================================
+        // IMPORTANT: use "sb" not "supabase" to avoid conflict
+        // with the global window.supabase from the SDK
+        // (same pattern used in login.html, dashboard.html, etc.)
+        // ============================================================
+        const sb = window.supabase.createClient(
+            'https://czzcmbxejxbotjemyuqf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg4MTYwNzcsImV4cCI6MjA1NDM5MjA3N30.ssII2KdmOcz1n-L3fo_tGdtHKBnPxLmEcJpWGBJBxDE'
+        );
 
         // ============ State ============
         let currentUser = null;
@@ -322,6 +386,18 @@
             document.getElementById('toast-icon').textContent = icon;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============ Password Visibility ============
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/></svg>';
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>';
+            }
         }
 
         // ============ Sound Toggle ============
@@ -357,11 +433,23 @@
             }
         }
 
+        // ============ Format Date ============
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                const d = new Date(dateStr);
+                const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+                return 'عضو منذ ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+            } catch(e) {
+                return '';
+            }
+        }
+
         // ============ Load Profile ============
         async function loadProfile() {
             try {
                 // Get current auth user
-                const { data: { user }, error: authError } = await supabase.auth.getUser();
+                const { data: { user }, error: authError } = await sb.auth.getUser();
 
                 if (authError || !user) {
                     console.error('Auth error:', authError);
@@ -371,13 +459,18 @@
 
                 currentUser = user;
 
-                // Display email immediately
+                // Display email immediately from auth
                 const email = user.email || 'غير متوفر';
                 document.getElementById('user-email-display').textContent = email;
                 document.getElementById('email-readonly').textContent = email;
 
+                // Show join date
+                if (user.created_at) {
+                    document.getElementById('user-join-date').textContent = formatDate(user.created_at);
+                }
+
                 // Get profile from profiles table
-                const { data: profile, error: profileError } = await supabase
+                const { data: profile, error: profileError } = await sb
                     .from('profiles')
                     .select('*')
                     .eq('id', user.id)
@@ -392,8 +485,14 @@
                     if (profile.avatar_emoji) {
                         document.getElementById('user-avatar').textContent = profile.avatar_emoji;
                     }
+
+                    // Use profile created_at if auth doesn't have it
+                    if (!user.created_at && profile.created_at) {
+                        document.getElementById('user-join-date').textContent = formatDate(profile.created_at);
+                    }
                 } else {
                     document.getElementById('user-name-display').textContent = 'مستخدم مساري';
+                    console.warn('Profile not found, profileError:', profileError);
                 }
 
                 // Init sound toggle
@@ -406,10 +505,7 @@
             } catch (err) {
                 console.error('Error loading profile:', err);
                 showToast('حدث خطأ في تحميل البيانات', '❌');
-                document.getElementById('loading-state').innerHTML = `
-                    <p class="text-red-400 text-sm">حدث خطأ في تحميل البيانات</p>
-                    <a href="dashboard.html" class="text-purple-400 text-sm mt-2 underline">العودة للرئيسية</a>
-                `;
+                document.getElementById('loading-state').innerHTML = '<p class="text-red-400 text-sm">حدث خطأ في تحميل البيانات</p><a href="dashboard.html" class="text-purple-400 text-sm mt-3 underline block">العودة للرئيسية</a>';
             }
         }
 
@@ -419,9 +515,11 @@
             const saveText = document.getElementById('save-text');
             const saveSpinner = document.getElementById('save-spinner');
 
+            // Prevent double-click
+            if (btn.disabled) return;
+
             // Disable button & show spinner
             btn.disabled = true;
-            btn.style.opacity = '0.7';
             saveText.classList.add('hidden');
             saveSpinner.classList.remove('hidden');
 
@@ -432,9 +530,23 @@
 
                 let hasChanges = false;
 
+                // Validate password first (before making any changes)
+                if (newPassword) {
+                    if (newPassword.length < 6) {
+                        showToast('كلمة المرور لازم تكون 6 أحرف على الأقل', '⚠️');
+                        resetSaveButton();
+                        return;
+                    }
+                    if (newPassword !== confirmPassword) {
+                        showToast('كلمات المرور ما تتطابق', '⚠️');
+                        resetSaveButton();
+                        return;
+                    }
+                }
+
                 // Update name in profiles table
                 if (newName && newName !== (currentProfile?.name || '')) {
-                    const { error: nameError } = await supabase
+                    const { error: nameError } = await sb
                         .from('profiles')
                         .update({ name: newName })
                         .eq('id', currentUser.id);
@@ -450,16 +562,7 @@
 
                 // Update password
                 if (newPassword) {
-                    if (newPassword.length < 6) {
-                        showToast('كلمة المرور لازم تكون 6 أحرف على الأقل', '⚠️');
-                        return;
-                    }
-                    if (newPassword !== confirmPassword) {
-                        showToast('كلمات المرور ما تتطابق', '⚠️');
-                        return;
-                    }
-
-                    const { error: passError } = await supabase.auth.updateUser({
+                    const { error: passError } = await sb.auth.updateUser({
                         password: newPassword
                     });
 
@@ -474,7 +577,7 @@
                 }
 
                 if (hasChanges) {
-                    showToast('تم حفظ التغييرات بنجاح ✓', '✅');
+                    showToast('تم حفظ التغييرات بنجاح', '✅');
                 } else {
                     showToast('ما في تغييرات جديدة', 'ℹ️');
                 }
@@ -483,12 +586,17 @@
                 console.error('Save error:', err);
                 showToast(err.message || 'حدث خطأ أثناء الحفظ', '❌');
             } finally {
-                // Re-enable button
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                saveText.classList.remove('hidden');
-                saveSpinner.classList.add('hidden');
+                resetSaveButton();
             }
+        }
+
+        function resetSaveButton() {
+            const btn = document.getElementById('btn-save');
+            const saveText = document.getElementById('save-text');
+            const saveSpinner = document.getElementById('save-spinner');
+            btn.disabled = false;
+            saveText.classList.remove('hidden');
+            saveSpinner.classList.add('hidden');
         }
 
         // ============ Logout ============
@@ -497,20 +605,19 @@
             const logoutText = document.getElementById('logout-text');
             const logoutSpinner = document.getElementById('logout-spinner');
 
+            // Prevent double-click
+            if (btn.disabled) return;
+
             btn.disabled = true;
-            btn.style.opacity = '0.7';
             logoutText.classList.add('hidden');
             logoutSpinner.classList.remove('hidden');
 
             try {
-                const { error } = await supabase.auth.signOut();
+                const { error } = await sb.auth.signOut();
 
                 if (error) {
                     throw error;
                 }
-
-                // Clear local data
-                localStorage.removeItem('soundEnabled');
 
                 showToast('تم تسجيل الخروج', '👋');
 
@@ -524,7 +631,6 @@
                 showToast('حدث خطأ أثناء تسجيل الخروج', '❌');
 
                 btn.disabled = false;
-                btn.style.opacity = '1';
                 logoutText.classList.remove('hidden');
                 logoutSpinner.classList.add('hidden');
             }
