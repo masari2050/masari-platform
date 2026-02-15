@@ -1,151 +1,118 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تسجيل الدخول - مساري</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    body { font-family: 'Tajawal', sans-serif; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - مساري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        *{font-family:'Tajawal',sans-serif}
+        body{background:linear-gradient(135deg,#0f0a2e 0%,#1a1145 30%,#1e1550 50%,#151040 70%,#0d0825 100%);min-height:100vh;display:flex;align-items:center;justify-content:center}
+        .card-glass{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:1.5rem}
+        .input-dark{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:.75rem;padding:.75rem 1rem;color:#fff;width:100%;transition:all .2s}
+        .input-dark:focus{outline:none;border-color:rgba(139,92,246,0.5);box-shadow:0 0 0 3px rgba(139,92,246,0.15)}
+        .input-dark::placeholder{color:rgba(255,255,255,0.25)}
+        .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);transition:all .3s;box-shadow:0 8px 25px rgba(99,102,241,0.3)}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 35px rgba(99,102,241,0.5)}
+        .btn-primary:disabled{opacity:.5;transform:none!important}
+        .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;font-size:.875rem;font-weight:700;z-index:999;animation:slideDown .4s ease}
+        .toast-error{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+        @keyframes slideDown{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .animate-in{animation:fadeUp .5s ease forwards}.delay-1{animation-delay:.1s;opacity:0}.delay-2{animation-delay:.2s;opacity:0}
+    </style>
 </head>
+<body class="text-white p-4">
 
-<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div id="toast" class="toast hidden"></div>
 
-  <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-    <div class="text-center mb-8">
-      <div class="text-4xl mb-3">🎓</div>
-      <h1 class="text-3xl font-bold text-gray-800 mb-2">أهلاً بعودتك</h1>
-      <p class="text-gray-600">سجّل دخولك وكمّل رحلتك</p>
-    </div>
-
-    <form id="loginForm" class="space-y-4">
-      <div>
-        <label class="block text-gray-700 font-medium mb-2">البريد الإلكتروني</label>
-        <input
-          type="email"
-          id="email"
-          required
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-          placeholder="example@email.com"
-        >
-      </div>
-
-      <div>
-        <label class="block text-gray-700 font-medium mb-2">كلمة المرور</label>
-        <div class="relative">
-          <input
-            type="password"
-            id="password"
-            required
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            placeholder="أدخل كلمة المرور"
-          >
-          <button
-            type="button"
-            onclick="togglePass()"
-            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-          >👁️</button>
+    <div class="w-full max-w-sm">
+        <!-- Logo -->
+        <div class="text-center mb-6 animate-in delay-1">
+            <span class="text-4xl block mb-2">🎓</span>
+            <h1 class="text-2xl font-black mb-1">أهلاً بعودتك</h1>
+            <p class="text-purple-300/50 text-sm">سجّل دخولك وكمّل رحلتك</p>
         </div>
-      </div>
 
-      <div id="errorMsg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+        <!-- Form Card -->
+        <div class="card-glass p-6 animate-in delay-2">
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-purple-300/60 text-xs font-medium mb-1.5">البريد الإلكتروني</label>
+                    <input type="email" id="email" required class="input-dark" placeholder="example@email.com" autocomplete="email">
+                </div>
+                <div>
+                    <label class="block text-purple-300/60 text-xs font-medium mb-1.5">كلمة المرور</label>
+                    <div class="relative">
+                        <input type="password" id="password" required class="input-dark pl-10" placeholder="أدخل كلمة المرور" autocomplete="current-password">
+                        <button type="button" onclick="togglePass()" class="absolute left-3 top-1/2 -translate-y-1/2 text-purple-300/30 hover:text-purple-300/60 transition">
+                            <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="btn-primary w-full py-3 rounded-xl font-bold text-sm text-white">
+                    تسجيل الدخول
+                </button>
+            </form>
 
-      <button
-        type="submit"
-        id="submitBtn"
-        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-bold text-lg transition transform hover:scale-105"
-      >
-        تسجيل الدخول 🚀
-      </button>
-    </form>
+            <div class="text-center mt-5">
+                <p class="text-purple-300/40 text-xs">ما عندك حساب؟ <a href="register.html" class="text-indigo-400 font-bold hover:underline">سجّل الآن</a></p>
+            </div>
+        </div>
 
-    <div class="text-center mt-6">
-      <p class="text-gray-600">
-        ما عندك حساب؟
-        <a href="register.html" class="text-indigo-600 font-bold hover:underline">سجّل الآن</a>
-      </p>
+        <div class="text-center mt-4">
+            <a href="index.html" class="text-purple-300/25 text-xs hover:text-purple-300/50 transition">← الرئيسية</a>
+        </div>
     </div>
 
-    <div class="text-center mt-4">
-      <a href="index.html" class="text-gray-500 text-sm hover:underline">← العودة للصفحة الرئيسية</a>
-    </div>
-  </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const sb = window.supabase.createClient(
+            'https://czzcmbxejxbotjemyuqf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
+        );
 
-  <script>
-    const sb = window.supabase.createClient(
-      'https://czzcmbxejxbotjemyuqf.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
-    );
-
-    function togglePass() {
-      const f = document.getElementById('password');
-      f.type = f.type === 'password' ? 'text' : 'password';
-    }
-
-    function showErr(m) {
-      const e = document.getElementById('errorMsg');
-      e.textContent = m;
-      e.classList.remove('hidden');
-    }
-
-    async function checkAuth() {
-      const { data: { session } } = await sb.auth.getSession();
-      if (session) {
-        // NEW: إذا فيه جلسة، خزن بيانات بسيطة حتى صفحات localStorage ما تتلخبط
-        localStorage.setItem('masari_user', JSON.stringify({
-          id: session.user.id,
-          email: session.user.email,
-          name: session.user.user_metadata?.name || 'طالب مساري'
-        }));
-        window.location.href = 'dashboard.html';
-      }
-    }
-    checkAuth();
-
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      const em = document.getElementById('email').value.trim();
-      const p = document.getElementById('password').value;
-
-      if (!em || !p) {
-        showErr('الرجاء ملء جميع الحقول');
-        return;
-      }
-
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = true;
-      btn.textContent = 'جاري تسجيل الدخول...';
-
-      try {
-        const { data, error } = await sb.auth.signInWithPassword({ email: em, password: p });
-        if (error) throw error;
-
-        // NEW: هذا هو السطر المهم اللي ناقص عندك
-        localStorage.setItem('masari_user', JSON.stringify({
-          id: data.user.id,
-          email: data.user.email,
-          name: data.user.user_metadata?.name || 'طالب مساري'
-        }));
-
-        window.location.href = 'dashboard.html';
-
-      } catch (error) {
-        if ((error.message || '').includes('Invalid')) {
-          showErr('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-        } else if ((error.message || '').includes('not confirmed')) {
-          showErr('لم يتم تأكيد البريد الإلكتروني');
-        } else {
-          showErr('حدث خطأ: ' + (error.message || error));
+        function togglePass() {
+            var f = document.getElementById('password');
+            f.type = f.type === 'password' ? 'text' : 'password';
         }
 
-        btn.disabled = false;
-        btn.textContent = 'تسجيل الدخول 🚀';
-      }
-    });
-  </script>
+        function showToast(msg, type) {
+            var t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast toast-' + (type || 'error');
+            setTimeout(function() { t.classList.add('hidden'); }, 3500);
+        }
+
+        (async function() {
+            var { data: { session } } = await sb.auth.getSession();
+            if (session) {
+                localStorage.setItem('masari_user', JSON.stringify({ id: session.user.id, email: session.user.email, name: session.user.user_metadata?.name || '' }));
+                window.location.href = 'dashboard.html';
+            }
+        })();
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var em = document.getElementById('email').value.trim();
+            var p = document.getElementById('password').value;
+            if (!em || !p) { showToast('الرجاء ملء جميع الحقول'); return; }
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.textContent = 'جاري الدخول...';
+            try {
+                var { data, error } = await sb.auth.signInWithPassword({ email: em, password: p });
+                if (error) throw error;
+                localStorage.setItem('masari_user', JSON.stringify({ id: data.user.id, email: data.user.email, name: data.user.user_metadata?.name || '' }));
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                var msg = 'حدث خطأ غير متوقع';
+                if ((error.message || '').includes('Invalid')) msg = 'البريد أو كلمة المرور غلط';
+                else if ((error.message || '').includes('not confirmed')) msg = 'البريد ما تأكد بعد';
+                showToast(msg);
+                btn.disabled = false; btn.textContent = 'تسجيل الدخول';
+            }
+        });
+    </script>
 </body>
 </html>
