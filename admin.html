@@ -440,11 +440,10 @@
         // ═══ Auth ═══
         async function checkAdmin() {
             var { data: { session } } = await sb.auth.getSession();
-            if (!session) { window.location.href = 'login.html'; return; }
+            if (!session) { window.location.href = 'admin-login.html'; return; }
             var { data: profile } = await sb.from('profiles').select('role, full_name').eq('id', session.user.id).single();
             if (!profile || profile.role !== 'admin') {
-                alert('ما عندك صلاحية للوصول لهذه الصفحة');
-                window.location.href = 'dashboard.html';
+                window.location.href = 'admin-login.html';
                 return;
             }
             currentAdmin = { id: session.user.id, ...profile };
