@@ -290,12 +290,12 @@
                 try {
                     const { data: profile } = await sb
                         .from('profiles')
-                        .select('name, avatar_emoji')
+                        .select('full_name, avatar_emoji')
                         .eq('id', currentUser.id)
                         .single();
 
-                    if (profile && profile.name) {
-                        displayName = profile.name;
+                    if (profile && profile.full_name) {
+                        displayName = profile.full_name;
                     }
                     if (profile && profile.avatar_emoji) {
                         document.getElementById('user-avatar').textContent = profile.avatar_emoji;
