@@ -27,6 +27,9 @@
         .beta-banner {
             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         }
+        .dot {
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -172,7 +175,13 @@
             });
             
             // إضافة selected للمختار
-            event.target.classList.add('selected');
+            const clickedButton = Array.from(document.querySelectorAll('.emoji-option')).find(btn => 
+                btn.textContent.trim() === emoji
+            );
+            
+            if (clickedButton) {
+                clickedButton.classList.add('selected');
+            }
             
             // تحديث القيمة
             document.getElementById('selectedEmoji').value = emoji;
@@ -182,22 +191,38 @@
         // ============================================
         // 🔊 تبديل الصوت
         // ============================================
-        document.getElementById('soundToggle').addEventListener('change', function() {
-            const track = document.getElementById('soundToggleTrack');
-            const dot = document.getElementById('soundToggleDot');
-            
+        const soundToggle = document.getElementById('soundToggle');
+        const soundToggleTrack = document.getElementById('soundToggleTrack');
+        const soundToggleDot = document.getElementById('soundToggleDot');
+
+        // تفعيل الصوت افتراضياً
+        soundToggle.checked = true;
+        soundToggleTrack.classList.add('bg-purple-600');
+        soundToggleTrack.classList.remove('bg-gray-300');
+        soundToggleDot.style.transform = 'translateX(24px)';
+
+        soundToggle.addEventListener('change', function() {
             if (this.checked) {
-                track.classList.remove('bg-gray-300');
-                track.classList.add('bg-purple-600');
-                dot.classList.remove('right-1');
-                dot.classList.add('right-7');
+                soundToggleTrack.classList.remove('bg-gray-300');
+                soundToggleTrack.classList.add('bg-purple-600');
+                soundToggleDot.style.transform = 'translateX(24px)';
+                localStorage.setItem('soundEnabled', 'true');
             } else {
-                track.classList.add('bg-gray-300');
-                track.classList.remove('bg-purple-600');
-                dot.classList.add('right-1');
-                dot.classList.remove('right-7');
+                soundToggleTrack.classList.add('bg-gray-300');
+                soundToggleTrack.classList.remove('bg-purple-600');
+                soundToggleDot.style.transform = 'translateX(0)';
+                localStorage.setItem('soundEnabled', 'false');
             }
         });
+
+        // تحميل حالة الصوت المحفوظة
+        const soundEnabled = localStorage.getItem('soundEnabled');
+        if (soundEnabled === 'false') {
+            soundToggle.checked = false;
+            soundToggleTrack.classList.add('bg-gray-300');
+            soundToggleTrack.classList.remove('bg-purple-600');
+            soundToggleDot.style.transform = 'translateX(0)';
+        }
 
         // ============================================
         // ⚠️ عرض الرسائل
@@ -253,11 +278,13 @@
                 console.log('✅ البروفايل الحالي:', profile);
                 
                 // عرض البيانات
-                document.getElementById('displayName').textContent = profile.name || 'مستخدم';
-                document.getElementById('displayEmail').textContent = user.email;
-                document.getElementById('nameInput').value = profile.name || '';
-                document.getElementById('mainAvatar').textContent = profile.avatar_emoji || '👤';
-                document.getElementById('selectedEmoji').value = profile.avatar_emoji || '👤';
+                document.getElementById('displayName').textContent = profile?.name || currentUser.email.split('@')[0];
+                document.getElementById('displayEmail').textContent = currentUser.email;
+                document.getElementById('nameInput').value = profile?.name || '';
+                
+                const avatarEmoji = profile?.avatar_emoji || '👤';
+                document.getElementById('mainAvatar').textContent = avatarEmoji;
+                document.getElementById('selectedEmoji').value = avatarEmoji;
                 
                 // تحديد الإيموجي الحالي
                 document.querySelectorAll('.emoji-option').forEach(btn => {
