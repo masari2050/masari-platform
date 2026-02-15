@@ -4,28 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الملف الشخصي - مساري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
         .beta-banner {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #4f46e5 100%);
+            background-size: 200% 100%;
+            animation: gradient-flow 3s ease infinite;
+        }
+        @keyframes gradient-flow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .toggle-bg:after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            background: white;
+            border-radius: 50%;
+            height: 20px;
+            width: 20px;
+            transition: transform 0.3s ease;
+        }
+        input:checked + .toggle-bg:after {
+            transform: translateX(24px);
+        }
+        input:checked + .toggle-bg {
+            background-color: #667eea;
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
 
     <!-- الشريط العلوي -->
     <div class="beta-banner text-white py-2 px-4 text-center text-xs sm:text-sm font-bold leading-relaxed">
@@ -33,9 +48,9 @@
     </div>
 
     <!-- الهيدر -->
-    <header class="gradient-bg text-white py-6 shadow-lg">
+    <header class="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-6 shadow-lg">
         <div class="max-w-4xl mx-auto px-4 flex items-center gap-4">
-            <button onclick="window.location.href='dashboard.html'" class="text-3xl hover:scale-110 transition-transform">
+            <button onclick="goBack()" class="text-3xl hover:scale-110 transition-transform">
                 ← 
             </button>
             <h1 class="text-2xl font-bold">الملف الشخصي</h1>
@@ -46,15 +61,15 @@
     <main class="max-w-4xl mx-auto px-4 py-8">
 
         <!-- رسائل النجاح/الخطأ -->
-        <div id="successMessage" class="hidden mb-4 p-4 bg-green-50 border border-green-200 rounded-2xl text-green-700 text-sm font-semibold"></div>
-        <div id="errorMessage" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-semibold"></div>
+        <div id="successMessage" class="hidden mb-4 p-4 bg-green-50 border border-green-200 rounded-2xl text-green-700 text-sm font-bold"></div>
+        <div id="errorMessage" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-bold"></div>
 
-        <!-- بطاقة المعلومات الأساسية -->
-        <div class="card bg-white rounded-3xl shadow-xl p-8 mb-6">
+        <!-- بطاقة المعلومات -->
+        <div class="bg-white rounded-3xl shadow-xl p-8 mb-6">
             
             <!-- الأيقونة والمعلومات -->
             <div class="text-center mb-8">
-                <div class="w-24 h-24 mx-auto gradient-bg rounded-full flex items-center justify-center text-5xl mb-4">
+                <div class="w-24 h-24 mx-auto bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center text-5xl mb-4 shadow-lg">
                     👤
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-1" id="displayName">جاري التحميل...</h2>
@@ -100,9 +115,26 @@
                 <p class="text-sm text-gray-500 mt-2 mr-1">اترك الحقول فارغة إذا لم ترغب في تغيير كلمة المرور</p>
             </div>
 
+            <!-- خط فاصل -->
+            <div class="border-t border-gray-200 my-6"></div>
+
+            <!-- تأثيرات الصوت -->
+            <div class="mb-6">
+                <label class="flex items-center justify-between p-4 border-2 border-gray-200 rounded-2xl cursor-pointer hover:border-purple-400 transition-all">
+                    <span class="text-lg font-bold flex items-center gap-2">
+                        <span>🔊</span>
+                        تأثيرات الصوت
+                    </span>
+                    <div class="relative">
+                        <input type="checkbox" id="soundToggle" class="sr-only" checked>
+                        <div class="toggle-bg block bg-gray-300 w-14 h-6 rounded-full relative"></div>
+                    </div>
+                </label>
+                <p class="text-sm text-gray-500 mt-2 mr-1">صوت عند الإجابة (صح أو خطأ)</p>
+            </div>
+
             <!-- زر حفظ التغييرات -->
             <button 
-                onclick="saveChanges()"
                 id="saveBtn"
                 class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-2xl font-bold text-lg hover:shadow-xl transform hover:scale-[1.02] transition-all"
             >
@@ -113,7 +145,7 @@
 
         <!-- زر تسجيل الخروج -->
         <button 
-            onclick="logout()"
+            id="logoutBtn"
             class="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg transform hover:scale-[1.02] transition-all"
         >
             🚪 تسجيل خروج
@@ -163,6 +195,13 @@
         }
 
         // ============================================
+        // 🔙 الرجوع للوحة التحكم
+        // ============================================
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // ============================================
         // 📥 تحميل البيانات الحالية
         // ============================================
         async function loadCurrentData() {
@@ -191,8 +230,9 @@
                 
                 if (profileError) {
                     console.error('❌ خطأ في جلب البروفايل:', profileError);
-                    // استخدم جزء من الإيميل كاسم افتراضي
-                    document.getElementById('displayName').textContent = user.email.split('@')[0];
+                    const userName = user.email.split('@')[0];
+                    document.getElementById('displayName').textContent = userName;
+                    document.getElementById('nameInput').placeholder = `الاسم الحالي: ${userName}`;
                     return;
                 }
                 
@@ -211,10 +251,29 @@
         }
 
         // ============================================
+        // 🔊 تبديل الصوت
+        // ============================================
+        const soundToggle = document.getElementById('soundToggle');
+        
+        // تحميل حالة الصوت المحفوظة
+        const soundEnabled = localStorage.getItem('soundEnabled');
+        if (soundEnabled === 'false') {
+            soundToggle.checked = false;
+        }
+
+        soundToggle.addEventListener('change', function() {
+            if (this.checked) {
+                localStorage.setItem('soundEnabled', 'true');
+            } else {
+                localStorage.setItem('soundEnabled', 'false');
+            }
+        });
+
+        // ============================================
         // 💾 حفظ التغييرات
         // ============================================
-        async function saveChanges() {
-            const saveBtn = document.getElementById('saveBtn');
+        document.getElementById('saveBtn').addEventListener('click', async function() {
+            const saveBtn = this;
             const originalText = saveBtn.innerHTML;
             
             saveBtn.disabled = true;
@@ -227,7 +286,7 @@
                 
                 let hasChanges = false;
                 
-                // التحقق من كلمة المرور إذا تم إدخالها
+                // التحقق من كلمة المرور
                 if (newPassword || confirmPassword) {
                     if (newPassword !== confirmPassword) {
                         showError('⚠️ كلمات المرور غير متطابقة');
@@ -259,7 +318,7 @@
                     hasChanges = true;
                 }
                 
-                // تحديث الاسم إذا تم تغييره
+                // تحديث الاسم
                 if (newName && newName !== currentProfile?.name) {
                     const { error: updateError } = await supabase
                         .from('profiles')
@@ -305,12 +364,12 @@
                 saveBtn.disabled = false;
                 saveBtn.innerHTML = originalText;
             }
-        }
+        });
 
         // ============================================
         // 🚪 تسجيل الخروج
         // ============================================
-        async function logout() {
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
             if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
                 try {
                     await supabase.auth.signOut();
@@ -320,7 +379,7 @@
                     showError('⚠️ حدث خطأ في تسجيل الخروج');
                 }
             }
-        }
+        });
 
         // ============================================
         // 🚀 تهيئة الصفحة
