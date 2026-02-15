@@ -218,7 +218,8 @@
                 <div class="text-center mb-6 pt-2">
                     <div class="w-14 h-14 bg-indigo-500/15 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">📅</div>
                     <h3 class="text-xl font-bold mb-1">اشتراك شهري</h3>
-                    <div class="text-5xl font-black text-indigo-400 mb-0.5">29 <span class="text-lg text-purple-300/40">ريال</span></div>
+                    <div id="monthly-orig-wrap" class="hidden"><span class="price-old inline-block text-sm px-2 mb-1" id="monthly-orig"></span></div>
+                    <div class="text-5xl font-black text-indigo-400 mb-0.5"><span id="monthly-price">29</span> <span class="text-lg text-purple-300/40">ريال</span></div>
                     <p class="text-purple-300/30 text-xs">شهرياً</p>
                 </div>
 
@@ -236,14 +237,14 @@
 
             <!-- Yearly — Best Value -->
             <div class="animate-in delay-4 card-glass p-6 relative">
-                <div class="badge-save absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1 rounded-full text-xs font-bold text-white whitespace-nowrap">💎 وفّر 120 ريال</div>
+                <div class="badge-save absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1 rounded-full text-xs font-bold text-white whitespace-nowrap" id="yearly-save-badge">💎 وفّر 120 ريال</div>
 
                 <div class="text-center mb-6 pt-2">
                     <div class="w-14 h-14 bg-emerald-500/15 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">💎</div>
                     <h3 class="text-xl font-bold mb-1">اشتراك سنوي</h3>
-                    <div class="text-5xl font-black text-emerald-400 mb-0.5">19 <span class="text-lg text-purple-300/40">ريال</span></div>
-                    <p class="text-purple-300/30 text-xs">شهرياً (يُدفع 228 ريال سنوياً)</p>
-                    <div class="price-old inline-block text-sm mt-1 px-2">348 ريال</div>
+                    <div id="yearly-orig-wrap" class="hidden"><span class="price-old inline-block text-sm px-2 mb-1" id="yearly-orig"></span></div>
+                    <div class="text-5xl font-black text-emerald-400 mb-0.5"><span id="yearly-per-month">19</span> <span class="text-lg text-purple-300/40">ريال</span></div>
+                    <p class="text-purple-300/30 text-xs">شهرياً (<span id="yearly-total">يُدفع 228 ريال سنوياً</span>)</p>
                 </div>
 
                 <div class="space-y-3 mb-6">
@@ -373,6 +374,42 @@
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
         );
 
+        // تحميل الأسعار من الإعدادات
+        (async function(){
+            var{data}=await sb.from('site_settings').select('*');
+            if(!data)return;
+            var s={};data.forEach(function(r){s[r.key]=r.value});
+
+            var mOrig=parseInt(s.price_monthly_orig)||0;
+            var mNow=parseInt(s.price_monthly)||29;
+            var yOrig=parseInt(s.price_yearly_orig)||0;
+            var yNow=parseInt(s.price_yearly)||228;
+            var yPerMonth=Math.round(yNow/12);
+
+            // الشهري
+            document.getElementById('monthly-price').textContent=mNow;
+            if(mOrig&&mOrig>mNow){
+                document.getElementById('monthly-orig').textContent=mOrig+' ريال';
+                document.getElementById('monthly-orig-wrap').classList.remove('hidden');
+            }
+
+            // السنوي
+            document.getElementById('yearly-per-month').textContent=yPerMonth;
+            document.getElementById('yearly-total').textContent='يُدفع '+yNow+' ريال سنوياً';
+            if(yOrig&&yOrig>yNow){
+                document.getElementById('yearly-orig').textContent=yOrig+' ريال';
+                document.getElementById('yearly-orig-wrap').classList.remove('hidden');
+            }
+
+            // حساب التوفير
+            var saving=(mNow*12)-yNow;
+            if(saving>0)document.getElementById('yearly-save-badge').textContent='💎 وفّر '+saving+' ريال';
+
+            // بانر العرض
+            var offerEl=document.querySelector('.offer-banner p');
+            if(offerEl&&saving>0)offerEl.textContent='وفّر '+saving+' ريال عند الاشتراك السنوي — بدل '+mNow+' ريال شهرياً ادفع '+yPerMonth+' ريال فقط!';
+        })();
+
         function subscribe(plan) {
             window.location.href = 'register.html';
         }
@@ -412,7 +449,6 @@
                     document.getElementById('couponMsg').textContent = '✓ ' + discountText;
                     document.getElementById('couponSuccess').classList.remove('hidden');
 
-                    // حفظ الكوبون في localStorage عشان يُطبّق لاحقاً عند الدفع
                     localStorage.setItem('masari_coupon', JSON.stringify({
                         code: data.code,
                         type: data.discount_type,
@@ -428,7 +464,6 @@
             btn.disabled = false;
         }
 
-        // Enter key
         document.getElementById('couponInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') applyCoupon();
         });
