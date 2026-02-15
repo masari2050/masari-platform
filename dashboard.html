@@ -4,63 +4,174 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>لوحة التحكم - مساري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { fontFamily: { tajawal: ['Tajawal', 'sans-serif'] } } }
+        }
+    </script>
     <style>
+        * { font-family: 'Tajawal', sans-serif; }
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #0f0a2e 0%, #1a1145 30%, #1e1550 50%, #151040 70%, #0d0825 100%);
+            min-height: 100vh;
         }
-        
-        .logo-shadow {
-            filter: drop-shadow(0 4px 12px rgba(79, 70, 229, 0.4));
-            animation: pulse-glow 3s ease-in-out infinite;
+
+        /* Cards */
+        .card-glass {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
         }
-        
-        @keyframes pulse-glow {
-            0%, 100% { filter: drop-shadow(0 4px 12px rgba(79, 70, 229, 0.4)); }
-            50% { filter: drop-shadow(0 8px 20px rgba(79, 70, 229, 0.6)); }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 30%, #a855f7 60%, #c084fc 100%);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .beta-banner {
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #4f46e5 100%);
-            background-size: 200% 100%;
-            animation: gradient-flow 3s ease infinite;
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            border-radius: 50%;
         }
-        
-        @keyframes gradient-flow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -30%; left: -10%;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+
+        /* Action Buttons */
+        .action-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            background: rgba(255,255,255,0.08);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #8b5cf6, #6366f1, #4f46e5);
+            border-radius: 999px;
+            transition: width 1s ease;
+            position: relative;
+        }
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeUp 0.5s ease forwards; }
+        .delay-1 { animation-delay: 0.05s; opacity: 0; }
+        .delay-2 { animation-delay: 0.1s; opacity: 0; }
+        .delay-3 { animation-delay: 0.15s; opacity: 0; }
+        .delay-4 { animation-delay: 0.2s; opacity: 0; }
+        .delay-5 { animation-delay: 0.25s; opacity: 0; }
+        .delay-6 { animation-delay: 0.3s; opacity: 0; }
+
+        /* Marquee */
+        .marquee-container { overflow: hidden; white-space: nowrap; }
+        .marquee-text { display: inline-block; animation: marquee 25s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        /* Logo */
+        @keyframes logoPulse {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(139,92,246,0.4)); }
+            50% { filter: drop-shadow(0 0 16px rgba(139,92,246,0.7)); }
+        }
+        .logo-glow { animation: logoPulse 3s ease-in-out infinite; }
+
+        /* Avatar */
+        .avatar-ring {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            padding: 2px;
+            border-radius: 50%;
+        }
+
+        /* Counter Animation */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="min-h-screen">
-    
-    <!-- Beta Banner -->
-    <div class="beta-banner text-white py-2 px-4 text-center text-xs sm:text-sm font-bold leading-relaxed">
-        ✨ منصة مساري تتطور يومياً — نضيف أسئلة جديدة ونحسّن التجربة باستمرار لتقديم تدريب أدق وأقوى
+<body class="font-tajawal text-white">
+
+    <!-- Top Banner -->
+    <div class="bg-gradient-to-l from-purple-900/60 via-indigo-900/60 to-purple-900/60 border-b border-purple-500/20">
+        <div class="marquee-container py-2.5">
+            <span class="marquee-text text-sm text-purple-200/90">
+                ✨ منصة مساري تتطور يومياً — نضيف أسئلة جديدة ونحسّن التجربة باستمرار لتقديم تدريب أدق وأقوى
+            </span>
+        </div>
     </div>
 
     <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4">
+    <header class="animate-in delay-1">
+        <div class="max-w-4xl mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
                 <div class="flex items-center gap-2">
-                    <span class="text-3xl logo-shadow">🎓</span>
-                    <h1 class="text-2xl font-black text-indigo-600 logo-shadow">مساري</h1>
+                    <span class="text-3xl logo-glow">🎓</span>
+                    <h1 class="text-2xl font-black bg-gradient-to-l from-purple-300 to-indigo-300 bg-clip-text text-transparent">مساري</h1>
                 </div>
-
-                <!-- User Info - Clickable -->
-                <button onclick="window.location.href='profile.html'" class="flex items-center gap-2 hover:opacity-80 transition">
+                <!-- User -->
+                <button onclick="window.location.href='profile.html'" class="flex items-center gap-3 hover:opacity-80 transition group">
                     <div class="text-right">
-                        <span class="font-bold text-gray-800 text-sm" id="userName">عبدالله</span>
-                        <p class="text-xs text-gray-500">مشترك شهري 🔥</p>
+                        <span class="font-bold text-white text-sm block" id="userName">...</span>
+                        <p class="text-xs text-purple-300/60" id="subscriptionLabel">مشترك 🔥</p>
                     </div>
-                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                        <span id="userAvatar">👤</span>
+                    <div class="avatar-ring">
+                        <div class="w-10 h-10 bg-indigo-900 rounded-full flex items-center justify-center text-xl group-hover:scale-105 transition">
+                            <span id="userAvatar">👤</span>
+                        </div>
                     </div>
                 </button>
             </div>
@@ -68,222 +179,193 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-6 max-w-6xl pb-24">
-        
-        <!-- Welcome Card - محسّن -->
-        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 rounded-3xl p-6 mb-6 shadow-2xl">
-            <h2 class="text-3xl font-black text-white mb-2">أهلاً <span id="displayName">عبدالله</span></h2>
-            <p class="text-indigo-100 text-lg font-medium" id="motivationalQuote">ثق بنفسك، أنت أقوى مما تتخيل</p>
+    <main class="max-w-4xl mx-auto px-4 pb-12">
+
+        <!-- Welcome Card -->
+        <div class="animate-in delay-2 welcome-banner rounded-3xl p-6 mb-5 shadow-2xl relative z-10">
+            <h2 class="text-2xl sm:text-3xl font-black text-white mb-1 relative z-10">
+                أهلاً <span id="displayName">...</span>
+            </h2>
+            <p class="text-white/80 text-sm sm:text-base font-medium relative z-10" id="motivationalQuote">ثق بنفسك، أنت أقوى مما تتخيل</p>
         </div>
 
-        <!-- Stats Cards - محسّنة -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-            
-            <!-- Total Questions -->
-            <div class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-3xl">📝</span>
-                </div>
-                <p class="text-gray-600 text-xs mb-1">إجمالي الأسئلة</p>
-                <p class="text-3xl font-black text-gray-800" id="totalQuestions">0</p>
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+            <div class="animate-in delay-3 stat-card rounded-2xl p-4 text-center">
+                <span class="text-2xl mb-2 block">📝</span>
+                <p class="text-purple-300/50 text-xs mb-1">إجمالي الأسئلة</p>
+                <p class="text-2xl sm:text-3xl font-black text-white" id="totalQuestions">0</p>
             </div>
-
-            <!-- Correct Answers -->
-            <div class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-3xl">✅</span>
-                </div>
-                <p class="text-gray-600 text-xs mb-1">الإجابات الصحيحة</p>
-                <p class="text-3xl font-black text-green-500" id="correctAnswers">0</p>
+            <div class="animate-in delay-3 stat-card rounded-2xl p-4 text-center">
+                <span class="text-2xl mb-2 block">✅</span>
+                <p class="text-purple-300/50 text-xs mb-1">الإجابات الصحيحة</p>
+                <p class="text-2xl sm:text-3xl font-black text-green-400" id="correctAnswers">0</p>
             </div>
-
-            <!-- Wrong Answers -->
-            <div class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-3xl">❌</span>
-                </div>
-                <p class="text-gray-600 text-xs mb-1">الإجابات الخاطئة</p>
-                <p class="text-3xl font-black text-red-500" id="wrongAnswers">0</p>
+            <div class="animate-in delay-4 stat-card rounded-2xl p-4 text-center">
+                <span class="text-2xl mb-2 block">❌</span>
+                <p class="text-purple-300/50 text-xs mb-1">الإجابات الخاطئة</p>
+                <p class="text-2xl sm:text-3xl font-black text-red-400" id="wrongAnswers">0</p>
             </div>
-
-            <!-- Success Rate -->
-            <div class="bg-white rounded-2xl p-5 shadow-lg hover:shadow-xl transition">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-3xl">🎯</span>
-                </div>
-                <p class="text-gray-600 text-xs mb-1">نسبة النجاح</p>
-                <p class="text-3xl font-black text-indigo-600" id="successRate">0%</p>
+            <div class="animate-in delay-4 stat-card rounded-2xl p-4 text-center">
+                <span class="text-2xl mb-2 block">🎯</span>
+                <p class="text-purple-300/50 text-xs mb-1">نسبة النجاح</p>
+                <p class="text-2xl sm:text-3xl font-black text-purple-300" id="successRate">0%</p>
             </div>
-
         </div>
 
-        <!-- Progress Bar -->
-        <div class="bg-white rounded-2xl p-5 shadow-lg mb-6">
+        <!-- Weekly Progress -->
+        <div class="animate-in delay-5 card-glass rounded-2xl p-5 mb-5">
             <div class="flex justify-between items-center mb-3">
-                <h3 class="text-lg font-bold text-gray-800">تقدمك هذا الأسبوع</h3>
-                <span class="text-gray-600 text-sm"><span id="weeklyCount">0</span> سؤال</span>
+                <h3 class="text-base font-bold">تقدمك هذا الأسبوع</h3>
+                <span class="text-purple-300/50 text-sm"><span id="weeklyCount">0</span> سؤال</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-3">
-                <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all" style="width: 0%"></div>
+            <div class="progress-track h-3">
+                <div id="progressBar" class="progress-fill h-3" style="width: 0%"></div>
             </div>
         </div>
 
         <!-- Action Buttons -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-            <a href="select-section.html" class="block bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white p-5 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:scale-105">
-                <div class="flex items-center gap-3">
-                    <div class="bg-white bg-opacity-20 p-3 rounded-xl">
-                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
-                        </svg>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <a href="select-section.html" class="animate-in delay-5 action-card block bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-5 rounded-2xl shadow-lg">
+                <div class="flex items-center gap-3 relative z-10">
+                    <div class="bg-white/15 p-3 rounded-xl flex-shrink-0">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
                     </div>
                     <div class="text-right flex-1">
                         <h3 class="text-lg font-bold">ابدأ التدريب</h3>
-                        <p class="text-sm text-indigo-100">حل أسئلة جديدة</p>
+                        <p class="text-sm text-white/60">حل أسئلة جديدة</p>
                     </div>
                 </div>
             </a>
-
-            <a href="stats.html" class="block bg-gradient-to-br from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white p-5 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:scale-105">
-                <div class="flex items-center gap-3">
-                    <div class="bg-white bg-opacity-20 p-3 rounded-xl">
-                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
-                        </svg>
+            <a href="stats.html" class="animate-in delay-6 action-card block bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-5 rounded-2xl shadow-lg">
+                <div class="flex items-center gap-3 relative z-10">
+                    <div class="bg-white/15 p-3 rounded-xl flex-shrink-0">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
                     </div>
                     <div class="text-right flex-1">
                         <h3 class="text-lg font-bold">إحصائياتي</h3>
-                        <p class="text-sm text-green-100">تحليل تفصيلي لأدائك</p>
+                        <p class="text-sm text-white/60">تحليل تفصيلي لأدائك</p>
                     </div>
                 </div>
             </a>
-
-            <a href="mistakes.html" class="block bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white p-5 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:scale-105">
-                <div class="flex items-center gap-3">
-                    <div class="bg-white bg-opacity-20 p-3 rounded-xl">
-                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                        </svg>
+            <a href="mistakes.html" class="animate-in delay-6 action-card block bg-gradient-to-br from-rose-600 to-pink-700 text-white p-5 rounded-2xl shadow-lg">
+                <div class="flex items-center gap-3 relative z-10">
+                    <div class="bg-white/15 p-3 rounded-xl flex-shrink-0">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
                     </div>
                     <div class="text-right flex-1">
                         <h3 class="text-lg font-bold">راجع أخطائك</h3>
-                        <p class="text-sm text-red-100">تعلم من الأخطاء السابقة</p>
+                        <p class="text-sm text-white/60">تعلم من الأخطاء السابقة</p>
                     </div>
                 </div>
             </a>
         </div>
 
+        <p class="text-center text-purple-300/20 text-xs mt-10">مساري v1.0</p>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const supabaseUrl = 'https://czzcmbxejxbotjemyuqf.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0';
-        const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+        const sb = window.supabase.createClient(
+            'https://czzcmbxejxbotjemyuqf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
+        );
 
         let currentUser = null;
 
         async function checkAuth() {
             try {
                 const { data: { session }, error } = await sb.auth.getSession();
-                
                 if (error || !session) {
                     window.location.href = 'login.html';
                     return false;
                 }
-                
                 currentUser = session.user;
-                
-                const { data: profile } = await sb
-                    .from('profiles')
-                    .select('name, avatar_emoji')
-                    .eq('id', currentUser.id)
-                    .single();
-                
-                if (profile && profile.name) {
-                    document.getElementById('userName').textContent = profile.name;
-                    if (profile.avatar_emoji) {
+
+                // Get name from profiles (full_name column)
+                let displayName = '';
+                try {
+                    const { data: profile } = await sb
+                        .from('profiles')
+                        .select('full_name, avatar_emoji')
+                        .eq('id', currentUser.id)
+                        .single();
+
+                    if (profile && profile.full_name) {
+                        displayName = profile.full_name;
+                    }
+                    if (profile && profile.avatar_emoji) {
                         document.getElementById('userAvatar').textContent = profile.avatar_emoji;
                     }
+                } catch(e) {}
+
+                // Fallback: user_metadata
+                if (!displayName && currentUser.user_metadata && currentUser.user_metadata.name) {
+                    displayName = currentUser.user_metadata.name;
                 }
-                
+
+                // Last fallback: email
+                if (!displayName) {
+                    displayName = currentUser.email ? currentUser.email.split('@')[0] : '';
+                }
+
+                // First name only for welcome
+                const firstName = displayName.split(' ')[0];
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('displayName').textContent = firstName;
+
                 return true;
-                
             } catch (err) {
-                console.error('❌ خطأ:', err);
+                console.error('Auth error:', err);
                 window.location.href = 'login.html';
                 return false;
             }
         }
 
         async function loadStats() {
+            const quotes = [
+                'كل سؤال تحله خطوة أقرب لحلمك',
+                'النجاح يحتاج للجهد والإصرار',
+                'أنت قادر على تحقيق أهدافك',
+                'ثق بنفسك، أنت أقوى مما تتخيل',
+                'كل يوم تدريب، كل يوم تطور',
+                'حلمك قريب، استمر واجتهد'
+            ];
+            document.getElementById('motivationalQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
             try {
-                // عبارات تحفيزية
-                const motivationalQuotes = [
-                    'كل سؤال تحله خطوة أقرب لحلمك',
-                    'النجاح يحتاج للجهد والإصرار',
-                    'أنت قادر على تحقيق أهدافك',
-                    'ثق بنفسك، أنت أقوى مما تتخيل',
-                    'كل يوم تدريب، كل يوم تطور',
-                    'حلمك قريب، استمر واجتهد'
-                ];
-                const randomQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-                document.getElementById('motivationalQuote').textContent = randomQuote;
-                
                 const { data: allAttempts, error } = await sb
                     .from('attempts')
                     .select('is_correct, answered_at')
                     .eq('user_id', currentUser.id);
-                
-                if (error && error.code !== 'PGRST116') {
-                    console.error('❌ خطأ:', error);
-                    return;
-                }
-                
-                const totalQuestions = allAttempts ? allAttempts.length : 0;
-                const correctAnswers = allAttempts ? allAttempts.filter(a => a.is_correct).length : 0;
-                const wrongAnswers = totalQuestions - correctAnswers;
-                const successRate = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-                
-                document.getElementById('totalQuestions').textContent = totalQuestions;
-                document.getElementById('correctAnswers').textContent = correctAnswers;
-                document.getElementById('wrongAnswers').textContent = wrongAnswers;
-                document.getElementById('successRate').textContent = successRate + '%';
-                
+
+                if (error && error.code !== 'PGRST116') return;
+
+                const total = allAttempts ? allAttempts.length : 0;
+                const correct = allAttempts ? allAttempts.filter(a => a.is_correct).length : 0;
+                const wrong = total - correct;
+                const rate = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+                document.getElementById('totalQuestions').textContent = total;
+                document.getElementById('correctAnswers').textContent = correct;
+                document.getElementById('wrongAnswers').textContent = wrong;
+                document.getElementById('successRate').textContent = rate + '%';
+
                 const oneWeekAgo = new Date();
                 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-                const weeklyAttempts = allAttempts ? allAttempts.filter(a => new Date(a.answered_at) > oneWeekAgo) : [];
-                const weeklyCount = weeklyAttempts.length;
-                
-                document.getElementById('weeklyCount').textContent = weeklyCount;
-                
-                const progressPercentage = Math.min((weeklyCount / 50) * 100, 100);
-                document.getElementById('progressBar').style.width = progressPercentage + '%';
-                
+                const weekly = allAttempts ? allAttempts.filter(a => new Date(a.answered_at) > oneWeekAgo).length : 0;
+                document.getElementById('weeklyCount').textContent = weekly;
+                document.getElementById('progressBar').style.width = Math.min((weekly / 50) * 100, 100) + '%';
             } catch (err) {
-                console.error('❌ خطأ:', err);
-            }
-        }
-
-        async function handleLogout() {
-            try {
-                const { error } = await sb.auth.signOut();
-                if (error) {
-                    console.error('❌ خطأ:', error);
-                    alert('حدث خطأ أثناء تسجيل الخروج');
-                    return;
-                }
-                window.location.href = 'login.html';
-            } catch (err) {
-                console.error('❌ خطأ:', err);
+                console.error('Stats error:', err);
             }
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
-            const isAuth = await checkAuth();
-            if (!isAuth) return;
+            const ok = await checkAuth();
+            if (!ok) return;
             await loadStats();
         });
     </script>
-
 </body>
 </html>
