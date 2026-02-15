@@ -21,23 +21,6 @@
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
-        .toggle-bg:after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            background: white;
-            border-radius: 50%;
-            height: 20px;
-            width: 20px;
-            transition: transform 0.3s ease;
-        }
-        input:checked + .toggle-bg:after {
-            transform: translateX(24px);
-        }
-        input:checked + .toggle-bg {
-            background-color: #667eea;
-        }
     </style>
 </head>
 <body>
@@ -50,7 +33,7 @@
     <!-- الهيدر -->
     <header class="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-6 shadow-lg">
         <div class="max-w-4xl mx-auto px-4 flex items-center gap-4">
-            <button onclick="goBack()" class="text-3xl hover:scale-110 transition-transform">
+            <button onclick="window.location.href='dashboard.html'" class="text-3xl hover:scale-110 transition-transform">
                 ← 
             </button>
             <h1 class="text-2xl font-bold">الملف الشخصي</h1>
@@ -125,16 +108,14 @@
                         <span>🔊</span>
                         تأثيرات الصوت
                     </span>
-                    <div class="relative">
-                        <input type="checkbox" id="soundToggle" class="sr-only" checked>
-                        <div class="toggle-bg block bg-gray-300 w-14 h-6 rounded-full relative"></div>
-                    </div>
+                    <input type="checkbox" id="soundToggle" class="w-12 h-6" checked>
                 </label>
                 <p class="text-sm text-gray-500 mt-2 mr-1">صوت عند الإجابة (صح أو خطأ)</p>
             </div>
 
             <!-- زر حفظ التغييرات -->
             <button 
+                onclick="saveChanges()"
                 id="saveBtn"
                 class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-2xl font-bold text-lg hover:shadow-xl transform hover:scale-[1.02] transition-all"
             >
@@ -145,6 +126,7 @@
 
         <!-- زر تسجيل الخروج -->
         <button 
+            onclick="logout()"
             id="logoutBtn"
             class="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg transform hover:scale-[1.02] transition-all"
         >
@@ -195,17 +177,12 @@
         }
 
         // ============================================
-        // 🔙 الرجوع للوحة التحكم
-        // ============================================
-        function goBack() {
-            window.location.href = 'dashboard.html';
-        }
-
-        // ============================================
         // 📥 تحميل البيانات الحالية
         // ============================================
         async function loadCurrentData() {
             try {
+                console.log('🔄 جاري تحميل البيانات...');
+                
                 // التحقق من المستخدم
                 const { data: { user }, error: userError } = await supabase.auth.getUser();
                 
@@ -218,7 +195,7 @@
                 currentUser = user;
                 console.log('✅ المستخدم الحالي:', user);
                 
-                // عرض الإيميل
+                // عرض الإيميل مباشرة
                 document.getElementById('displayEmail').textContent = user.email;
                 
                 // جلب البروفايل
@@ -264,16 +241,20 @@
         soundToggle.addEventListener('change', function() {
             if (this.checked) {
                 localStorage.setItem('soundEnabled', 'true');
+                console.log('✅ تم تفعيل الصوت');
             } else {
                 localStorage.setItem('soundEnabled', 'false');
+                console.log('❌ تم إيقاف الصوت');
             }
         });
 
         // ============================================
         // 💾 حفظ التغييرات
         // ============================================
-        document.getElementById('saveBtn').addEventListener('click', async function() {
-            const saveBtn = this;
+        async function saveChanges() {
+            console.log('💾 بدء عملية الحفظ...');
+            
+            const saveBtn = document.getElementById('saveBtn');
             const originalText = saveBtn.innerHTML;
             
             saveBtn.disabled = true;
@@ -316,6 +297,7 @@
                     }
                     
                     hasChanges = true;
+                    console.log('✅ تم تحديث كلمة المرور');
                 }
                 
                 // تحديث الاسم
@@ -334,6 +316,7 @@
                     }
                     
                     hasChanges = true;
+                    console.log('✅ تم تحديث الاسم');
                 }
                 
                 // نجح الحفظ
@@ -364,14 +347,15 @@
                 saveBtn.disabled = false;
                 saveBtn.innerHTML = originalText;
             }
-        });
+        }
 
         // ============================================
         // 🚪 تسجيل الخروج
         // ============================================
-        document.getElementById('logoutBtn').addEventListener('click', async function() {
+        async function logout() {
             if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
                 try {
+                    console.log('🚪 جاري تسجيل الخروج...');
                     await supabase.auth.signOut();
                     window.location.href = 'login.html';
                 } catch (err) {
@@ -379,12 +363,13 @@
                     showError('⚠️ حدث خطأ في تسجيل الخروج');
                 }
             }
-        });
+        }
 
         // ============================================
         // 🚀 تهيئة الصفحة
         // ============================================
         window.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 تحميل صفحة Profile...');
             loadCurrentData();
         });
     </script>
