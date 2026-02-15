@@ -10,37 +10,40 @@
         *{font-family:'Tajawal',sans-serif}
         body{background:linear-gradient(135deg,#0f0a2e 0%,#1a1145 30%,#1e1550 50%,#151040 70%,#0d0825 100%);min-height:100vh}
         .glass{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:1rem}
-        .sidebar{background:rgba(255,255,255,0.03);border-left:1px solid rgba(255,255,255,0.06);min-height:100vh;width:220px;position:fixed;top:0;right:0;z-index:40;overflow-y:auto}
-        .sidebar-link{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:.75rem;font-size:.8rem;font-weight:600;color:rgba(196,181,253,0.5);transition:all .2s;cursor:pointer;margin:2px 8px}
+        .sidebar{background:rgba(255,255,255,0.03);border-left:1px solid rgba(255,255,255,0.06);min-height:100vh;width:240px;position:fixed;top:0;right:0;z-index:40;overflow-y:auto}
+        .sidebar-link{display:flex;align-items:center;gap:12px;padding:12px 18px;border-radius:.75rem;font-size:.9rem;font-weight:700;color:rgba(196,181,253,0.5);transition:all .2s;cursor:pointer;margin:3px 10px}
         .sidebar-link:hover{background:rgba(255,255,255,0.05);color:rgba(196,181,253,0.8)}
         .sidebar-link.active{background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.2)}
-        .main-content{margin-right:220px;padding:20px;min-height:100vh}
-        .input-dark{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:.75rem;padding:.625rem .875rem;color:#fff;width:100%;font-size:.85rem;transition:all .2s}
+        .main-content{margin-right:240px;padding:28px;min-height:100vh}
+        .input-dark{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:.75rem;padding:.75rem 1rem;color:#fff;width:100%;font-size:.95rem;transition:all .2s}
         .input-dark:focus{outline:none;border-color:rgba(139,92,246,0.5);box-shadow:0 0 0 3px rgba(139,92,246,0.1)}
         .input-dark::placeholder{color:rgba(255,255,255,0.2)}
         .input-dark option{background:#1a1145;color:#fff}
-        .btn-p{background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:8px 20px;border-radius:.75rem;font-weight:700;font-size:.8rem;color:#fff;transition:all .2s;border:none;cursor:pointer}
+        .btn-p{background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:10px 24px;border-radius:.75rem;font-weight:700;font-size:.9rem;color:#fff;transition:all .2s;border:none;cursor:pointer}
         .btn-p:hover{box-shadow:0 8px 25px rgba(99,102,241,0.3);transform:translateY(-1px)}
-        .btn-d{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:6px 14px;border-radius:.75rem;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
+        .btn-d{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.2);color:#f87171;padding:8px 16px;border-radius:.75rem;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
         .btn-d:hover{background:rgba(239,68,68,0.25)}
-        .btn-s{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#c4b5fd;padding:6px 14px;border-radius:.75rem;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s}
+        .btn-s{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#c4b5fd;padding:8px 16px;border-radius:.75rem;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
         .btn-s:hover{background:rgba(255,255,255,0.1)}
         .stat-card{transition:all .3s}.stat-card:hover{transform:translateY(-3px)}
         .table-row{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .2s}
         .table-row:hover{background:rgba(255,255,255,0.03)}
-        .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.7rem;font-weight:700}
+        .badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:.8rem;font-weight:700}
         .badge-free{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.2)}
         .badge-monthly{background:rgba(99,102,241,0.1);color:#818cf8;border:1px solid rgba(99,102,241,0.2)}
         .badge-yearly{background:rgba(16,185,129,0.1);color:#34d399;border:1px solid rgba(16,185,129,0.2)}
         .badge-admin{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2)}
         .tab-section{display:none}.tab-section.active{display:block}
-        .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:10px 24px;border-radius:12px;font-size:.85rem;font-weight:700;z-index:999;animation:slideD .4s ease}
+        .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 28px;border-radius:12px;font-size:.95rem;font-weight:700;z-index:999;animation:slideD .4s ease}
         .toast-ok{background:linear-gradient(135deg,#10b981,#14b8a6);color:#fff}
         .toast-err{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
         @keyframes slideD{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(5px);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
-        .modal-box{background:linear-gradient(135deg,#1a1145,#1e1550);border:1px solid rgba(139,92,246,0.2);border-radius:1.25rem;padding:24px;width:100%;max-width:500px;max-height:85vh;overflow-y:auto}
-        @media(max-width:768px){.sidebar{display:none}.main-content{margin-right:0}}
+        .modal-box{background:linear-gradient(135deg,#1a1145,#1e1550);border:1px solid rgba(139,92,246,0.2);border-radius:1.25rem;padding:28px;width:100%;max-width:520px;max-height:85vh;overflow-y:auto}
+        .rank-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:.75rem;transition:background .2s}
+        .rank-row:hover{background:rgba(255,255,255,0.03)}
+        .rank-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;flex-shrink:0}
+        @media(max-width:768px){.sidebar{display:none}.main-content{margin-right:0;padding:16px}}
     </style>
 </head>
 <body class="text-white">
@@ -93,33 +96,68 @@
 
         <!-- ══════════════ نظرة عامة ══════════════ -->
         <div id="tab-overview" class="tab-section active">
-            <h2 class="text-xl font-black mb-5">📊 نظرة عامة</h2>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <div class="stat-card glass p-4 text-center">
-                    <p class="text-purple-300/40 text-xs mb-1">إجمالي الأسئلة</p>
-                    <p class="text-2xl font-black text-indigo-400" id="ov-questions">-</p>
+            <h2 class="text-2xl font-black mb-6">📊 نظرة عامة</h2>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="stat-card glass p-5 text-center">
+                    <p class="text-purple-300/50 text-sm mb-1">إجمالي الأسئلة</p>
+                    <p class="text-4xl font-black text-indigo-400" id="ov-questions">-</p>
                 </div>
-                <div class="stat-card glass p-4 text-center">
-                    <p class="text-purple-300/40 text-xs mb-1">الأعضاء</p>
-                    <p class="text-2xl font-black text-emerald-400" id="ov-users">-</p>
+                <div class="stat-card glass p-5 text-center">
+                    <p class="text-purple-300/50 text-sm mb-1">الأعضاء</p>
+                    <p class="text-4xl font-black text-emerald-400" id="ov-users">-</p>
                 </div>
-                <div class="stat-card glass p-4 text-center">
-                    <p class="text-purple-300/40 text-xs mb-1">إجمالي المحاولات</p>
-                    <p class="text-2xl font-black text-purple-400" id="ov-attempts">-</p>
+                <div class="stat-card glass p-5 text-center">
+                    <p class="text-purple-300/50 text-sm mb-1">إجمالي المحاولات</p>
+                    <p class="text-4xl font-black text-purple-400" id="ov-attempts">-</p>
                 </div>
-                <div class="stat-card glass p-4 text-center">
-                    <p class="text-purple-300/40 text-xs mb-1">البلاغات</p>
-                    <p class="text-2xl font-black text-red-400" id="ov-reports">-</p>
+                <div class="stat-card glass p-5 text-center">
+                    <p class="text-purple-300/50 text-sm mb-1">البلاغات</p>
+                    <p class="text-4xl font-black text-red-400" id="ov-reports">-</p>
                 </div>
             </div>
-            <div class="grid lg:grid-cols-2 gap-4">
-                <div class="glass p-5">
-                    <h3 class="font-bold text-sm mb-3">📝 الأسئلة حسب القسم</h3>
-                    <div class="space-y-2" id="ov-sections"></div>
+
+            <!-- Row 2: Sections + Hardest -->
+            <div class="grid lg:grid-cols-2 gap-4 mb-6">
+                <div class="glass p-6">
+                    <h3 class="font-bold text-base mb-4">📝 الأسئلة حسب القسم</h3>
+                    <div class="space-y-3" id="ov-sections"></div>
                 </div>
-                <div class="glass p-5">
-                    <h3 class="font-bold text-sm mb-3">🔥 أكثر سؤال يغلطون فيه</h3>
-                    <div id="ov-hardest" class="text-purple-300/40 text-sm">جاري التحميل...</div>
+                <div class="glass p-6">
+                    <h3 class="font-bold text-base mb-4">🔥 أكثر سؤال يغلطون فيه</h3>
+                    <div id="ov-hardest" class="text-purple-300/50 text-sm">جاري التحميل...</div>
+                </div>
+            </div>
+
+            <!-- Row 3: Leaderboards -->
+            <div class="grid lg:grid-cols-3 gap-4 mb-6">
+                <div class="glass p-6">
+                    <h3 class="font-bold text-base mb-4">🏆 أكثر حلولاً</h3>
+                    <div id="ov-top-solvers" class="space-y-1 text-sm text-purple-300/50">جاري التحميل...</div>
+                </div>
+                <div class="glass p-6">
+                    <h3 class="font-bold text-base mb-4">🎯 أعلى نسبة صح</h3>
+                    <div id="ov-top-accuracy" class="space-y-1 text-sm text-purple-300/50">جاري التحميل...</div>
+                </div>
+                <div class="glass p-6">
+                    <h3 class="font-bold text-base mb-4">⚡ أنشط الأعضاء (آخر 7 أيام)</h3>
+                    <div id="ov-top-active" class="space-y-1 text-sm text-purple-300/50">جاري التحميل...</div>
+                </div>
+            </div>
+
+            <!-- Row 4: Success Rate + New Members -->
+            <div class="grid lg:grid-cols-2 gap-4">
+                <div class="glass p-6">
+                    <h3 class="font-bold text-base mb-4">📈 نسبة النجاح العامة</h3>
+                    <div id="ov-success-rate" class="text-center">
+                        <p class="text-5xl font-black text-emerald-400" id="ov-rate-num">-</p>
+                        <p class="text-purple-300/40 text-sm mt-1">من إجمالي المحاولات</p>
+                    </div>
+                </div>
+                <div class="glass p-6">
+                    <h3 class="font-bold text-base mb-4">🆕 أحدث الأعضاء</h3>
+                    <div id="ov-new-members" class="space-y-1 text-sm text-purple-300/50">جاري التحميل...</div>
                 </div>
             </div>
         </div>
@@ -482,8 +520,8 @@
         // ═══════════════════════════════════
         async function loadOverview() {
             var { data: q } = await sb.from('questions').select('section');
-            var { data: u } = await sb.from('profiles').select('id');
-            var { data: a } = await sb.from('attempts').select('id');
+            var { data: u } = await sb.from('profiles').select('id, full_name, email, avatar_emoji, created_at');
+            var { data: a } = await sb.from('attempts').select('id, user_id, is_correct, created_at');
             var { data: r } = await sb.from('reports').select('id');
 
             document.getElementById('ov-questions').textContent = q ? q.length : 0;
@@ -501,27 +539,100 @@
                 var html = '';
                 for (var k in counts) {
                     var pct = Math.round((counts[k] / total) * 100);
-                    html += '<div class="flex items-center justify-between text-xs mb-1"><span class="text-purple-200/60">' + names[k] + '</span><span class="font-bold">' + counts[k] + '</span></div>';
-                    html += '<div class="h-1.5 rounded-full mb-2" style="background:rgba(255,255,255,0.06)"><div class="h-full rounded-full" style="width:' + pct + '%;background:' + colors[k] + '"></div></div>';
+                    html += '<div class="flex items-center justify-between text-sm mb-1"><span class="text-purple-200/70">' + names[k] + '</span><span class="font-bold text-white">' + counts[k] + '</span></div>';
+                    html += '<div class="h-2 rounded-full mb-3" style="background:rgba(255,255,255,0.06)"><div class="h-full rounded-full" style="width:' + pct + '%;background:' + colors[k] + '"></div></div>';
                 }
                 document.getElementById('ov-sections').innerHTML = html;
             }
 
             // Hardest question
             if (a && a.length > 0) {
-                var { data: wrongA } = await sb.from('attempts').select('question_id').eq('is_correct', false);
-                if (wrongA && wrongA.length > 0) {
+                var wrongA = a.filter(function(x){ return !x.is_correct; });
+                if (wrongA.length > 0) {
                     var freq = {};
                     wrongA.forEach(function(x) { freq[x.question_id] = (freq[x.question_id] || 0) + 1; });
                     var hardestId = Object.keys(freq).sort(function(a,b) { return freq[b] - freq[a]; })[0];
                     var { data: hq } = await sb.from('questions').select('question_text, section').eq('id', hardestId).single();
                     if (hq) {
                         var sn = { quant: 'كمي', verbal: 'لفظي', tahsili: 'تحصيلي' };
-                        document.getElementById('ov-hardest').innerHTML = '<span class="badge badge-' + (hq.section === 'quant' ? 'monthly' : hq.section === 'verbal' ? 'yearly' : 'free') + ' mb-2">' + (sn[hq.section] || '') + '</span><p class="text-white text-sm">' + hq.question_text + '</p><p class="text-red-400/60 text-xs mt-1">' + freq[hardestId] + ' خطأ</p>';
+                        document.getElementById('ov-hardest').innerHTML = '<span class="badge badge-' + (hq.section === 'quant' ? 'monthly' : hq.section === 'verbal' ? 'yearly' : 'free') + ' mb-2">' + (sn[hq.section] || '') + '</span><p class="text-white text-base mt-2">' + hq.question_text.substring(0, 120) + '</p><p class="text-red-400 text-sm mt-2 font-bold">🔴 ' + freq[hardestId] + ' خطأ</p>';
                     }
                 } else {
-                    document.getElementById('ov-hardest').innerHTML = '<p class="text-purple-300/30 text-sm">ما فيه أخطاء بعد</p>';
+                    document.getElementById('ov-hardest').innerHTML = '<p class="text-purple-300/40 text-base">ما فيه أخطاء بعد</p>';
                 }
+
+                // ═══ Success Rate ═══
+                var correct = a.filter(function(x){ return x.is_correct; }).length;
+                var rate = Math.round((correct / a.length) * 100);
+                document.getElementById('ov-rate-num').textContent = rate + '%';
+
+                // ═══ Top Solvers (most attempts) ═══
+                var userAttempts = {};
+                a.forEach(function(x) {
+                    if (!userAttempts[x.user_id]) userAttempts[x.user_id] = { total: 0, correct: 0 };
+                    userAttempts[x.user_id].total++;
+                    if (x.is_correct) userAttempts[x.user_id].correct++;
+                });
+
+                var userMap = {};
+                if (u) u.forEach(function(x) { userMap[x.id] = x; });
+
+                // Top Solvers
+                var topSolvers = Object.keys(userAttempts).sort(function(a,b){ return userAttempts[b].total - userAttempts[a].total; }).slice(0, 5);
+                var rankColors = ['#fbbf24','#c0c0c0','#cd7f32','#818cf8','#818cf8'];
+                var rankBg = ['rgba(251,191,36,0.15)','rgba(192,192,192,0.1)','rgba(205,127,50,0.1)','rgba(129,140,248,0.08)','rgba(129,140,248,0.08)'];
+                var html = '';
+                topSolvers.forEach(function(uid, i){
+                    var user = userMap[uid] || {};
+                    html += '<div class="rank-row"><div class="rank-num" style="background:' + rankBg[i] + ';color:' + rankColors[i] + '">' + (i+1) + '</div><div class="flex-1"><p class="text-white font-bold text-sm">' + (user.full_name || 'مجهول') + '</p><p class="text-purple-300/30 text-xs">' + (user.email || '') + '</p></div><div class="text-left"><p class="text-lg font-black text-indigo-400">' + userAttempts[uid].total + '</p><p class="text-purple-300/30 text-[10px]">محاولة</p></div></div>';
+                });
+                document.getElementById('ov-top-solvers').innerHTML = html || '<p class="text-purple-300/30">لا توجد بيانات</p>';
+
+                // Top Accuracy (min 5 attempts)
+                var topAcc = Object.keys(userAttempts).filter(function(uid){ return userAttempts[uid].total >= 3; }).sort(function(a,b){
+                    return (userAttempts[b].correct / userAttempts[b].total) - (userAttempts[a].correct / userAttempts[a].total);
+                }).slice(0, 5);
+                html = '';
+                topAcc.forEach(function(uid, i){
+                    var user = userMap[uid] || {};
+                    var pct = Math.round((userAttempts[uid].correct / userAttempts[uid].total) * 100);
+                    html += '<div class="rank-row"><div class="rank-num" style="background:' + rankBg[i] + ';color:' + rankColors[i] + '">' + (i+1) + '</div><div class="flex-1"><p class="text-white font-bold text-sm">' + (user.full_name || 'مجهول') + '</p><p class="text-purple-300/30 text-xs">' + userAttempts[uid].correct + '/' + userAttempts[uid].total + ' صح</p></div><div class="text-left"><p class="text-lg font-black text-emerald-400">' + pct + '%</p></div></div>';
+                });
+                document.getElementById('ov-top-accuracy').innerHTML = html || '<p class="text-purple-300/30">لا توجد بيانات كافية</p>';
+
+                // Most Active (last 7 days)
+                var weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+                var recentAttempts = {};
+                a.forEach(function(x){
+                    if (new Date(x.created_at) >= weekAgo) {
+                        recentAttempts[x.user_id] = (recentAttempts[x.user_id] || 0) + 1;
+                    }
+                });
+                var topActive = Object.keys(recentAttempts).sort(function(a,b){ return recentAttempts[b] - recentAttempts[a]; }).slice(0, 5);
+                html = '';
+                topActive.forEach(function(uid, i){
+                    var user = userMap[uid] || {};
+                    html += '<div class="rank-row"><div class="rank-num" style="background:' + rankBg[i] + ';color:' + rankColors[i] + '">' + (i+1) + '</div><div class="flex-1"><p class="text-white font-bold text-sm">' + (user.full_name || 'مجهول') + '</p></div><div class="text-left"><p class="text-lg font-black text-purple-400">' + recentAttempts[uid] + '</p><p class="text-purple-300/30 text-[10px]">هالأسبوع</p></div></div>';
+                });
+                document.getElementById('ov-top-active').innerHTML = html || '<p class="text-purple-300/30">لا يوجد نشاط هالأسبوع</p>';
+
+            } else {
+                document.getElementById('ov-hardest').innerHTML = '<p class="text-purple-300/40 text-base">ما فيه محاولات بعد</p>';
+                document.getElementById('ov-rate-num').textContent = '-';
+                document.getElementById('ov-top-solvers').innerHTML = '<p class="text-purple-300/30">لا توجد بيانات</p>';
+                document.getElementById('ov-top-accuracy').innerHTML = '<p class="text-purple-300/30">لا توجد بيانات</p>';
+                document.getElementById('ov-top-active').innerHTML = '<p class="text-purple-300/30">لا توجد بيانات</p>';
+            }
+
+            // ═══ New Members ═══
+            if (u && u.length > 0) {
+                var sorted = u.sort(function(a,b){ return new Date(b.created_at) - new Date(a.created_at); }).slice(0, 5);
+                var html = '';
+                sorted.forEach(function(m){
+                    var d = m.created_at ? new Date(m.created_at).toLocaleDateString('ar-SA') : '';
+                    html += '<div class="rank-row"><span class="text-lg">' + (m.avatar_emoji || '👤') + '</span><div class="flex-1"><p class="text-white font-bold text-sm">' + (m.full_name || '—') + '</p><p class="text-purple-300/30 text-xs">' + (m.email || '') + '</p></div><p class="text-purple-300/30 text-xs">' + d + '</p></div>';
+                });
+                document.getElementById('ov-new-members').innerHTML = html;
             }
         }
 
