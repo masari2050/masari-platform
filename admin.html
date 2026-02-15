@@ -310,19 +310,41 @@
             </div>
 
             <!-- Pricing -->
-            <div class="glass p-5 mb-4">
-                <h3 class="font-bold text-sm mb-3">💰 أسعار الاشتراكات</h3>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-purple-300/40 text-xs mb-1 block">الشهري (ريال)</label>
-                        <input type="number" id="set-price-monthly" class="input-dark" value="29">
-                    </div>
-                    <div>
-                        <label class="text-purple-300/40 text-xs mb-1 block">السنوي (ريال)</label>
-                        <input type="number" id="set-price-yearly" class="input-dark" value="228">
+            <div class="glass p-6 mb-4">
+                <h3 class="font-bold text-base mb-4">💰 أسعار الاشتراكات</h3>
+                <p class="text-purple-300/30 text-xs mb-4">حط السعر الأصلي والسعر المخفّض — لو السعر المخفّض أقل بيظهر خط على الأصلي</p>
+
+                <!-- Monthly -->
+                <div class="mb-4 p-4 rounded-xl" style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.1)">
+                    <p class="text-indigo-400 font-bold text-sm mb-2">📅 الاشتراك الشهري</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-purple-300/40 text-xs mb-1 block">السعر الأصلي (ريال)</label>
+                            <input type="number" id="set-price-monthly-orig" class="input-dark" value="39">
+                        </div>
+                        <div>
+                            <label class="text-purple-300/40 text-xs mb-1 block">السعر الحالي (ريال)</label>
+                            <input type="number" id="set-price-monthly" class="input-dark" value="29">
+                        </div>
                     </div>
                 </div>
-                <button class="btn-p mt-2" onclick="savePricing()">حفظ الأسعار</button>
+
+                <!-- Yearly -->
+                <div class="mb-4 p-4 rounded-xl" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.1)">
+                    <p class="text-emerald-400 font-bold text-sm mb-2">💎 الاشتراك السنوي</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-purple-300/40 text-xs mb-1 block">السعر الأصلي (ريال)</label>
+                            <input type="number" id="set-price-yearly-orig" class="input-dark" value="348">
+                        </div>
+                        <div>
+                            <label class="text-purple-300/40 text-xs mb-1 block">السعر الحالي (ريال)</label>
+                            <input type="number" id="set-price-yearly" class="input-dark" value="228">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-p" onclick="savePricing()">💾 حفظ الأسعار</button>
             </div>
 
             <!-- Free Limit -->
@@ -681,8 +703,10 @@
                 question_text: document.getElementById('qm-text').value,
                 choices: [document.getElementById('qm-c0').value, document.getElementById('qm-c1').value, document.getElementById('qm-c2').value, document.getElementById('qm-c3').value],
                 correct_index: parseInt(document.getElementById('qm-correct').value),
-                explanation: document.getElementById('qm-explanation').value,
-                image_url: document.getElementById('qm-image').value || null
+                explanation: document.getElementById('qm-explanation').value
+            };
+            var imgUrl = document.getElementById('qm-image').value;
+            if (imgUrl) obj.image_url = imgUrl;
             };
             if (!obj.question_text || !obj.choices[0]) { toast('املأ الحقول المطلوبة', false); return; }
 
@@ -856,6 +880,8 @@
                     if (s.key === 'free_limit') document.getElementById('set-free-limit').value = s.value || '10';
                     if (s.key === 'price_monthly') document.getElementById('set-price-monthly').value = s.value || '29';
                     if (s.key === 'price_yearly') document.getElementById('set-price-yearly').value = s.value || '228';
+                    if (s.key === 'price_monthly_orig') document.getElementById('set-price-monthly-orig').value = s.value || '39';
+                    if (s.key === 'price_yearly_orig') document.getElementById('set-price-yearly-orig').value = s.value || '348';
                     if (s.key === 'theme') {
                         var r = document.querySelector('input[name="theme"][value="' + s.value + '"]');
                         if (r) r.checked = true;
@@ -882,6 +908,8 @@
         function savePricing() {
             saveSetting('price_monthly', document.getElementById('set-price-monthly').value);
             saveSetting('price_yearly', document.getElementById('set-price-yearly').value);
+            saveSetting('price_monthly_orig', document.getElementById('set-price-monthly-orig').value);
+            saveSetting('price_yearly_orig', document.getElementById('set-price-yearly-orig').value);
         }
 
         // ═══ Init ═══
