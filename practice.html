@@ -219,6 +219,46 @@
         </div>
     </main>
 
+    <!-- Paywall Modal -->
+    <div id="paywallModal" class="hidden fixed inset-0 z-[999] flex items-center justify-center p-4" style="background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+        <div class="w-full max-w-md rounded-3xl p-7 text-center relative overflow-hidden" style="background: linear-gradient(135deg, #1a1145, #1e1550, #0f0a2e); border: 1px solid rgba(139,92,246,0.2);">
+            <!-- Glow -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full" style="background: radial-gradient(circle, rgba(139,92,246,0.2), transparent 70%);"></div>
+
+            <div class="relative z-10">
+                <span class="text-5xl block mb-3">🚀</span>
+                <h2 class="text-2xl font-black mb-2">ما شاء الله عليك!</h2>
+                <p class="text-purple-200/70 text-sm mb-1">حليت الأسئلة المجانية كلها</p>
+                <p class="text-purple-300/50 text-xs mb-6">عشان تكمل رحلتك وتوصل لحلمك، اشترك وانطلق</p>
+
+                <div class="space-y-3 text-right mb-6 px-2">
+                    <div class="flex items-center gap-2"><span class="text-green-400 text-sm">✓</span><span class="text-purple-200/80 text-sm">أسئلة غير محدودة لكل الأقسام</span></div>
+                    <div class="flex items-center gap-2"><span class="text-green-400 text-sm">✓</span><span class="text-purple-200/80 text-sm">إحصائيات متقدمة ومراجعة أخطاء</span></div>
+                    <div class="flex items-center gap-2"><span class="text-green-400 text-sm">✓</span><span class="text-purple-200/80 text-sm">تحديثات أسبوعية للأسئلة</span></div>
+                </div>
+
+                <div class="flex items-center justify-center gap-3 mb-5 px-2" style="direction: ltr;">
+                    <div class="flex-1 text-center p-3 rounded-xl" style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);">
+                        <div class="text-2xl font-black text-indigo-300">29</div>
+                        <div class="text-purple-300/40 text-xs">ريال/شهر</div>
+                    </div>
+                    <div class="text-purple-300/20 text-xs">أو</div>
+                    <div class="flex-1 text-center p-3 rounded-xl" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3);">
+                        <div class="text-2xl font-black text-emerald-300">19</div>
+                        <div class="text-purple-300/40 text-xs">ريال/شهر سنوي</div>
+                    </div>
+                </div>
+
+                <a href="pricing.html" class="block w-full py-3.5 rounded-xl font-bold text-sm text-white mb-3" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                    اشترك الآن وكمّل مشوارك ✨
+                </a>
+                <button onclick="closePaywall()" class="text-purple-300/30 text-xs hover:text-purple-300/50 transition">
+                    ارجع للرئيسية
+                </button>
+            </div>
+        </div>
+    </div>
+
     <audio id="correctSound" preload="auto"></audio>
     <audio id="wrongSound" preload="auto"></audio>
 
@@ -238,7 +278,10 @@
         let sessionId = null;
         let timeRemaining = 0;
         let timerInterval = null;
+        let userSubscription = 'free';
+        let totalAttemptsCount = 0;
         const SECONDS_PER_QUESTION = 60;
+        const FREE_LIMIT = 10;
 
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -276,7 +319,35 @@
                 return false;
             }
             currentUser = session.user;
+
+            // Get subscription type
+            try {
+                const { data: profile } = await sb.from('profiles').select('subscription_type').eq('id', currentUser.id).single();
+                if (profile && profile.subscription_type) userSubscription = profile.subscription_type;
+            } catch(e) {}
+
+            // Get total attempts count for free limit
+            if (userSubscription === 'free') {
+                try {
+                    const { data: attempts } = await sb.from('attempts').select('id').eq('user_id', currentUser.id);
+                    totalAttemptsCount = attempts ? attempts.length : 0;
+                } catch(e) {}
+
+                if (totalAttemptsCount >= FREE_LIMIT) {
+                    showPaywall();
+                    return false;
+                }
+            }
             return true;
+        }
+
+        function showPaywall() {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('paywallModal').classList.remove('hidden');
+        }
+
+        function closePaywall() {
+            window.location.href = 'dashboard.html';
         }
 
         async function loadQuestions() {
@@ -395,6 +466,7 @@
 
             playSound(isCorrect);
             if (isCorrect) correctCount++; else wrongCount++;
+            totalAttemptsCount++;
             updateStats();
 
             const cards = document.querySelectorAll('.option-card');
@@ -435,6 +507,12 @@
         }
 
         function nextQuestion() {
+            // Check free limit
+            if (userSubscription === 'free' && totalAttemptsCount >= FREE_LIMIT) {
+                clearInterval(timerInterval);
+                showPaywall();
+                return;
+            }
             currentQuestionIndex++;
             displayQuestion();
         }
