@@ -106,7 +106,7 @@
 <!-- ═══ الكوبونات ═══ -->
 <div id="t-coupons" class="tab">
     <div class="flex items-center justify-between mb-5"><h2 class="text-2xl font-black">🎟️ الكوبونات</h2><button class="bp" onclick="$('couponM').classList.remove('hidden')">+ كوبون جديد</button></div>
-    <div class="glass overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-purple-500/10"><th class="text-right p-3 text-purple-300/50">الكود</th><th class="text-center p-3 text-purple-300/50">الخصم</th><th class="text-center p-3 text-purple-300/50">الاستخدامات</th><th class="text-center p-3 text-purple-300/50">الحد</th><th class="text-center p-3 text-purple-300/50">الحالة</th><th class="text-center p-3 text-purple-300/50">إجراء</th></tr></thead><tbody id="c-list"></tbody></table></div>
+    <div class="glass overflow-x-auto"><table class="w-full text-sm"><thead><tr class="border-b border-purple-500/10"><th class="text-right p-3 text-purple-300/50">الكود</th><th class="text-center p-3 text-purple-300/50">الخصم</th><th class="text-center p-3 text-purple-300/50">يطبّق على</th><th class="text-center p-3 text-purple-300/50">المدة</th><th class="text-center p-3 text-purple-300/50">الاستخدام</th><th class="text-center p-3 text-purple-300/50">الحالة</th><th class="text-center p-3 text-purple-300/50">إجراء</th></tr></thead><tbody id="c-list"></tbody></table></div>
 </div>
 
 <!-- ═══ المالية ═══ -->
@@ -137,7 +137,7 @@
         <h3 class="font-bold text-base mb-4">💰 الأسعار والخصومات</h3>
         <p class="text-purple-300/30 text-xs mb-4">حط السعر الأصلي والحالي — لو الحالي أقل بيظهر خط على الأصلي في صفحة الباقات</p>
         <div class="mb-4 p-4 rounded-xl" style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.1)"><p class="text-indigo-400 font-bold text-sm mb-2">📅 الشهري</p><div class="grid grid-cols-2 gap-3"><div><label class="text-purple-300/40 text-xs mb-1 block">الأصلي</label><input type="number" id="st-mo" class="inp" value="39"></div><div><label class="text-purple-300/40 text-xs mb-1 block">الحالي</label><input type="number" id="st-m" class="inp" value="29"></div></div></div>
-        <div class="mb-4 p-4 rounded-xl" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.1)"><p class="text-emerald-400 font-bold text-sm mb-2">💎 السنوي</p><div class="grid grid-cols-2 gap-3"><div><label class="text-purple-300/40 text-xs mb-1 block">الأصلي</label><input type="number" id="st-yo" class="inp" value="348"></div><div><label class="text-purple-300/40 text-xs mb-1 block">الحالي</label><input type="number" id="st-y" class="inp" value="228"></div></div></div>
+        <div class="mb-4 p-4 rounded-xl" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.1)"><p class="text-emerald-400 font-bold text-sm mb-2">💎 السنوي (الإجمالي للسنة)</p><div class="grid grid-cols-2 gap-3"><div><label class="text-purple-300/40 text-xs mb-1 block">الأصلي السنوي (ريال)</label><input type="number" id="st-yo" class="inp" value="348"></div><div><label class="text-purple-300/40 text-xs mb-1 block">الحالي السنوي (ريال)</label><input type="number" id="st-y" class="inp" value="228"></div></div><p class="text-purple-300/20 text-xs mt-2">* السعر الشهري يتحسب تلقائياً (÷12)</p></div>
         <button class="bp" onclick="savePrice()">💾 حفظ الأسعار</button>
     </div>
     <div class="glass p-6 mb-4"><h3 class="font-bold text-base mb-3">🆓 حد الأسئلة المجانية</h3><input type="number" id="st-fl" class="inp" value="10" style="max-width:120px"><button class="bp mt-2" onclick="saveSt('free_limit',$('st-fl').value)">حفظ</button></div>
@@ -180,13 +180,25 @@
 <!-- ═══ Coupon Modal ═══ -->
 <div id="couponM" class="mbg hidden"><div class="mbox">
     <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">كوبون جديد</h3><button onclick="$('couponM').classList.add('hidden')" class="text-purple-300/30 hover:text-white text-lg">✕</button></div>
-    <div class="space-y-3"><div><label class="text-purple-300/50 text-sm mb-1 block">الكود</label><input id="cm-c" class="inp" style="text-transform:uppercase"></div><div><label class="text-purple-300/50 text-sm mb-1 block">نوع الخصم</label><select id="cm-t" class="inp"><option value="percentage">نسبة %</option><option value="fixed">مبلغ ثابت</option></select></div><div><label class="text-purple-300/50 text-sm mb-1 block">القيمة</label><input type="number" id="cm-v" class="inp"></div><div><label class="text-purple-300/50 text-sm mb-1 block">الحد الأقصى</label><input type="number" id="cm-x" class="inp" value="100"></div><div><label class="text-purple-300/50 text-sm mb-1 block">ينتهي</label><input type="date" id="cm-e" class="inp"></div><button class="bp w-full" onclick="saveC2()">💾 إنشاء</button></div>
+    <div class="space-y-3">
+        <div><label class="text-purple-300/50 text-sm mb-1 block">الكود</label><input id="cm-c" class="inp" style="text-transform:uppercase" placeholder="مثال: MASARI50"></div>
+        <div><label class="text-purple-300/50 text-sm mb-1 block">يطبّق على</label><select id="cm-plan" class="inp"><option value="all">الكل (شهري + سنوي)</option><option value="monthly">شهري فقط</option><option value="yearly">سنوي فقط</option></select></div>
+        <div><label class="text-purple-300/50 text-sm mb-1 block">نوع الخصم</label><select id="cm-t" class="inp"><option value="percentage">نسبة %</option><option value="fixed">مبلغ ثابت (ريال)</option></select></div>
+        <div><label class="text-purple-300/50 text-sm mb-1 block">القيمة</label><input type="number" id="cm-v" class="inp" placeholder="مثال: 50"></div>
+        <div><label class="text-purple-300/50 text-sm mb-1 block">مدة الكوبون (اشتراك يفعّل لكم شهر)</label><select id="cm-dur" class="inp"><option value="1">شهر واحد</option><option value="3">3 أشهر</option><option value="6">6 أشهر</option><option value="12" selected>سنة كاملة</option></select></div>
+        <div class="grid grid-cols-2 gap-3">
+            <div><label class="text-purple-300/50 text-sm mb-1 block">الحد الأقصى للاستخدام</label><input type="number" id="cm-x" class="inp" value="100"></div>
+            <div><label class="text-purple-300/50 text-sm mb-1 block">ينتهي بتاريخ</label><input type="date" id="cm-e" class="inp"></div>
+        </div>
+        <button class="bp w-full" onclick="saveC2()">💾 إنشاء الكوبون</button>
+    </div>
 </div></div>
 
 <!-- ═══ Staff Modal ═══ -->
 <div id="staffM" class="mbg hidden"><div class="mbox">
     <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">إضافة موظف</h3><button onclick="$('staffM').classList.add('hidden')" class="text-purple-300/30 hover:text-white text-lg">✕</button></div>
     <div class="space-y-3"><div><label class="text-purple-300/50 text-sm mb-1 block">إيميل الموظف</label><input id="sm-e" class="inp"></div><button class="bp w-full" onclick="saveSt2()">💾 إضافة كأدمن</button></div>
+</div></div>
 <!-- ═══ Preview Modal ═══ -->
 <div id="previewM" class="mbg hidden"><div class="mbox" style="max-width:420px">
     <div class="flex items-center justify-between mb-4"><h3 class="font-bold text-lg">👁️ معاينة السؤال</h3><button onclick="$('previewM').classList.add('hidden')" class="text-purple-300/30 hover:text-white text-lg">✕</button></div>
@@ -289,8 +301,16 @@ async function loadQ(){
     var sn={quant:'كمي',verbal:'لفظي',tahsili:'تحصيلي'},h='';
     data.forEach(function(q){
         var img=q.image_url?'<img src="'+q.image_url+'" class="w-16 h-16 rounded-lg object-cover ml-2 flex-shrink-0">':'';
-        h+='<div class="glass p-4"><div class="flex items-start justify-between gap-3"><div class="flex-1 flex gap-3">'+img+'<div><span class="bg bg-'+(q.section==='quant'?'m':q.section==='verbal'?'y':'f')+'">'+(sn[q.section]||'')+'</span>'+(q.sub_section?'<span class="text-purple-300/30 text-xs mr-2">'+q.sub_section+'</span>':'')+'<p class="text-sm text-white leading-relaxed mt-1">'+(q.question_text||'سؤال بالصورة').substring(0,100)+'</p></div></div><div class="flex gap-1 flex-shrink-0"><button class="bs" onclick="previewQ(\''+q.id+'\')" title="معاينة">👁️</button><button class="bs" onclick="editQ(\''+q.id+'\')">✏️</button><button class="bd" onclick="delQ(\''+q.id+'\')">🗑️</button></div></div></div>'
-    });$('q-list').innerHTML=h||'<p class="text-purple-300/30 text-center py-8">لا توجد أسئلة</p>'
+        h+='<div class="glass p-4"><div class="flex items-start justify-between gap-3"><div class="flex-1 flex gap-3">'+img+'<div><span class="bg bg-'+(q.section==='quant'?'m':q.section==='verbal'?'y':'f')+'">'+(sn[q.section]||'')+'</span>'+(q.sub_section?'<span class="text-purple-300/30 text-xs mr-2">'+q.sub_section+'</span>':'')+'<p class="text-sm text-white leading-relaxed mt-1">'+(q.question_text||'سؤال بالصورة').substring(0,100)+'</p></div></div><div class="flex gap-1 flex-shrink-0"><button class="bs qact" data-a="preview" data-id="'+q.id+'">👁️</button><button class="bs qact" data-a="edit" data-id="'+q.id+'">✏️</button><button class="bd qact" data-a="del" data-id="'+q.id+'">🗑️</button></div></div></div>'
+    });$('q-list').innerHTML=h||'<p class="text-purple-300/30 text-center py-8">لا توجد أسئلة</p>';
+    document.querySelectorAll('.qact').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            var id=this.dataset.id,a=this.dataset.a;
+            if(a==='preview')previewQ(id);
+            if(a==='edit')editQ(id);
+            if(a==='del')delQ(id);
+        });
+    });
 }
 
 function openQM(q){
@@ -386,9 +406,10 @@ async function editU(id){var{data}=await sb.from('profiles').select('*').eq('id'
 async function saveU2(){var{error}=await sb.from('profiles').update({full_name:$('um-n').value,subscription_type:$('um-s').value,role:$('um-r').value}).eq('id',$('um-id').value);if(error)toast('خطأ',false);else{toast('تم',true);$('userM').classList.add('hidden');loadU()}}
 
 // ═══ COUPONS ═══
-async function loadC(){var{data}=await sb.from('coupons').select('*').order('created_at',{ascending:false});if(!data||!data.length){$('c-list').innerHTML='<tr><td colspan="6" class="p-6 text-center text-purple-300/30">لا توجد كوبونات</td></tr>';return}
-var h='';data.forEach(function(c){var ok=!c.expires_at||new Date(c.expires_at)>new Date();h+='<tr class="tr"><td class="p-3 font-bold text-indigo-300">'+c.code+'</td><td class="p-3 text-center">'+c.discount_value+(c.discount_type==='percentage'?'%':' ر')+'</td><td class="p-3 text-center font-bold">'+(c.used_count||0)+'</td><td class="p-3 text-center text-purple-300/40">'+(c.max_uses||'∞')+'</td><td class="p-3 text-center"><span class="bg '+(ok?'bg-y':'bg-f')+'">'+(ok?'فعّال':'منتهي')+'</span></td><td class="p-3 text-center"><button class="bd" onclick="delC(\''+c.id+'\')">🗑️</button></td></tr>'});$('c-list').innerHTML=h}
-async function saveC2(){var obj={code:$('cm-c').value.toUpperCase().trim(),discount_type:$('cm-t').value,discount_value:parseFloat($('cm-v').value),max_uses:parseInt($('cm-x').value)||100,used_count:0,expires_at:$('cm-e').value||null};if(!obj.code||!obj.discount_value){toast('املأ الحقول',false);return}var{error}=await sb.from('coupons').insert(obj);if(error)toast('خطأ: '+error.message,false);else{toast('تم',true);$('couponM').classList.add('hidden');loadC()}}
+async function loadC(){var{data}=await sb.from('coupons').select('*').order('created_at',{ascending:false});if(!data||!data.length){$('c-list').innerHTML='<tr><td colspan="7" class="p-6 text-center text-purple-300/30">لا توجد كوبونات</td></tr>';return}
+var planN={all:'الكل',monthly:'شهري',yearly:'سنوي'};var durN={'1':'شهر','3':'3 أشهر','6':'6 أشهر','12':'سنة'};
+var h='';data.forEach(function(c){var ok=!c.expires_at||new Date(c.expires_at)>new Date();h+='<tr class="tr"><td class="p-3 font-bold text-indigo-300">'+c.code+'</td><td class="p-3 text-center">'+c.discount_value+(c.discount_type==='percentage'?'%':' ر')+'</td><td class="p-3 text-center text-purple-300/40 text-xs">'+(planN[c.plan_type]||'الكل')+'</td><td class="p-3 text-center text-purple-300/40 text-xs">'+(durN[c.duration_months]||'-')+'</td><td class="p-3 text-center font-bold">'+(c.used_count||0)+'/'+(c.max_uses||'∞')+'</td><td class="p-3 text-center"><span class="bg '+(ok?'bg-y':'bg-f')+'">'+(ok?'فعّال':'منتهي')+'</span></td><td class="p-3 text-center"><button class="bd" onclick="delC(\''+c.id+'\')">🗑️</button></td></tr>'});$('c-list').innerHTML=h}
+async function saveC2(){var obj={code:$('cm-c').value.toUpperCase().trim(),discount_type:$('cm-t').value,discount_value:parseFloat($('cm-v').value),plan_type:$('cm-plan').value,duration_months:parseInt($('cm-dur').value),max_uses:parseInt($('cm-x').value)||100,used_count:0,expires_at:$('cm-e').value||null};if(!obj.code||!obj.discount_value){toast('املأ الكود والقيمة',false);return}var{error}=await sb.from('coupons').insert(obj);if(error)toast('خطأ: '+error.message,false);else{toast('تم إنشاء الكوبون',true);$('couponM').classList.add('hidden');loadC()}}
 async function delC(id){if(!confirm('حذف؟'))return;await sb.from('coupons').delete().eq('id',id);toast('تم',true);loadC()}
 
 // ═══ FINANCE ═══
