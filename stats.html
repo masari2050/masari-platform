@@ -4,255 +4,190 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إحصائياتي - مساري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{tajawal:['Tajawal','sans-serif']}}}}</script>
     <style>
-        * { font-family: 'Tajawal', sans-serif; }
+        *{font-family:'Tajawal',sans-serif}
+        body{background:linear-gradient(135deg,#0f0a2e 0%,#1a1145 30%,#1e1550 50%,#151040 70%,#0d0825 100%);min-height:100vh}
+        .card-glass{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:1.25rem}
+        .stat-card{transition:all .3s ease}.stat-card:hover{transform:translateY(-3px)}
+        .progress-track{background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden;height:8px}
+        .progress-fill{border-radius:999px;transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative}
+        .progress-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);animation:shimmer 2s infinite}
+        @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+        .section-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:1.25rem;transition:all .3s ease;position:relative;overflow:hidden}
+        .section-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity .3s}
+        .section-card:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)}.section-card:hover::before{opacity:1}
+        .sec-quant::before{background:linear-gradient(90deg,#3b82f6,#6366f1)}.sec-verbal::before{background:linear-gradient(90deg,#10b981,#14b8a6)}.sec-tahsili::before{background:linear-gradient(90deg,#a855f7,#8b5cf6)}
+        .mini-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:.75rem;padding:12px;text-align:center}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .animate-in{animation:fadeUp .5s ease forwards}.delay-1{animation-delay:.1s;opacity:0}.delay-2{animation-delay:.15s;opacity:0}.delay-3{animation-delay:.2s;opacity:0}.delay-4{animation-delay:.3s;opacity:0}.delay-5{animation-delay:.4s;opacity:0}
+        .spinner-lg{width:40px;height:40px;border:3px solid rgba(139,92,246,0.2);border-top-color:#8b5cf6;border-radius:50%;animation:spin .7s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-50 via-white to-blue-50 min-h-screen">
-    
+<body class="font-tajawal text-white">
+
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-indigo-100">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="dashboard.html" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                <span class="font-medium">العودة للوحة</span>
-            </a>
-            <h1 class="text-2xl font-bold text-gray-800">📊 إحصائياتي التفصيلية</h1>
-        </div>
-    </header>
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between animate-in delay-1">
+        <a href="dashboard.html" class="flex items-center gap-2 text-purple-300/70 hover:text-white transition text-sm">
+            <svg class="w-5 h-5 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            <span>الرئيسية</span>
+        </a>
+        <h1 class="text-lg font-bold">📊 إحصائياتي</h1>
+        <div class="w-16"></div>
+    </div>
 
-    <main class="max-w-6xl mx-auto px-4 py-8">
-        
-        <!-- Loading State -->
-        <div id="loadingState" class="text-center py-20">
-            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
-            <p class="text-xl text-gray-600">جاري تحميل الإحصائيات...</p>
+    <main class="max-w-4xl mx-auto px-4 pb-12">
+
+        <!-- Loading -->
+        <div id="loadingState" class="flex flex-col items-center justify-center py-20">
+            <div class="spinner-lg mb-4"></div>
+            <p class="text-purple-300/50 text-sm">جاري تحميل الإحصائيات...</p>
         </div>
 
-        <!-- Content (Hidden initially) -->
+        <!-- Content -->
         <div id="statsContent" class="hidden">
+
             <!-- Overall Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div class="bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl p-6 text-white shadow-xl">
-                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-2">
-                        <span class="text-2xl">📝</span>
-                    </div>
-                    <p class="text-sm opacity-90 mb-1">إجمالي الأسئلة</p>
-                    <p class="text-4xl font-black" id="totalQuestions">0</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 animate-in delay-2">
+                <div class="stat-card card-glass p-4 text-center">
+                    <span class="text-2xl mb-1 block">📝</span>
+                    <p class="text-purple-300/40 text-xs mb-0.5">إجمالي الأسئلة</p>
+                    <p class="text-2xl font-black" id="totalQuestions">0</p>
                 </div>
-                
-                <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl">
-                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-2">
-                        <span class="text-2xl">✅</span>
-                    </div>
-                    <p class="text-sm opacity-90 mb-1">الإجابات الصحيحة</p>
-                    <p class="text-4xl font-black" id="correctAnswers">0</p>
+                <div class="stat-card card-glass p-4 text-center">
+                    <span class="text-2xl mb-1 block">✅</span>
+                    <p class="text-purple-300/40 text-xs mb-0.5">الصحيحة</p>
+                    <p class="text-2xl font-black text-green-400" id="correctAnswers">0</p>
                 </div>
-                
-                <div class="bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl p-6 text-white shadow-xl">
-                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-2">
-                        <span class="text-2xl">❌</span>
-                    </div>
-                    <p class="text-sm opacity-90 mb-1">الإجابات الخاطئة</p>
-                    <p class="text-4xl font-black" id="wrongAnswers">0</p>
+                <div class="stat-card card-glass p-4 text-center">
+                    <span class="text-2xl mb-1 block">❌</span>
+                    <p class="text-purple-300/40 text-xs mb-0.5">الخاطئة</p>
+                    <p class="text-2xl font-black text-red-400" id="wrongAnswers">0</p>
                 </div>
-                
-                <div class="bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl p-6 text-white shadow-xl">
-                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-2">
-                        <span class="text-2xl">🎯</span>
-                    </div>
-                    <p class="text-sm opacity-90 mb-1">نسبة النجاح</p>
-                    <p class="text-4xl font-black" id="successRate">0%</p>
+                <div class="stat-card card-glass p-4 text-center">
+                    <span class="text-2xl mb-1 block">🎯</span>
+                    <p class="text-purple-300/40 text-xs mb-0.5">نسبة النجاح</p>
+                    <p class="text-2xl font-black text-purple-300" id="successRate">0%</p>
                 </div>
             </div>
 
             <!-- Section Analysis -->
-            <div class="bg-white rounded-2xl shadow-xl border-2 p-8 mb-8">
-                <h2 class="text-3xl font-black mb-8 text-gray-800">📊 التحليل حسب القسم</h2>
-                
-                <div class="space-y-6">
-                    <!-- Quantitative -->
-                    <div class="border-3 border-indigo-300 rounded-2xl p-8 bg-gradient-to-br from-indigo-50 to-blue-50">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="flex items-center gap-3">
-                                <div class="w-14 h-14 bg-indigo-500 rounded-xl flex items-center justify-center text-2xl">📐</div>
-                                <h3 class="text-2xl font-bold text-indigo-900">قدرات كمي</h3>
-                            </div>
-                            <span class="text-4xl font-black text-indigo-600" id="quantRate">0%</span>
-                        </div>
-                        <div class="grid grid-cols-3 gap-6 mb-6">
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">إجمالي الأسئلة</p>
-                                <p class="text-3xl font-black text-indigo-700" id="quantTotal">0</p>
-                            </div>
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">الإجابات الصحيحة</p>
-                                <p class="text-3xl font-black text-green-600" id="quantCorrect">0</p>
-                            </div>
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">الإجابات الخاطئة</p>
-                                <p class="text-3xl font-black text-red-600" id="quantWrong">0</p>
-                            </div>
-                        </div>
-                        <div class="bg-gray-200 rounded-full h-4">
-                            <div class="bg-gradient-to-r from-indigo-500 to-blue-500 h-4 rounded-full transition-all duration-1000" id="quantProgress" style="width: 0%"></div>
-                        </div>
-                    </div>
+            <h2 class="text-lg font-bold mb-4 animate-in delay-3">التحليل حسب القسم</h2>
 
-                    <!-- Verbal -->
-                    <div class="border-3 border-green-300 rounded-2xl p-8 bg-gradient-to-br from-green-50 to-emerald-50">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="flex items-center gap-3">
-                                <div class="w-14 h-14 bg-green-500 rounded-xl flex items-center justify-center text-2xl">📖</div>
-                                <h3 class="text-2xl font-bold text-green-900">قدرات لفظي</h3>
-                            </div>
-                            <span class="text-4xl font-black text-green-600" id="verbalRate">0%</span>
+            <div class="space-y-4">
+                <!-- Quant -->
+                <div class="animate-in delay-3 section-card sec-quant p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">📐</div>
+                            <h3 class="text-base font-bold">قدرات كمي</h3>
                         </div>
-                        <div class="grid grid-cols-3 gap-6 mb-6">
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">إجمالي الأسئلة</p>
-                                <p class="text-3xl font-black text-green-700" id="verbalTotal">0</p>
-                            </div>
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">الإجابات الصحيحة</p>
-                                <p class="text-3xl font-black text-green-600" id="verbalCorrect">0</p>
-                            </div>
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">الإجابات الخاطئة</p>
-                                <p class="text-3xl font-black text-red-600" id="verbalWrong">0</p>
-                            </div>
-                        </div>
-                        <div class="bg-gray-200 rounded-full h-4">
-                            <div class="bg-gradient-to-r from-green-500 to-emerald-500 h-4 rounded-full transition-all duration-1000" id="verbalProgress" style="width: 0%"></div>
-                        </div>
+                        <span class="text-2xl font-black text-blue-400" id="quantRate">0%</span>
                     </div>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">الإجمالي</p><p class="text-lg font-black text-blue-300" id="quantTotal">0</p></div>
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">صحيحة</p><p class="text-lg font-black text-green-400" id="quantCorrect">0</p></div>
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">خاطئة</p><p class="text-lg font-black text-red-400" id="quantWrong">0</p></div>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill h-full" id="quantProgress" style="width:0%;background:linear-gradient(90deg,#3b82f6,#6366f1)"></div></div>
+                </div>
 
-                    <!-- Tahsili -->
-                    <div class="border-3 border-purple-300 rounded-2xl p-8 bg-gradient-to-br from-purple-50 to-violet-50">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="flex items-center gap-3">
-                                <div class="w-14 h-14 bg-purple-500 rounded-xl flex items-center justify-center text-2xl">🎓</div>
-                                <h3 class="text-2xl font-bold text-purple-900">التحصيلي</h3>
-                            </div>
-                            <span class="text-4xl font-black text-purple-600" id="tahsiliRate">0%</span>
+                <!-- Verbal -->
+                <div class="animate-in delay-4 section-card sec-verbal p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style="background:linear-gradient(135deg,#10b981,#14b8a6)">📖</div>
+                            <h3 class="text-base font-bold">قدرات لفظي</h3>
                         </div>
-                        <div class="grid grid-cols-3 gap-6 mb-6">
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">إجمالي الأسئلة</p>
-                                <p class="text-3xl font-black text-purple-700" id="tahsiliTotal">0</p>
-                            </div>
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">الإجابات الصحيحة</p>
-                                <p class="text-3xl font-black text-green-600" id="tahsiliCorrect">0</p>
-                            </div>
-                            <div class="text-center bg-white rounded-xl p-4 shadow-sm">
-                                <p class="text-base font-medium text-gray-600 mb-2">الإجابات الخاطئة</p>
-                                <p class="text-3xl font-black text-red-600" id="tahsiliWrong">0</p>
-                            </div>
-                        </div>
-                        <div class="bg-gray-200 rounded-full h-4">
-                            <div class="bg-gradient-to-r from-purple-500 to-violet-500 h-4 rounded-full transition-all duration-1000" id="tahsiliProgress" style="width: 0%"></div>
-                        </div>
+                        <span class="text-2xl font-black text-emerald-400" id="verbalRate">0%</span>
                     </div>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">الإجمالي</p><p class="text-lg font-black text-emerald-300" id="verbalTotal">0</p></div>
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">صحيحة</p><p class="text-lg font-black text-green-400" id="verbalCorrect">0</p></div>
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">خاطئة</p><p class="text-lg font-black text-red-400" id="verbalWrong">0</p></div>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill h-full" id="verbalProgress" style="width:0%;background:linear-gradient(90deg,#10b981,#14b8a6)"></div></div>
+                </div>
+
+                <!-- Tahsili -->
+                <div class="animate-in delay-5 section-card sec-tahsili p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style="background:linear-gradient(135deg,#a855f7,#8b5cf6)">🎓</div>
+                            <h3 class="text-base font-bold">التحصيلي</h3>
+                        </div>
+                        <span class="text-2xl font-black text-purple-400" id="tahsiliRate">0%</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">الإجمالي</p><p class="text-lg font-black text-purple-300" id="tahsiliTotal">0</p></div>
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">صحيحة</p><p class="text-lg font-black text-green-400" id="tahsiliCorrect">0</p></div>
+                        <div class="mini-stat"><p class="text-purple-300/30 text-xs">خاطئة</p><p class="text-lg font-black text-red-400" id="tahsiliWrong">0</p></div>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill h-full" id="tahsiliProgress" style="width:0%;background:linear-gradient(90deg,#a855f7,#8b5cf6)"></div></div>
                 </div>
             </div>
 
-            <!-- No Data State -->
-            <div id="noDataMessage" class="hidden bg-white rounded-2xl shadow-xl border-2 p-12 text-center">
-                <div class="text-6xl mb-4">📊</div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">لا توجد بيانات كافية للتحليل</h2>
-                <p class="text-gray-600 mb-6">حل 12 أسئلة على الأقل من نفس الموضوع لعرض التحليل</p>
-                <a href="select-section.html" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold transition">
-                    ابدأ التدريب
-                </a>
+            <!-- No Data -->
+            <div id="noDataMessage" class="hidden card-glass p-10 text-center mt-6">
+                <span class="text-5xl block mb-3">📝</span>
+                <h2 class="text-xl font-bold mb-2">ما بدأت بعد!</h2>
+                <p class="text-purple-300/40 text-sm mb-5">ابدأ حل الأسئلة عشان تشوف إحصائياتك هنا</p>
+                <a href="select-section.html" class="inline-block px-6 py-2.5 rounded-xl text-sm font-bold text-white" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">ابدأ التدريب</a>
             </div>
         </div>
-
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const supabaseUrl = 'https://czzcmbxejxbotjemyuqf.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0';
-        const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
-
+        const sb = window.supabase.createClient(
+            'https://czzcmbxejxbotjemyuqf.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
+        );
         let currentUser = null;
 
         async function checkAuth() {
             const { data: { session } } = await sb.auth.getSession();
-            if (!session) {
-                window.location.href = 'login.html';
-                return false;
-            }
+            if (!session) { window.location.href = 'login.html'; return false; }
             currentUser = session.user;
             return true;
         }
 
         async function loadStats() {
             try {
-                console.log('🔄 جاري تحميل الإحصائيات...');
-                
-                // جلب كل المحاولات
-                const { data: attempts, error } = await sb
-                    .from('attempts')
-                    .select('*, questions(section)')
-                    .eq('user_id', currentUser.id);
-                
+                const { data: attempts, error } = await sb.from('attempts').select('*, questions(section)').eq('user_id', currentUser.id);
                 if (error) throw error;
-                
-                console.log('✅ تم جلب', attempts ? attempts.length : 0, 'محاولة');
-                
-                if (!attempts || attempts.length === 0) {
-                    showNoData();
-                    return;
-                }
-                
-                // حساب الإحصائيات الإجمالية
+                if (!attempts || attempts.length === 0) { showNoData(); return; }
+
                 const total = attempts.length;
                 const correct = attempts.filter(a => a.is_correct).length;
-                const wrong = total - correct;
-                const rate = Math.round((correct / total) * 100);
-                
                 document.getElementById('totalQuestions').textContent = total;
                 document.getElementById('correctAnswers').textContent = correct;
-                document.getElementById('wrongAnswers').textContent = wrong;
-                document.getElementById('successRate').textContent = rate + '%';
-                
-                // حساب إحصائيات كل قسم
-                calculateSectionStats(attempts, 'quant');
-                calculateSectionStats(attempts, 'verbal');
-                calculateSectionStats(attempts, 'tahsili');
-                
-                // إظهار المحتوى
+                document.getElementById('wrongAnswers').textContent = total - correct;
+                document.getElementById('successRate').textContent = Math.round((correct / total) * 100) + '%';
+
+                calcSection(attempts, 'quant');
+                calcSection(attempts, 'verbal');
+                calcSection(attempts, 'tahsili');
+
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('statsContent').classList.remove('hidden');
-                
             } catch (err) {
-                console.error('❌ خطأ:', err);
-                showError();
+                console.error(err);
+                document.getElementById('loadingState').innerHTML = '<div class="text-center"><span class="text-5xl block mb-3">⚠️</span><p class="text-purple-300/50 text-sm">حدث خطأ — <a href="" class="underline">حاول مرة ثانية</a></p></div>';
             }
         }
 
-        function calculateSectionStats(attempts, section) {
-            const sectionAttempts = attempts.filter(a => a.questions && a.questions.section === section);
-            
-            const total = sectionAttempts.length;
-            const correct = sectionAttempts.filter(a => a.is_correct).length;
-            const wrong = total - correct;
-            const rate = total > 0 ? Math.round((correct / total) * 100) : 0;
-            
-            document.getElementById(`${section}Total`).textContent = total;
-            document.getElementById(`${section}Correct`).textContent = correct;
-            document.getElementById(`${section}Wrong`).textContent = wrong;
-            document.getElementById(`${section}Rate`).textContent = rate + '%';
-            
-            setTimeout(() => {
-                document.getElementById(`${section}Progress`).style.width = rate + '%';
-            }, 300);
+        function calcSection(attempts, section) {
+            const sa = attempts.filter(a => a.questions && a.questions.section === section);
+            const t = sa.length, c = sa.filter(a => a.is_correct).length, r = t > 0 ? Math.round((c/t)*100) : 0;
+            document.getElementById(section+'Total').textContent = t;
+            document.getElementById(section+'Correct').textContent = c;
+            document.getElementById(section+'Wrong').textContent = t - c;
+            document.getElementById(section+'Rate').textContent = r + '%';
+            setTimeout(function() { document.getElementById(section+'Progress').style.width = r + '%'; }, 400);
         }
 
         function showNoData() {
@@ -261,24 +196,9 @@
             document.getElementById('noDataMessage').classList.remove('hidden');
         }
 
-        function showError() {
-            document.getElementById('loadingState').innerHTML = `
-                <div class="text-center">
-                    <div class="text-6xl mb-4">⚠️</div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">حدث خطأ</h2>
-                    <p class="text-gray-600 mb-6">لم نتمكن من تحميل الإحصائيات</p>
-                    <button onclick="location.reload()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold transition">
-                        إعادة المحاولة
-                    </button>
-                </div>
-            `;
-        }
-
         document.addEventListener('DOMContentLoaded', async function() {
-            const isAuth = await checkAuth();
-            if (!isAuth) return;
-            
-            await loadStats();
+            const ok = await checkAuth();
+            if (ok) await loadStats();
         });
     </script>
 </body>
