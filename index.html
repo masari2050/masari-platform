@@ -10,68 +10,45 @@
     <style>
         *{font-family:'Tajawal',sans-serif;scroll-behavior:smooth}
         body{background:#0d0825;overflow-x:hidden}
-
-        /* Hero gradient */
-        .hero-bg{
-            background:linear-gradient(135deg,#0f0a2e 0%,#1a1145 25%,#1e1550 50%,#151040 75%,#0d0825 100%);
-            position:relative;overflow:hidden;
-        }
+        .hero-bg{background:linear-gradient(135deg,#0f0a2e 0%,#1a1145 25%,#1e1550 50%,#151040 75%,#0d0825 100%);position:relative;overflow:hidden}
         .hero-bg::before{content:'';position:absolute;top:-200px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,0.12) 0%,transparent 65%);border-radius:50%}
         .hero-bg::after{content:'';position:absolute;bottom:-150px;left:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,0.1) 0%,transparent 65%);border-radius:50%}
-
-        /* Glass Card */
         .glass{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:1.25rem}
-
-        /* Floating Elements */
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
         @keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(3deg)}}
         @keyframes pulse-soft{0%,100%{opacity:1}50%{opacity:.6}}
-        @keyframes orbit{0%{transform:rotate(0deg) translateX(80px) rotate(0deg)}100%{transform:rotate(360deg) translateX(80px) rotate(-360deg)}}
-        @keyframes count-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
         .float{animation:float 4s ease-in-out infinite}
         .float2{animation:float2 5s ease-in-out infinite}
         .pulse-soft{animation:pulse-soft 3s ease-in-out infinite}
-
-        /* Scroll Animations */
         .reveal{opacity:0;transform:translateY(30px);transition:all .6s ease}
         .reveal.visible{opacity:1;transform:translateY(0)}
-
-        /* Feature Cards */
         .feature-card{transition:all .3s ease;position:relative;overflow:hidden}
         .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity .3s}
         .feature-card:hover{transform:translateY(-6px);background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.15)}
         .feature-card:hover::before{opacity:1}
-
-        /* Buttons */
         .btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 8px 30px rgba(99,102,241,0.3);transition:all .3s}
         .btn-primary:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(99,102,241,0.5)}
         .btn-ghost{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);transition:all .3s}
         .btn-ghost:hover{background:rgba(255,255,255,0.12);transform:translateY(-2px)}
-
-        /* Stat Counter */
-        .stat-glow{position:relative}
-        .stat-glow::after{content:'';position:absolute;inset:-2px;border-radius:1rem;opacity:0;transition:opacity .3s}
-        .stat-glow:hover::after{opacity:1}
-
-        /* Nav */
         .nav-glass{background:rgba(13,8,37,0.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05)}
         .nav-scrolled{box-shadow:0 4px 20px rgba(0,0,0,0.3)}
-
-        /* Testimonial */
         .testimonial{background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(139,92,246,0.08));border:1px solid rgba(139,92,246,0.15)}
-
-        /* CTA */
         .cta-section{background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(139,92,246,0.2);position:relative;overflow:hidden}
         .cta-section::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:radial-gradient(circle,rgba(139,92,246,0.15),transparent 70%);border-radius:50%}
         .cta-section::after{content:'';position:absolute;bottom:-40%;left:-10%;width:250px;height:250px;background:radial-gradient(circle,rgba(99,102,241,0.1),transparent 70%);border-radius:50%}
-
-        /* Marquee */
         .marquee-container{overflow:hidden;white-space:nowrap}
         .marquee-text{display:inline-block;animation:marquee 30s linear infinite}
         @keyframes marquee{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-
-        /* Section divider */
         .section-line{width:60px;height:3px;border-radius:999px;background:linear-gradient(90deg,#6366f1,#8b5cf6);margin:0 auto}
+        /* Khawariz Logo */
+        .kh-logo-box{position:relative;display:inline-flex;flex-direction:column;align-items:center;padding:7px 22px 6px;border:1.5px solid rgba(139,92,246,0.25);border-radius:6px;background:rgba(15,10,46,0.3)}
+        .kh-corner-tl,.kh-corner-br{position:absolute;width:8px;height:8px}
+        .kh-corner-tl{top:-1.5px;left:-1.5px;border-top:2px solid #a855f7;border-left:2px solid #a855f7;border-radius:2px 0 0 0}
+        .kh-corner-br{bottom:-1.5px;right:-1.5px;border-bottom:2px solid #a855f7;border-right:2px solid #a855f7;border-radius:0 0 2px 0}
+        .kh-logo-name{font-size:18px;font-weight:900;line-height:1;color:white}
+        .kh-logo-name .kha{background:linear-gradient(135deg,#c084fc,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .kh-logo-line{height:1.5px;margin-top:3px;width:100%;background:linear-gradient(90deg,#7c3aed,#a855f7,rgba(168,85,247,0.2));border-radius:1px}
+        .kh-logo-en{font-size:7px;letter-spacing:2.5px;color:rgba(168,85,247,0.45);font-weight:700;margin-top:2px}
     </style>
 </head>
 <body class="text-white" style="font-family:'Tajawal',sans-serif">
@@ -80,10 +57,12 @@
     <nav id="mainNav" class="nav-glass fixed top-0 left-0 right-0 z-50 transition-all">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
             <a href="#" class="flex items-center gap-2">
-                <span class="text-2xl">🎓</span>
-                <div>
-                    <span class="text-xl font-black bg-gradient-to-l from-purple-300 to-indigo-300 bg-clip-text text-transparent">خوارز</span>
-                    <span class="block text-[9px] text-purple-200/70 font-medium -mt-1">القدرات · التحصيلي · قياس</span>
+                <div class="kh-logo-box">
+                    <div class="kh-corner-tl"></div>
+                    <div class="kh-corner-br"></div>
+                    <div class="kh-logo-name"><span class="kha">خـ</span>ـوارز</div>
+                    <div class="kh-logo-line"></div>
+                    <div class="kh-logo-en">KHAWARIZ</div>
                 </div>
             </a>
             <div class="flex items-center gap-2">
@@ -118,10 +97,8 @@
                         </a>
                         <a href="pricing.html" class="btn-ghost px-7 py-3.5 rounded-xl font-bold text-sm">شوف الباقات</a>
                     </div>
-
-                    <!-- Live Stats -->
                     <div class="flex gap-5">
-                       <div>
+                        <div>
                             <p class="text-2xl sm:text-3xl font-black text-white" id="liveQuestions">607+</p>
                             <p class="text-purple-200/70 text-xs">سؤال متنوع</p>
                             <div class="mt-1.5 flex items-center gap-1.5">
@@ -141,39 +118,22 @@
                         <div>
                             <p class="text-2xl sm:text-3xl font-black text-white">0 ريال</p>
                             <p class="text-purple-200/70 text-xs">للتجربة الأولى</p>
-                 
                         </div>
-     
                     </div>
-      
                 </div>
-
-
-
                 <!-- Visual -->
                 <div class="hidden md:flex items-center justify-center relative">
-                    <!-- Floating Cards -->
                     <div class="relative w-80 h-80">
-                        <!-- Main Circle -->
                         <div class="absolute inset-8 rounded-3xl flex items-center justify-center" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(139,92,246,0.2)">
                             <div class="text-center">
                                 <span class="text-7xl block mb-2 float">🎓</span>
                                 <p class="text-sm font-bold text-purple-200/80">جاهز تبدأ؟</p>
                             </div>
                         </div>
-                        <!-- Floating Badges -->
-                        <div class="absolute top-0 right-0 glass px-3 py-2 text-xs font-bold float" style="animation-delay:.5s">
-                            <span class="text-green-400">✓</span> قدرات كمي
-                        </div>
-                        <div class="absolute bottom-8 right-0 glass px-3 py-2 text-xs font-bold float2">
-                            <span class="text-emerald-400">✓</span> قدرات لفظي
-                        </div>
-                        <div class="absolute top-12 left-0 glass px-3 py-2 text-xs font-bold float" style="animation-delay:1s">
-                            <span class="text-purple-400">✓</span> التحصيلي
-                        </div>
-                        <div class="absolute bottom-0 left-4 glass px-3 py-2 text-xs font-bold float2" style="animation-delay:.3s">
-                            📊 إحصائيات فورية
-                        </div>
+                        <div class="absolute top-0 right-0 glass px-3 py-2 text-xs font-bold float" style="animation-delay:.5s"><span class="text-green-400">✓</span> قدرات كمي</div>
+                        <div class="absolute bottom-8 right-0 glass px-3 py-2 text-xs font-bold float2"><span class="text-emerald-400">✓</span> قدرات لفظي</div>
+                        <div class="absolute top-12 left-0 glass px-3 py-2 text-xs font-bold float" style="animation-delay:1s"><span class="text-purple-400">✓</span> التحصيلي</div>
+                        <div class="absolute bottom-0 left-4 glass px-3 py-2 text-xs font-bold float2" style="animation-delay:.3s">📊 إحصائيات فورية</div>
                     </div>
                 </div>
             </div>
@@ -181,20 +141,20 @@
     </section>
 
     <!-- Trusted By Banner -->
-  <section class="border-y border-purple-500/10 py-6">
-    <div class="max-w-6xl mx-auto px-4">
-        <p class="text-purple-200/40 text-xs text-center mb-4">مصمم خصيصاً لاختبارات:</p>
-        <div class="flex items-center justify-center gap-4 sm:gap-10 flex-wrap">
-            <div class="flex items-center gap-1.5"><span class="text-base sm:text-lg">📐</span><span class="text-purple-200/70 text-xs sm:text-sm font-bold">القدرات الكمي</span></div>
-            <div class="hidden sm:block w-px h-4 bg-purple-500/20"></div>
-            <div class="flex items-center gap-1.5"><span class="text-base sm:text-lg">📖</span><span class="text-purple-200/70 text-xs sm:text-sm font-bold">القدرات اللفظي</span></div>
-            <div class="hidden sm:block w-px h-4 bg-purple-500/20"></div>
-            <div class="flex items-center gap-1.5"><span class="text-base sm:text-lg">🎓</span><span class="text-purple-200/70 text-xs sm:text-sm font-bold">التحصيلي</span></div>
-            <div class="hidden sm:block w-px h-4 bg-purple-500/20"></div>
-            <div class="flex items-center gap-1.5"><span class="text-base sm:text-lg">🏛️</span><span class="text-purple-200/70 text-xs sm:text-sm font-bold">هيئة تقويم التعليم</span></div>
+    <section class="border-y border-purple-500/10 py-6">
+        <div class="max-w-6xl mx-auto px-4">
+            <p class="text-purple-200/40 text-xs text-center mb-4">مصمم خصيصاً لاختبارات:</p>
+            <div class="flex items-center justify-center gap-4 sm:gap-10 flex-wrap">
+                <div class="flex items-center gap-1.5"><span class="text-base sm:text-lg">📐</span><span class="text-purple-200/70 text-xs sm:text-sm font-bold">القدرات الكمي</span></div>
+                <div class="hidden sm:block w-px h-4 bg-purple-500/20"></div>
+                <div class="flex items-center gap-1.5"><span class="text-base sm:text-lg">📖</span><span class="text-purple-200/70 text-xs sm:text-sm font-bold">القدرات اللفظي</span></div>
+                <div class="hidden sm:block w-px h-4 bg-purple-500/20"></div>
+                <div class="flex items-center gap-1.5"><span class="text-base sm:text-lg">🎓</span><span class="text-purple-200/70 text-xs sm:text-sm font-bold">التحصيلي</span></div>
+                <div class="hidden sm:block w-px h-4 bg-purple-500/20"></div>
+                <div class="flex items-center gap-1.5"><span class="text-base sm:text-lg">🏛️</span><span class="text-purple-200/70 text-xs sm:text-sm font-bold">هيئة تقويم التعليم</span></div>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- Features Section -->
     <section class="py-16 sm:py-20" style="background:linear-gradient(180deg,#0d0825,#0f0a2e,#0d0825)">
@@ -204,38 +164,13 @@
                 <p class="text-purple-300/50 text-sm">كل اللي تحتاجه عشان تتفوق في اختبارات قياس</p>
                 <div class="section-line mt-4"></div>
             </div>
-
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="reveal feature-card glass p-6" style="--delay:.1s"><div class="feature-card::before" style="background:linear-gradient(90deg,#6366f1,#8b5cf6)"></div>
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">📚</div>
-                    <h3 class="text-base font-bold mb-2">بنك أسئلة شامل</h3>
-                    <p class="text-purple-200/70 text-sm leading-relaxed">أسئلة متنوعة لكل الأقسام مع شرح تفصيلي خطوة بخطوة ومعادلات واضحة</p>
-                </div>
-                <div class="reveal feature-card glass p-6" style="--delay:.15s">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#10b981,#14b8a6)">📊</div>
-                    <h3 class="text-base font-bold mb-2">إحصائيات دقيقة</h3>
-                    <p class="text-purple-200/70 text-sm leading-relaxed">تتبع تقدمك بدقة واعرف نقاط قوتك وضعفك في كل قسم على حدة</p>
-                </div>
-                <div class="reveal feature-card glass p-6" style="--delay:.2s">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#f59e0b,#f97316)">💪</div>
-                    <h3 class="text-base font-bold mb-2">رسائل تحفيزية</h3>
-                    <p class="text-purple-200/70 text-sm leading-relaxed">رسائل بالعامية السعودية مخصصة حسب جنسك ومستوى أدائك ترفع همتك</p>
-                </div>
-                <div class="reveal feature-card glass p-6" style="--delay:.25s">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#ef4444,#ec4899)">🎯</div>
-                    <h3 class="text-base font-bold mb-2">مراجعة الأخطاء</h3>
-                    <p class="text-purple-200/70 text-sm leading-relaxed">راجع كل أخطائك السابقة مع الشرح المفصّل وتعلم منها بطريقة فعالة</p>
-                </div>
-                <div class="reveal feature-card glass p-6" style="--delay:.3s">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#8b5cf6,#a855f7)">⏱️</div>
-                    <h3 class="text-base font-bold mb-2">مؤقت ذكي</h3>
-                    <p class="text-purple-200/70 text-sm leading-relaxed">60 ثانية لكل سؤال — نفس ضغط الاختبار الحقيقي عشان تتعود على الوقت</p>
-                </div>
-                <div class="reveal feature-card glass p-6" style="--delay:.35s">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">📱</div>
-                    <h3 class="text-base font-bold mb-2">يشتغل من أي مكان</h3>
-                    <p class="text-purple-200/70 text-sm leading-relaxed">جوال أو لابتوب أو آيباد — تدرّب وين ما كنت بدون ما تحتاج تحمل شي</p>
-                </div>
+                <div class="reveal feature-card glass p-6"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">📚</div><h3 class="text-base font-bold mb-2">بنك أسئلة شامل</h3><p class="text-purple-200/70 text-sm leading-relaxed">أسئلة متنوعة لكل الأقسام مع شرح تفصيلي خطوة بخطوة ومعادلات واضحة</p></div>
+                <div class="reveal feature-card glass p-6"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#10b981,#14b8a6)">📊</div><h3 class="text-base font-bold mb-2">إحصائيات دقيقة</h3><p class="text-purple-200/70 text-sm leading-relaxed">تتبع تقدمك بدقة واعرف نقاط قوتك وضعفك في كل قسم على حدة</p></div>
+                <div class="reveal feature-card glass p-6"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#f59e0b,#f97316)">💪</div><h3 class="text-base font-bold mb-2">رسائل تحفيزية</h3><p class="text-purple-200/70 text-sm leading-relaxed">رسائل بالعامية السعودية مخصصة حسب جنسك ومستوى أدائك ترفع همتك</p></div>
+                <div class="reveal feature-card glass p-6"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#ef4444,#ec4899)">🎯</div><h3 class="text-base font-bold mb-2">مراجعة الأخطاء</h3><p class="text-purple-200/70 text-sm leading-relaxed">راجع كل أخطائك السابقة مع الشرح المفصّل وتعلم منها بطريقة فعالة</p></div>
+                <div class="reveal feature-card glass p-6"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#8b5cf6,#a855f7)">⏱️</div><h3 class="text-base font-bold mb-2">مؤقت ذكي</h3><p class="text-purple-200/70 text-sm leading-relaxed">60 ثانية لكل سؤال — نفس ضغط الاختبار الحقيقي عشان تتعود على الوقت</p></div>
+                <div class="reveal feature-card glass p-6"><div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">📱</div><h3 class="text-base font-bold mb-2">يشتغل من أي مكان</h3><p class="text-purple-200/70 text-sm leading-relaxed">جوال أو لابتوب أو آيباد — تدرّب وين ما كنت بدون ما تحتاج تحمل شي</p></div>
             </div>
         </div>
     </section>
@@ -248,29 +183,10 @@
                 <p class="text-purple-300/50 text-sm">ثلاث خطوات بس وتبدأ رحلتك</p>
                 <div class="section-line mt-4"></div>
             </div>
-
             <div class="grid sm:grid-cols-3 gap-5">
-                <div class="reveal text-center">
-                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.2)">
-                        <span>1️⃣</span>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1">سجّل حسابك</h3>
-                    <p class="text-purple-200/70 text-xs">حساب مجاني بثوانٍ — بريد إلكتروني وكلمة مرور بس</p>
-                </div>
-                <div class="reveal text-center" style="transition-delay:.1s">
-                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(20,184,166,0.15));border:1px solid rgba(16,185,129,0.2)">
-                        <span>2️⃣</span>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1">اختر القسم</h3>
-                    <p class="text-purple-200/70 text-xs">كمي أو لفظي أو تحصيلي — حسب اللي تبي تتدرب عليه</p>
-                </div>
-                <div class="reveal text-center" style="transition-delay:.2s">
-                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4" style="background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(139,92,246,0.15));border:1px solid rgba(168,85,247,0.2)">
-                        <span>3️⃣</span>
-                    </div>
-                    <h3 class="font-bold text-sm mb-1">ابدأ حل</h3>
-                    <p class="text-purple-200/70 text-xs">10 أسئلة عشوائية مع تايمر وشرح فوري — وبتشوف نتيجتك</p>
-                </div>
+                <div class="reveal text-center"><div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.15));border:1px solid rgba(99,102,241,0.2)"><span>1️⃣</span></div><h3 class="font-bold text-sm mb-1">سجّل حسابك</h3><p class="text-purple-200/70 text-xs">حساب مجاني بثوانٍ — بريد إلكتروني وكلمة مرور بس</p></div>
+                <div class="reveal text-center" style="transition-delay:.1s"><div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(20,184,166,0.15));border:1px solid rgba(16,185,129,0.2)"><span>2️⃣</span></div><h3 class="font-bold text-sm mb-1">اختر القسم</h3><p class="text-purple-200/70 text-xs">كمي أو لفظي أو تحصيلي — حسب اللي تبي تتدرب عليه</p></div>
+                <div class="reveal text-center" style="transition-delay:.2s"><div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4" style="background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(139,92,246,0.15));border:1px solid rgba(168,85,247,0.2)"><span>3️⃣</span></div><h3 class="font-bold text-sm mb-1">ابدأ حل</h3><p class="text-purple-200/70 text-xs">10 أسئلة عشوائية مع تايمر وشرح فوري — وبتشوف نتيجتك</p></div>
             </div>
         </div>
     </section>
@@ -283,38 +199,12 @@
                 <p class="text-purple-300/50 text-sm">ابدأ مجاناً وارتقِ لما تحتاج أكثر</p>
                 <div class="section-line mt-4"></div>
             </div>
-
             <div class="grid sm:grid-cols-3 gap-4 reveal">
-                <!-- Free -->
-                <div class="glass p-6 text-center">
-                    <span class="text-3xl block mb-2">🆓</span>
-                    <h3 class="font-bold mb-1">مجاني</h3>
-                    <p class="text-3xl font-black mb-1">0 <span class="text-sm text-purple-200/70">ريال</span></p>
-                    <p class="text-purple-200/60 text-xs mb-4">10 أسئلة مجانية</p>
-                    <a href="register.html" class="btn-ghost block w-full py-2.5 rounded-xl text-sm font-bold text-center">ابدأ الآن</a>
-                </div>
-                <!-- Monthly -->
-                <div class="glass p-6 text-center relative" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.3)">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-0.5 rounded-full text-xs font-bold text-white" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">الأكثر شعبية</div>
-                    <span class="text-3xl block mb-2 mt-1">📅</span>
-                    <h3 class="font-bold mb-1">شهري</h3>
-                    <p class="text-3xl font-black text-indigo-400 mb-1">29 <span class="text-sm text-purple-200/70">ريال</span></p>
-                    <p class="text-purple-200/60 text-xs mb-4">أسئلة غير محدودة</p>
-                    <a href="register.html" class="btn-primary block w-full py-2.5 rounded-xl text-sm font-bold text-center">اشترك</a>
-                </div>
-                <!-- Yearly -->
-                <div class="glass p-6 text-center">
-                    <span class="text-3xl block mb-2">💎</span>
-                    <h3 class="font-bold mb-1">سنوي</h3>
-                    <p class="text-3xl font-black text-emerald-400 mb-1">19 <span class="text-sm text-purple-200/70">ريال/شهر</span></p>
-                    <p class="text-purple-200/60 text-xs mb-4">وفّر 120 ريال</p>
-                    <a href="register.html" class="btn-ghost block w-full py-2.5 rounded-xl text-sm font-bold text-center" style="border-color:rgba(16,185,129,0.3);color:#34d399">اشترك</a>
-                </div>
+                <div class="glass p-6 text-center"><span class="text-3xl block mb-2">🆓</span><h3 class="font-bold mb-1">مجاني</h3><p class="text-3xl font-black mb-1">0 <span class="text-sm text-purple-200/70">ريال</span></p><p class="text-purple-200/60 text-xs mb-4">10 أسئلة مجانية</p><a href="register.html" class="btn-ghost block w-full py-2.5 rounded-xl text-sm font-bold text-center">ابدأ الآن</a></div>
+                <div class="glass p-6 text-center relative" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.3)"><div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-0.5 rounded-full text-xs font-bold text-white" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">الأكثر شعبية</div><span class="text-3xl block mb-2 mt-1">📅</span><h3 class="font-bold mb-1">شهري</h3><p class="text-3xl font-black text-indigo-400 mb-1">29 <span class="text-sm text-purple-200/70">ريال</span></p><p class="text-purple-200/60 text-xs mb-4">أسئلة غير محدودة</p><a href="register.html" class="btn-primary block w-full py-2.5 rounded-xl text-sm font-bold text-center">اشترك</a></div>
+                <div class="glass p-6 text-center"><span class="text-3xl block mb-2">💎</span><h3 class="font-bold mb-1">سنوي</h3><p class="text-3xl font-black text-emerald-400 mb-1">19 <span class="text-sm text-purple-200/70">ريال/شهر</span></p><p class="text-purple-200/60 text-xs mb-4">وفّر 120 ريال</p><a href="register.html" class="btn-ghost block w-full py-2.5 rounded-xl text-sm font-bold text-center" style="border-color:rgba(16,185,129,0.3);color:#34d399">اشترك</a></div>
             </div>
-
-            <div class="text-center mt-6 reveal">
-                <a href="pricing.html" class="text-indigo-400/70 text-sm hover:text-indigo-300 transition">شوف المقارنة الكاملة ←</a>
-            </div>
+            <div class="text-center mt-6 reveal"><a href="pricing.html" class="text-indigo-400/70 text-sm hover:text-indigo-300 transition">شوف المقارنة الكاملة ←</a></div>
         </div>
     </section>
 
@@ -339,8 +229,13 @@
             <div class="grid sm:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center gap-2 mb-3">
-                        <span class="text-xl">🎓</span>
-                        <span class="font-black text-lg bg-gradient-to-l from-purple-300 to-indigo-300 bg-clip-text text-transparent">خوارز</span>
+                        <div class="kh-logo-box" style="padding:5px 16px 4px">
+                            <div class="kh-corner-tl" style="width:6px;height:6px"></div>
+                            <div class="kh-corner-br" style="width:6px;height:6px"></div>
+                            <div class="kh-logo-name" style="font-size:15px"><span class="kha">خـ</span>ـوارز</div>
+                            <div class="kh-logo-line"></div>
+                            <div class="kh-logo-en" style="font-size:6px">KHAWARIZ</div>
+                        </div>
                     </div>
                     <p class="text-purple-200/60 text-xs leading-relaxed">منصة تعليمية سعودية لتحضير الطلاب والطالبات لاختبارات القدرات والتحصيلي</p>
                 </div>
@@ -374,40 +269,34 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // === Live question count ===
-        (async function(){
-            try {
-                var sb = window.supabase.createClient(
-                    'https://czzcmbxejxbotjemyuqf.supabase.co',
-                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
-                );
-                var { data } = await sb.from('questions').select('id');
-                if (data && data.length > 0) {
-                    document.getElementById('liveQuestions').textContent = data.length + '+';
-                }
-            } catch(e){}
-        })();
+    (async function(){
+        try {
+            var sb = window.supabase.createClient(
+                'https://czzcmbxejxbotjemyuqf.supabase.co',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6emNtYnhlanhib3RqZW15dXFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzQ0ODEsImV4cCI6MjA4NTc1MDQ4MX0.xDfG1qsDZGyUrpL44JfqOtk57dVsLaMsvIzJz1KgiR0'
+            );
+            var { data } = await sb.from('questions').select('id');
+            if (data && data.length > 0) {
+                document.getElementById('liveQuestions').textContent = data.length + '+';
+            }
+        } catch(e){}
+    })();
 
-        // === Scroll reveal ===
-        var reveals = document.querySelectorAll('.reveal');
-        var observer = new IntersectionObserver(function(entries){
-            entries.forEach(function(entry){
-                if(entry.isIntersecting){
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
-        reveals.forEach(function(el){ observer.observe(el); });
-
-        // === Nav scroll effect ===
-        window.addEventListener('scroll', function(){
-            var nav = document.getElementById('mainNav');
-            if(window.scrollY > 50) nav.classList.add('nav-scrolled');
-            else nav.classList.remove('nav-scrolled');
+    var reveals = document.querySelectorAll('.reveal');
+    var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+            if(entry.isIntersecting){ entry.target.classList.add('visible'); }
         });
+    }, { threshold: 0.1 });
+    reveals.forEach(function(el){ observer.observe(el); });
+
+    window.addEventListener('scroll', function(){
+        var nav = document.getElementById('mainNav');
+        if(window.scrollY > 50) nav.classList.add('nav-scrolled');
+        else nav.classList.remove('nav-scrolled');
+    });
     </script>
 </body>
 </html>
