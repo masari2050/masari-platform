@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة الإدارة - خوارز</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         *{font-family:'Tajawal',sans-serif}
@@ -40,15 +40,15 @@
         .rr{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:.75rem}.rr:hover{background:rgba(255,255,255,0.03)}
         .rn{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;flex-shrink:0}
         @media(max-width:768px){.sidebar{display:none}.mc{margin-right:0;padding:16px}}
-    /* Khawariz Logo */
-.kh-logo-box{position:relative;display:inline-flex;flex-direction:column;align-items:center;padding:7px 22px 6px;border:1.5px solid rgba(139,92,246,0.25);border-radius:6px;background:rgba(15,10,46,0.3)}
-.kh-corner-tl,.kh-corner-br{position:absolute;width:8px;height:8px}
-.kh-corner-tl{top:-1.5px;left:-1.5px;border-top:2px solid #a855f7;border-left:2px solid #a855f7;border-radius:2px 0 0 0}
-.kh-corner-br{bottom:-1.5px;right:-1.5px;border-bottom:2px solid #a855f7;border-right:2px solid #a855f7;border-radius:0 0 2px 0}
-.kh-logo-name{font-size:18px;font-weight:900;line-height:1;color:white}
-.kh-logo-name .kha{background:linear-gradient(135deg,#c084fc,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.kh-logo-line{height:1.5px;margin-top:3px;width:100%;background:linear-gradient(90deg,#7c3aed,#a855f7,rgba(168,85,247,0.2));border-radius:1px}
-.kh-logo-en{font-size:7px;letter-spacing:2.5px;color:rgba(168,85,247,0.45);font-weight:700;margin-top:2px}
+    /* Khawariz Logo - B */
+.kh-logo{font-family:Cairo,sans-serif;display:inline-block}
+.kh-logo .kh-ar{font-weight:900;color:white}
+.kh-logo .kh-kha{font-weight:900;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.kh-logo .kh-en-wrap{display:flex;align-items:center;justify-content:center;gap:6px}
+.kh-logo .kh-en-line{height:1px;width:16px;border-radius:2px}
+.kh-logo .kh-en-line-r{background:linear-gradient(90deg,transparent,rgba(99,102,241,0.45))}
+.kh-logo .kh-en-line-l{background:linear-gradient(90deg,rgba(99,102,241,0.45),transparent)}
+.kh-logo .kh-en{font-family:Tajawal,sans-serif;letter-spacing:3.5px;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
 </style>
 </head>
 <body class="text-white">
@@ -56,7 +56,7 @@
 
 <!-- Sidebar -->
 <aside class="sidebar">
-    <div class="p-4 mb-2"><div class="flex items-center gap-2 mb-1"><div class="kh-logo-box"><div class="kh-corner-tl"></div><div class="kh-corner-br"></div><div class="kh-logo-name"><span class="kha">خـ</span>ـوارز</div><div class="kh-logo-line"></div><div class="kh-logo-en">KHAWARIZ</div></div><span class="text-lg font-black bg-gradient-to-l from-purple-300 to-indigo-300 bg-clip-text text-transparent">خوارز</span></div><p class="text-[10px] text-purple-200/60">لوحة الإدارة</p></div>
+    <div class="p-4 mb-2"><div class="flex items-center gap-2 mb-1"><div class="kh-logo"><span class="kh-kha" style="font-size:24px">خـ</span><span class="kh-ar" style="font-size:24px">ـوارز</span><div class="kh-en-wrap" style="margin-top:0px"><div class="kh-en-line kh-en-line-r"></div><span class="kh-en" style="font-size:7px">KHAWARIZ</span><div class="kh-en-line kh-en-line-l"></div></div></div><span class="text-lg font-black bg-gradient-to-l from-purple-300 to-indigo-300 bg-clip-text text-transparent">خوارز</span></div><p class="text-[10px] text-purple-200/60">لوحة الإدارة</p></div>
     <div class="sb-link on" data-tab="overview"><span>📊</span><span>نظرة عامة</span></div>
     <div class="sb-link" data-tab="questions"><span>📝</span><span>الأسئلة</span></div>
     <div class="sb-link" data-tab="users"><span>👥</span><span>الأعضاء</span></div>
