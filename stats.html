@@ -169,7 +169,78 @@ const sectionNames = { quant: 'كمي', verbal: 'لفظي', tahsili: 'تحصيل
 let allData = [];
 let currentSection = 'all';
 
-async function loadStats() {
+async 
+function generateLocalReport(topicStats, total, overall) {
+    const arr = Object.values(topicStats);
+    const strong = arr.filter(t => t.total >= 3 && Math.round(t.correct/t.total*100) >= 70)
+        .sort((a,b) => (b.correct/b.total) - (a.correct/a.total));
+    const weak = arr.filter(t => t.total >= 3 && Math.round(t.correct/t.total*100) < 50)
+        .sort((a,b) => (a.correct/a.total) - (b.correct/b.total));
+    const medium = arr.filter(t => t.total >= 3 && Math.round(t.correct/t.total*100) >= 50 && Math.round(t.correct/t.total*100) < 70);
+
+    let report = '';
+
+    // تقييم عام
+    if (overall >= 80) report += `🌟 أداء رائع! نسبة إجاباتك الصحيحة ${overall}% وهذا مستوى ممتاز يعكس استعداداً قوياً للاختبار.\n\n`;
+    else if (overall >= 60) report += `💪 أداء جيد! حققت ${overall}% نسبة صح من أصل ${total} سؤال. أنت على الطريق الصح وبقليل من التركيز ستصل لمستوى أعلى.\n\n`;
+    else if (overall >= 40) report += `📈 بداية واعدة! نسبتك ${overall}% وعندك فرصة كبيرة للتحسن. كل سؤال تحله الآن يضيف لرصيدك.\n\n`;
+    else report += `🚀 مرحلة البناء! نسبتك الحالية ${overall}% وهذا بداية الرحلة. التركيز والمثابرة سيحولان هذه الأرقام بسرعة.\n\n`;
+
+    // نقاط القوة
+    if (strong.length > 0) {
+        report += `✅ نقاط القوة:\n`;
+        strong.forEach(t => {
+            const acc = Math.round(t.correct/t.total*100);
+            report += `• ${topicNames[t.topic] || t.topic}: ${acc}% (${t.correct}/${t.total}) — ممتاز 🔥\n`;
+        });
+        report += '\n';
+    }
+
+    // مواضيع متوسطة
+    if (medium.length > 0) {
+        report += `⚡ مواضيع تحتاج تطوير:\n`;
+        medium.forEach(t => {
+            const acc = Math.round(t.correct/t.total*100);
+            report += `• ${topicNames[t.topic] || t.topic}: ${acc}% — قريب من الهدف، زِد التدريب قليلاً\n`;
+        });
+        report += '\n';
+    }
+
+    // نقاط الضعف
+    if (weak.length > 0) {
+        report += `⚠️ تحتاج مراجعة عاجلة:\n`;
+        weak.forEach(t => {
+            const acc = Math.round(t.correct/t.total*100);
+            report += `• ${topicNames[t.topic] || t.topic}: ${acc}% — ركّز هنا أولاً\n`;
+        });
+        report += '\n';
+    }
+
+    // خطة عملية
+    report += `📋 خطتك للأسبوع القادم:\n`;
+    if (weak.length > 0) {
+        report += `1. ابدأ بمراجعة ${topicNames[weak[0].topic] || weak[0].topic} — حل 20 سؤال يومياً\n`;
+        if (weak.length > 1) report += `2. راجع ${topicNames[weak[1].topic] || weak[1].topic} — حل 15 سؤال يومياً\n`;
+        else report += `2. كرّر المواضيع المتوسطة لرفع مستواها للممتاز\n`;
+    } else {
+        report += `1. حافظ على مستواك الحالي بحل 20 سؤال يومياً\n`;
+        report += `2. جرّب وضع محاكاة الاختبار الكامل\n`;
+    }
+    report += `3. راجع أخطاءك السابقة قبل كل جلسة جديدة\n\n`;
+
+    // جملة تحفيزية
+    const motivational = [
+        'كل سؤال تحله اليوم هو خطوة نحو النتيجة اللي تحلم فيها 🎯',
+        'النجاح في قياس مو حظ، هو تراكم جهد متواصل — وأنت على الطريق الصح 💫',
+        'الفرق بين أين أنت وأين تريد أن تكون هو ما ستفعله اليوم 🚀',
+        'كل يوم تدرب فيه هو يوم تقدمت فيه. استمر! 🌟'
+    ];
+    report += motivational[Math.floor(Math.random() * motivational.length)];
+
+    return report;
+}
+
+function loadStats() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) { window.location.href = 'login.html'; return; }
 
@@ -388,20 +459,21 @@ ${summary}
 استخدم أسلوباً ودياً وداعماً مع الحفاظ على الدقة.`;
 
     try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
-                max_tokens: 1000,
-                messages: [{ role: 'user', content: prompt }]
-            })
-        });
-        const data = await res.json();
-        const text = data.content?.[0]?.text || 'تعذر توليد التقرير';
-        content.textContent = text;
+        const report = generateLocalReport(topicStats, total, overall);
+        // عرض تدريجي للنص
+        content.textContent = '';
+        let i = 0;
+        const words = report.split(' ');
+        const interval = setInterval(() => {
+            if (i < words.length) {
+                content.textContent += (i > 0 ? ' ' : '') + words[i];
+                i++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 30);
     } catch (e) {
-        content.textContent = 'تعذر الاتصال. تأكد من الاتصال بالإنترنت.';
+        content.textContent = 'حدث خطأ أثناء توليد التقرير.';
     }
 
     btn.disabled = false;
