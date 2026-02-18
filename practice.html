@@ -114,7 +114,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .option-card:hover {
+        .option-card:not([disabled]):hover {
             border-color: #8b5cf6;
             background: #f5f3ff;
             box-shadow: 0 4px 12px rgba(139,92,246,0.1);
@@ -142,7 +142,7 @@
         @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         .animate-card { animation: fadeUp 0.4s ease forwards; }
-        .animate-option { animation: slideIn 0.3s ease forwards; opacity: 0; }
+        .animate-option { animation: slideIn 0.3s ease forwards; }
 
         .marquee-container { overflow: hidden; white-space: nowrap; }
         .marquee-text { display: inline-block; animation: marquee 25s linear infinite; }
